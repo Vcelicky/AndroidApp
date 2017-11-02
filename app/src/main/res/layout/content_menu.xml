@@ -4,10 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jozef.vcelicky.MainActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.jozef.vcelicky.MenuActivity"
+    tools:showIn="@layout/app_bar_menu">
 
-    <ListView
-        android:id="@+id/hiveListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

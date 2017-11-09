@@ -35,18 +35,16 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         textHiveName.setText(hiveList.get(position).getHiveName());
 
         TextView textOutTemperature = (TextView) customView.findViewById(R.id.textOutTemperature);
-        textOutTemperature.setText(String.valueOf(hiveList.get(position).getOutsideTemperature()));
+        textOutTemperature.setText(String.valueOf("T:"+hiveList.get(position).getOutsideTemperature())+"°C (vonkajšia)"); // ("Vonkajšia teplota"+"hiveList.get(position).getHiveName()"+"°C");
 
-        TextView textInTemperature = (TextView) customView.findViewById(R.id.textInTemperature);
-        textInTemperature.setText(String.valueOf(hiveList.get(position).getInsideTemperature()));
+        TextView textInTemperature =   (TextView) customView.findViewById(R.id.textInTemperature);
+        textInTemperature.setText( String.valueOf("T:"+hiveList.get(position).getInsideTemperature())+"°C (vnútorná)");
 
-        TextView textHumidity = (TextView) customView.findViewById(R.id.textHumidity);
-        textHumidity.setText(String.valueOf(hiveList.get(position).getHumidity()));
+        TextView textHumidity = (TextView) customView.findViewById(R.id.textInHumidity);
+        textHumidity.setText(String.valueOf("H:"+hiveList.get(position).getHumidity())+"%");
 
         TextView textWeight = (TextView) customView.findViewById(R.id.textWeight);
-        textWeight.setText(String.valueOf(hiveList.get(position).getWeight()));
-
-
+        textWeight.setText(String.valueOf("W:"+hiveList.get(position).getWeight())+"kg");
 
         return customView;
     }

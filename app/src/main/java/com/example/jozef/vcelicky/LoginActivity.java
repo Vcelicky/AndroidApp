@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import java.lang.invoke.ConstantCallSite;
-
 public class LoginActivity extends AppCompatActivity {
 
     EditText mail, pass;
@@ -30,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login (View view){
-        if(mail.getText().toString().equals("")){
+        if(false){
             main.setAlpha((float)0.5);
             error.setVisibility(View.VISIBLE);
         }

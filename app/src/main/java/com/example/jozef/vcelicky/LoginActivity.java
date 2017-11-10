@@ -12,8 +12,8 @@ import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText mail, pass;
-    ConstraintLayout main, error;
+    private EditText mail, pass;
+    private ConstraintLayout main, error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

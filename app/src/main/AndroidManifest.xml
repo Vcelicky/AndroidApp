@@ -32,9 +32,10 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme" />
         <activity android:name=".HiveDetailsActivity" />
-            android:name=".MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme" />
+        android:name=".MenuActivity"
+        android:label="@string/title_activity_menu"
+        android:theme="@style/AppTheme" />
+        <activity android:name=".OpisActivity"></activity>
     </application>
 
 </manifest>

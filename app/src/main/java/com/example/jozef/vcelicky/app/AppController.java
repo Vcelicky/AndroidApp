@@ -3,7 +3,6 @@ package com.example.jozef.vcelicky.app;
 import com.example.jozef.vcelicky.utils.LruBitmapCache;
 import android.app.Application;
 import android.text.TextUtils;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -33,7 +32,6 @@ public class AppController extends Application {
 		if (mRequestQueue == null) {
 			mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		}
-
 		return mRequestQueue;
 	}
 

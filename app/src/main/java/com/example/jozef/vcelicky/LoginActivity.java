@@ -63,19 +63,14 @@ public class LoginActivity extends AppCompatActivity {
         // Session manager
         session = new SessionManager(getApplicationContext());
 
-        //in progress
-        /*Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
-
         // Check if user is already logged in or not
-        /*if (session.isLoggedIn()) {
+        if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
             Log.i("LoginAct", "Prihlasujem bez overenia...");
-        }*/
+        }
     }
 
     public void login (View view){
@@ -95,9 +90,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         else{
-            Toast.makeText(getApplicationContext(),
-                    "Please enter the credentials!", Toast.LENGTH_LONG)
-                    .show();
+            main.setAlpha((float)0.5);
+            error.setVisibility(View.VISIBLE);
         }
     }
 
@@ -142,10 +136,10 @@ public class LoginActivity extends AppCompatActivity {
                 hideDialog();
 
                 try {
-                    boolean error = response.getBoolean("error");
+                    boolean er = response.getBoolean("error");
 
                     // Check for error node in json
-                    if (!error) {
+                    if (!er) {
                         // user successfully logged in
                         // Create login session
                         session.setLogin(true);
@@ -168,9 +162,8 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = response.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
+                        main.setAlpha((float)0.5);
+                        error.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     // JSON error

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
                         HiveBaseInfo device = (HiveBaseInfo) parent.getAdapter().getItem(position);
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
                         i.putExtra("hiveId",device.getHiveId());
+                        i.putExtra("hiveName",device.getHiveName());
                         startActivity(i);
                     }
                 }
@@ -61,16 +62,16 @@ public class MainActivity extends AppCompatActivity
 
 
     public void createTestData(){
-        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 69));
-        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Beta", 40 , 43, 68, 50));
-        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Gama", 30 , 42, 68, 60));
-        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Delta", 40 , 45, 50, 53));
-        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Pomaranč", 35 , 43, 68, 56));
-        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Žehlička", 32 , 49, 61, 89));
-        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Imro", 36 , 45, 68, 66));
-        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Kýbeľ", 36 , 45, 68, 66));
-        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Stolička", 36 , 45, 68, 66));
-        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Slniečko", 36 , 45, 68, 66));
+        hiveList.add(new HiveBaseInfo(1234, "Alfa", 55 , 45, 70, 69));
+        hiveList.add(new HiveBaseInfo(1235, "Beta", 40 , 43, 68, 50));
+        hiveList.add(new HiveBaseInfo(1236, "Gama", 30 , 42, 68, 60));
+        hiveList.add(new HiveBaseInfo(1237, "Delta", 40 , 45, 50, 53));
+        hiveList.add(new HiveBaseInfo(1238, "Pomaranč", 35 , 43, 68, 56));
+        hiveList.add(new HiveBaseInfo(1239, "Žehlička", 32 , 49, 61, 89));
+        hiveList.add(new HiveBaseInfo(1240, "Imro", 36 , 45, 68, 66));
+        hiveList.add(new HiveBaseInfo(1241, "Kýbeľ", 36 , 45, 68, 66));
+        hiveList.add(new HiveBaseInfo(1242, "Stolička", 36 , 45, 68, 66));
+        hiveList.add(new HiveBaseInfo(1243, "Slniečko", 36 , 45, 68, 66));
     }
 
 

@@ -63,6 +63,14 @@ public class LoginActivity extends AppCompatActivity {
         // Session manager
         session = new SessionManager(getApplicationContext());
 
+
+// Temp - bypass login
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        Log.i("LoginAct", "Prihlasujem bez overenia...");
+  //
+
         // Check if user is already logged in or not
         /*if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity

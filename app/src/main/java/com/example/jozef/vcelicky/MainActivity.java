@@ -17,6 +17,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+// jakub dev branch
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
 
-        } 
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

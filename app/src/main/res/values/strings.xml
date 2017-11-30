@@ -41,5 +41,10 @@
     </string>
     <string name="register">Nemáte účet? Zaregistrujte sa</string>
     <string name="registration">Registrácia</string>
+    <string name="name">Meno a priezvisko</string>
+    <string name="email">E-mail</string>
+    <string name="phone">Telefónne číslo</string>
+    <string name="numOfDevs">Počet zariadení</string>
+    <string name="notes">Poznámky</string>
 
 </resources>

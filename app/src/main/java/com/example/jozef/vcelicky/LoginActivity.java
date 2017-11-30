@@ -14,13 +14,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
@@ -30,8 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -152,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        String token = user.getString("token");
+                        //String token = user.getString("token");
 
                         // Inserting row in users table
                         db.addUser(name, email, role);
@@ -160,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 MainActivity.class);
-                        intent.putExtra("token", token);
+                        //intent.putExtra("token", token);
                         startActivity(intent);
                         finish();
                     } else {
@@ -234,8 +230,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view){
         EditText editName = findViewById(R.id.editName);
-        EditText editMail = findViewById(R.id.editMail);
-        EditText editPass = findViewById(R.id.editPass);
+        EditText editMail = findViewById(R.id.editRegMail);
+        EditText editPass = findViewById(R.id.editRegPass);
         EditText editPassAgain = findViewById(R.id.editPassAgain);
 
         String name = editName.getText().toString().trim();
@@ -243,11 +239,86 @@ public class LoginActivity extends AppCompatActivity {
         String pass = editPass.getText().toString().trim();
         String passAgain = editPassAgain.getText().toString().trim();
 
+        Log.i("LoginAct", "heslo: " + pass);
+        Log.i("LoginAct", "znova: " + passAgain);
+
         if(pass.equals(passAgain)){
-            
+            String tag_json_obj = "json_obj_req";
+
+            pDialog.setMessage("Registration in progress ...");
+            showDialog();
+
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("name", name);
+                jsonBody.put("email", mail);
+                jsonBody.put("password", pass);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
+            final String requestBody = jsonBody.toString();
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                    AppConfig.URL_REGISTER, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, "Login Response: " + response.toString());
+                    hideDialog();
+
+                    try {
+                        boolean er = response.getBoolean("error");
+
+                        // Check for error node in json
+                        if (!er) {
+                            Toast.makeText(getApplicationContext(), "Registrácia bola úspešná", Toast.LENGTH_LONG).show();
+                            reg.setVisibility(View.INVISIBLE);
+                            main.setAlpha(1);
+                        } else {
+                            String errMsg = response.getString("error_msg");
+                            Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        // JSON error
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Login Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(),
+                            error.getMessage(), Toast.LENGTH_LONG).show();
+                    hideDialog();
+                }
+            }) {
+
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee){
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
         else{
-            //nejaka hlaska na error ze sa nezhoduju hesla
+            Toast.makeText(getApplicationContext(), "Heslá sa nezhodujú", Toast.LENGTH_LONG).show();
         }
     }
 }

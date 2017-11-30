@@ -35,7 +35,11 @@
         android:name=".MenuActivity"
         android:label="@string/title_activity_menu"
         android:theme="@style/AppTheme" />
-        <activity android:name=".OpisActivity"></activity>
+        <activity android:name=".OpisActivity" />
+        <activity
+            android:name=".OrderActivity"
+            android:label="Objednávka"
+            ></activity>
     </application>
 
 </manifest>

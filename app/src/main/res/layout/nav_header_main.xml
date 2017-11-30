@@ -23,18 +23,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="VČELIČKY TEAM"
+        android:text="@string/team"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fiittp20@gmail.com" />
+        android:text="@string/team_mail" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="http://team20-17.studenti.fiit.stuba.sk/" />
+        android:text="@string/team_web" />
 
 </LinearLayout>

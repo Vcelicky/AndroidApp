@@ -39,5 +39,7 @@
     <string name="description">
         V spolupráci s firmou SimpleCell sme vytvorili projekt na monitorovanie včelích úľov. Pomocou získaných informácií chceme pomôcť včelárom výrazne znížiť počet rutinných inšpekcií, odhaliť rojenie či choroby včiel. Na tieto účely využívame Arduino mega 2560, ktoré zhromažďuje informácie zo senzorov. Ide napríklad o senzor teploty, vlhkosti, tenzometer či akcelerometer na odhalenie prevalenia úľa alebo prípadného kradnutia. Včelárom využívajúcim našu technológiu poskytneme štatistické informácie z krátkodobého ale aj dlhodobého hľadiska a v prípade náhlej zmeny ich upozorňujeme prostredníctvom emailov, notifikácii v aplikácii alebo SMS.
     </string>
+    <string name="register">Nemáte účet? Zaregistrujte sa</string>
+    <string name="registration">Registrácia</string>
 
 </resources>

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private EditText mail, pass;
-    private ConstraintLayout main, error;
+    private ConstraintLayout main, error, reg;
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         pass = findViewById(R.id.editPass);
         main = findViewById(R.id.mainLayout);
         error = findViewById(R.id.errorLayout);
+        reg = findViewById(R.id.registerLayout);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -222,5 +223,29 @@ public class LoginActivity extends AppCompatActivity {
             netInfo = cm.getActiveNetworkInfo();
         }
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public void showRegisterForm(View view){
+        main.setAlpha((float)0.5);
+        reg.setVisibility(View.VISIBLE);
+    }
+
+    public void register(View view){
+        EditText editName = findViewById(R.id.editName);
+        EditText editMail = findViewById(R.id.editMail);
+        EditText editPass = findViewById(R.id.editPass);
+        EditText editPassAgain = findViewById(R.id.editPassAgain);
+
+        String name = editName.getText().toString().trim();
+        String mail = editMail.getText().toString().trim();
+        String pass = editPass.getText().toString().trim();
+        String passAgain = editPassAgain.getText().toString().trim();
+
+        if(pass.equals(passAgain)){
+            
+        }
+        else{
+            //nejaka hlaska na error ze sa nezhoduju hesla
+        }
     }
 }

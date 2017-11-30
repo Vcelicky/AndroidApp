@@ -111,16 +111,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_about_project) {
-            // Handle the camera action
+          Intent intent = new Intent(MainActivity.this, OpisActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-
+       
         } else if (id == R.id.nav_logout) {
-
+             
         } 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
+                        String token = user.getString("token");
 
                         // Inserting row in users table
                         db.addUser(name, email, role);
@@ -158,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 MainActivity.class);
+                        intent.putExtra("token", token);
                         startActivity(intent);
                         finish();
                     } else {

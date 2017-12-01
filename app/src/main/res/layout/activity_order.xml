@@ -55,7 +55,7 @@
         app:srcCompat="@drawable/contact_logo" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -79,15 +79,15 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText2"
-        app:layout_constraintEnd_toStartOf="@+id/editText2"
+        app:layout_constraintBottom_toBottomOf="@+id/editMail"
+        app:layout_constraintEnd_toStartOf="@+id/editMail"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText2"
+        app:layout_constraintTop_toTopOf="@+id/editMail"
         app:srcCompat="@drawable/mail_logo" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -111,15 +111,15 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText3"
-        app:layout_constraintEnd_toStartOf="@+id/editText3"
+        app:layout_constraintBottom_toBottomOf="@+id/editPhone"
+        app:layout_constraintEnd_toStartOf="@+id/editPhone"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText3"
+        app:layout_constraintTop_toTopOf="@+id/editPhone"
         app:srcCompat="@android:drawable/ic_menu_call" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editDevCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -136,7 +136,7 @@
         app:layout_constraintVertical_bias="0.55" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/editNotes"
         android:layout_width="288dp"
         android:layout_height="120dp"
         android:layout_marginBottom="8dp"
@@ -166,7 +166,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/editNotes" />
 
     <ImageView
         android:id="@+id/imageView21"
@@ -176,11 +176,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText4"
-        app:layout_constraintEnd_toStartOf="@+id/editText4"
+        app:layout_constraintBottom_toBottomOf="@+id/editDevCount"
+        app:layout_constraintEnd_toStartOf="@+id/editDevCount"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText4"
+        app:layout_constraintTop_toTopOf="@+id/editDevCount"
         app:srcCompat="@drawable/wireless_dev_logo" />
 
 </android.support.constraint.ConstraintLayout>

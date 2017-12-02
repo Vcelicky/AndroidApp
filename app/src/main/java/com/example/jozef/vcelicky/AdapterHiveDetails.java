@@ -34,7 +34,7 @@ public class AdapterHiveDetails extends ArrayAdapter<HiveBaseInfo> {
         TextView textHiveName = (TextView) customView.findViewById(R.id.hive_name);
 //        textHiveName.setText(hiveList.get(position).getTimeStamp().toString());
         Calendar ts = hiveList.get(position).getTimeStamp();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         textHiveName.setText(ts.get(Calendar.DAY_OF_MONTH)+"."+ts.get(Calendar.MONTH)+"."+ts.get(Calendar.YEAR)+" "+timeFormat.format(ts.getTime()));
 
         TextView textOutTemperature = (TextView) customView.findViewById(R.id.textOutTemperature);

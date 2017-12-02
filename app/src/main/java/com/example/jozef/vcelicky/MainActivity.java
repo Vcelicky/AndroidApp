@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         if (type.equals("P")) {
                             Log.d(TAG, "found P : ");
-            //                p = json.getInt("hodnota");
+                           //TODO P (proximity is not in this model) need HOTFIX // Weight is mising
                         }
 
                     }
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
+                Log.e(TAG, " Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -276,6 +276,7 @@ public class MainActivity extends AppCompatActivity
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
                         i.putExtra("hiveId",device.getHiveId());
                         i.putExtra("hiveName",device.getHiveName());
+                        i.putExtra("token",token);
                         startActivity(i);
                     }
                 }

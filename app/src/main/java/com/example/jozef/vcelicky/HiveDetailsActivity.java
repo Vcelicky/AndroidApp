@@ -8,11 +8,26 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.jozef.vcelicky.app.AppConfig;
+import com.example.jozef.vcelicky.app.AppController;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,6 +36,11 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
 
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     int hiveID;
+    String token;
+    final String TAG = "HiveDetailsActivity";
+    ArrayAdapter<HiveBaseInfo> allAdapter;
+    String hiveName;
+    ListView menuListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +50,8 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
         Intent intent = getIntent();
         // hiveId
         hiveID =  intent.getIntExtra("hiveId",0);
-        String hiveName = intent.getExtras().getString("hiveName");
+        hiveName = intent.getExtras().getString("hiveName");
+        token =  intent.getExtras().getString("token");
         toolbar.setTitle("Včelí úľ "+hiveName);
         setSupportActionBar(toolbar);
 
@@ -46,9 +67,11 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
         navigationView.setNavigationItemSelectedListener(this);
 /////////////////
         createTestData();
-        ArrayAdapter<HiveBaseInfo> allAdapter = new AdapterHiveDetails(this, hiveList);
-        ListView menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
+        allAdapter = new AdapterHiveDetails(this, hiveList);
+        menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
         menuListView.setAdapter(allAdapter);
+
+        loadHiveBaseInfoServerReq(hiveName);
 
     }
 
@@ -67,6 +90,151 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
         hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 40)));
         hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 50)));
     }
+
+
+    public void loadHiveBaseInfoServerReq( String hiveName){
+
+        Log.d(TAG, "Load Hive Details Info method");
+        String tag_json_obj = "json_obj_req";
+        JSONObject jsonBody = new JSONObject();
+
+        Log.d(TAG, ": " + hiveName);
+        Log.d(TAG, ": " + token);
+        try {
+            jsonBody.put("device_name", hiveName);
+            jsonBody.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+        final String requestBody = jsonBody.toString();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                AppConfig.URL_GET_HIVE_INFO_DETAILS, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
+
+                try {
+                    ///////////////////////
+                    int it = 0;
+                    int ot = 0;
+                    int h = 0;
+                    int p = 0;
+
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONArray jsonArray2 = jsonArray.getJSONArray(i); // proccess additional []
+                        int recordValue = 0;
+                        for(int j=0;j<jsonArray2.length();j++){
+                            JSONObject jo= jsonArray2.getJSONObject(j);
+                            String type = jo.getString("typ");
+
+                            if (type.equals("IT")) {
+                                Log.d(TAG, "found IT : ");
+                                it = jo.getInt("hodnota");
+                            }
+                            if (type.equals("OT")) {
+                                Log.d(TAG, "found OT : ");
+                                ot = jo.getInt("hodnota");
+                            }
+                            if (type.equals("H")) {
+                                Log.d(TAG, "found H : ");
+                                h = jo.getInt("hodnota");
+                            }
+                            if (type.equals("P")) {
+                                Log.d(TAG, "found P : ");
+                                //TODO P (proximity is not in this model) need HOTFIX // Weight is mising
+                            }
+                            String timeStamp = jo.getString("cas");
+                            GregorianCalendar timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
+                            // parse date from tomo API time format (day.month.year.hour.minute)
+
+                            Log.d(TAG, "Cas: "+timeStamp);
+
+                            recordValue++;
+                            if (recordValue == 4) {                     // every record have 4 values after that new record is processed
+                                Log.d(TAG, "I will add new record to list: ");
+                                hiveList.add(new HiveBaseInfo(0, "hiveNameIsNotUsedHere", ot, it, h, 0,timeStampGregCal));
+                                menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
+                                menuListView.setAdapter(allAdapter);
+                                recordValue = 0;
+                            }
+                        }
+
+                    }
+
+////////////////////////////
+                } catch (Exception e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Log.e(TAG, "Login Error: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee){
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+
+
+    }
+
+
+    // parse date from tomo API time format (day.month.year.hour.minute)
+    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
+        String[] timeStampParts = timeStamp.split("\\.", -1);
+        int year=0, month = 0, day = 0, hour = 0, minute = 0;
+        for (int s=0; s<timeStampParts.length;s++){
+            Log.d(TAG, "P: "+timeStampParts[s]);
+            if (s == 0){
+                day = Integer.parseInt(timeStampParts[s]);
+            }
+            if (s == 1){
+                month = Integer.parseInt(timeStampParts[s]);
+            }
+            if (s == 2){
+                year = Integer.parseInt(timeStampParts[s]);
+            }
+            if (s == 3){
+                hour = Integer.parseInt(timeStampParts[s]);
+            }
+            if (s == 4){
+                minute = Integer.parseInt(timeStampParts[s]);
+            }
+        }
+        return new GregorianCalendar(year, month, day, hour, minute);
+
+    }
+
+
+
 
     @Override
 

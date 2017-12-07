@@ -38,8 +38,7 @@
         <activity android:name=".OpisActivity" />
         <activity
             android:name=".OrderActivity"
-            android:label="Objednávka"
-            ></activity>
+            android:label="Objednávka" />
     </application>
 
 </manifest>

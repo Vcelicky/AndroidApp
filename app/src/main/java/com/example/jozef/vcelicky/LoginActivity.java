@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
+    private EditText editName;
+    private EditText editMail;
+    private EditText editPass;
+    private EditText editPassAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         main = findViewById(R.id.mainLayout);
         error = findViewById(R.id.errorLayout);
         reg = findViewById(R.id.registerLayout);
+        editName = findViewById(R.id.editName);
+        editMail = findViewById(R.id.editRegMail);
+        editPass = findViewById(R.id.editRegPass);
+        editPassAgain = findViewById(R.id.editPassAgain);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -70,6 +79,25 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
             Log.i("LoginAct", "Prihlasujem bez overenia...");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (reg.getVisibility() == View.VISIBLE){
+            reg.setVisibility(View.INVISIBLE);
+            main.setAlpha(1);
+            editName.setText("");
+            editMail.setText("");
+            editPass.setText("");
+            editPassAgain.setText("");
+            editName.setError(null);
+            editMail.setError(null);
+            editPass.setError(null);
+            editPassAgain.setError(null);
+        }
+        else{
+            finish();
         }
     }
 
@@ -137,11 +165,11 @@ public class LoginActivity extends AppCompatActivity {
                         // Now store the user in SQLite
                         String id = response.getString("id");
                         String role = response.getString("role_id");
+                        String token = response.getString("token");
 
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        String token = user.getString("token");
 
                         // Inserting row in users table
                         db.addUser(name, email, role);
@@ -232,96 +260,155 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register(View view){
-        EditText editName = findViewById(R.id.editName);
-        EditText editMail = findViewById(R.id.editRegMail);
-        EditText editPass = findViewById(R.id.editRegPass);
-        EditText editPassAgain = findViewById(R.id.editPassAgain);
+        editName.setError(null);
+        editMail.setError(null);
+        editPass.setError(null);
+        editPassAgain.setError(null);
 
-        String name = editName.getText().toString().trim();
-        String mail = editMail.getText().toString().trim();
-        String pass = editPass.getText().toString().trim();
+        final String name = editName.getText().toString().trim();
+        final String email = editMail.getText().toString().trim();
+        final String pass = editPass.getText().toString().trim();
         String passAgain = editPassAgain.getText().toString().trim();
 
         Log.i("LoginAct", "heslo: " + pass);
         Log.i("LoginAct", "znova: " + passAgain);
 
-        if(pass.equals(passAgain)){
-            String tag_json_obj = "json_obj_req";
+        boolean cancel = false;
+        View focusView = null;
 
-            pDialog.setMessage("Registration in progress ...");
-            showDialog();
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(passAgain)){
+            editPassAgain.setError(getString(R.string.error_field_required));
+            focusView = editPassAgain;
+            cancel = true;
+        } else if(!isPasswordValid(passAgain)) {
+            editPassAgain.setError(getString(R.string.error_invalid_password));
+            focusView = editPassAgain;
+            cancel = true;
+        }
 
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("name", name);
-                jsonBody.put("email", mail);
-                jsonBody.put("password", pass);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return;
-            }
-            final String requestBody = jsonBody.toString();
+        // Check for a valid password again.
+        if (TextUtils.isEmpty(pass)){
+            editPass.setError(getString(R.string.error_field_required));
+            focusView = editPass;
+            cancel = true;
+        } else if(!isPasswordValid(pass)) {
+            editPass.setError(getString(R.string.error_invalid_password));
+            focusView = editPass;
+            cancel = true;
+        }
 
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                    AppConfig.URL_REGISTER, null, new Response.Listener<JSONObject>() {
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            editMail.setError(getString(R.string.error_field_required));
+            focusView = editMail;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            editMail.setError(getString(R.string.error_invalid_email));
+            focusView = editMail;
+            cancel = true;
+        }
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d(TAG, "Login Response: " + response.toString());
-                    hideDialog();
+        // Check for a valid name and surname entered.
+        if(TextUtils.isEmpty(name)){
+            editName.setError(getString(R.string.error_field_required));
+            focusView = editName;
+            cancel = true;
+        } else if(!isNameValid(name)){
+            editName.setError(getString(R.string.error_invalid_name));
+            focusView = editName;
+            cancel = true;
+        }
 
-                    try {
-                        boolean er = response.getBoolean("error");
+        if(cancel){
+            focusView.requestFocus();
+        }
+        else {
+            if (pass.equals(passAgain)) {
+                String tag_json_obj = "json_obj_req";
 
-                        // Check for error node in json
-                        if (!er) {
-                            Toast.makeText(getApplicationContext(), "Registrácia bola úspešná", Toast.LENGTH_LONG).show();
-                            reg.setVisibility(View.INVISIBLE);
-                            main.setAlpha(1);
-                        } else {
-                            String errMsg = response.getString("error_msg");
-                            Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_LONG).show();
+                pDialog.setMessage("Registration in progress ...");
+                showDialog();
+
+                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                        AppConfig.URL_REGISTER, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "Login Response: " + response.toString());
+                        hideDialog();
+
+                        try {
+                            boolean er = response.getBoolean("error");
+
+                            // Check for error node in json
+                            if (!er) {
+                                Toast.makeText(getApplicationContext(), "Registrácia bola úspešná, môžete sa prihlásiť", Toast.LENGTH_LONG).show();
+                                reg.setVisibility(View.INVISIBLE);
+                                main.setAlpha(1);
+                                editName.setText("");
+                                editMail.setText("");
+                                editPass.setText("");
+                                editPassAgain.setText("");
+                            } else {
+                                String errMsg = response.getString("error_msg");
+                                Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            // JSON error
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    } catch (JSONException e) {
-                        // JSON error
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Login Error: " + error.getMessage());
+                        Toast.makeText(getApplicationContext(),
+                                error.getMessage(), Toast.LENGTH_LONG).show();
+                        hideDialog();
+                    }
+                }) {
+
+                    @Override
+                    public String getBodyContentType() {
+                        return "multipart/form-data;boundary=" + BOUNDARY;
                     }
 
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "Login Error: " + error.getMessage());
-                    Toast.makeText(getApplicationContext(),
-                            error.getMessage(), Toast.LENGTH_LONG).show();
-                    hideDialog();
-                }
-            }) {
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return requestBody == null ? null : requestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee){
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                        return null;
+                    @Override
+                    public byte[] getBody() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("name", name);
+                        params.put("email", email);
+                        params.put("password", pass);
+                        final String requestBody = createPostBody(params);
+                        return requestBody.getBytes();
                     }
-                }
+                };
 
-            };
+                // Adding request to request queue
+                AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            } else {
+                editPassAgain.setError(getString(R.string.error_not_equal_password));
+                focusView = editPassAgain;
+                editPass.setError(getString(R.string.error_not_equal_password));
+                focusView = editPass;
+                focusView.requestFocus();
+            }
+        }
+    }
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-        }
-        else{
-            Toast.makeText(getApplicationContext(), "Heslá sa nezhodujú", Toast.LENGTH_LONG).show();
-        }
+    private boolean isEmailValid(String email) {
+        return email.contains("@") && email.contains(".");
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() >= 8;
+    }
+
+    private boolean isNameValid(String name){
+        return name.contains(" ");
     }
 }

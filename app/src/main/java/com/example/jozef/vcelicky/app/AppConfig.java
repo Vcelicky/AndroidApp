@@ -6,7 +6,7 @@ package com.example.jozef.vcelicky.app;
 
 public class AppConfig {
     // Server user login url
-    public static String URL_LOGIN = "http://147.175.149.151/BeeWebpage/public/login2/user";
+    public static String URL_LOGIN = "http://147.175.149.151/BeeWebpage/public/login/user";
 
     // Server user register url
     public static String URL_REGISTER = "http://147.175.149.151/BeeWebpage/public/register/user";

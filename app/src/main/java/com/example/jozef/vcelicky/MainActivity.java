@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.jozef.vcelicky.helper.SessionManager;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -118,6 +120,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notifications) {
        
         } else if (id == R.id.nav_logout) {
+            SessionManager session = new SessionManager(getApplicationContext());
+            if(session.isLoggedIn()){
+                session.setLogin(false);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
              
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(MainActivity.this, OrderActivity.class);

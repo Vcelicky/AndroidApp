@@ -28,10 +28,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String BOUNDARY = "VcelickovyBoundary";
     private EditText mail, pass;
     private ConstraintLayout main, error, reg;
     private ProgressDialog pDialog;
@@ -114,16 +117,6 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.setMessage("Logging in ...");
         showDialog();
 
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("email", email);
-            jsonBody.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        final String requestBody = jsonBody.toString();
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 AppConfig.URL_LOGIN, null, new Response.Listener<JSONObject>() {
 
@@ -148,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        //String token = user.getString("token");
+                        String token = user.getString("token");
 
                         // Inserting row in users table
                         db.addUser(name, email, role);
@@ -184,23 +177,33 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+                return "multipart/form-data;boundary=" + BOUNDARY;
             }
 
             @Override
             public byte[] getBody() {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee){
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                params.put("password", password);
+                final String requestBody = createPostBody(params);
+                return requestBody.getBytes();
             }
-
         };
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+    }
+
+    private String createPostBody(Map<String, String> params) {
+        StringBuilder sbPost = new StringBuilder();
+        for (String key : params.keySet()) {
+            if (params.get(key) != null) {
+                sbPost.append("\r\n" + "--" + BOUNDARY + "\r\n");
+                sbPost.append("Content-Disposition: form-data; name=\"" + key + "\"" + "\r\n\r\n");
+                sbPost.append(params.get(key));
+            }
+        }
+        return sbPost.toString();
     }
 
     private void showDialog() {

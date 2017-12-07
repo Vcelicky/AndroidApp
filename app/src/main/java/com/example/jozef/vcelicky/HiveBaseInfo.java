@@ -15,7 +15,36 @@ public class HiveBaseInfo {
     float insideTemperature;
     float humidity;
     float weight;
+    boolean accelerometer;
+    float battery;
+
     GregorianCalendar timeStamp;
+
+
+
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight, GregorianCalendar timeStamp, boolean accelerometer, float battery) {
+        this.hiveId = hiveId;
+        this.hiveName = hiveName;
+        this.outsideTemperature = outsideTemperature;
+        this.insideTemperature = insideTemperature;
+        this.humidity = humidity;
+        this.weight = weight;
+        this.accelerometer = accelerometer;
+        this.battery = battery;
+        this.timeStamp = timeStamp;
+    }
+
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight, boolean accelerometer, float battery) {
+        this.hiveId = hiveId;
+        this.hiveName = hiveName;
+        this.outsideTemperature = outsideTemperature;
+        this.insideTemperature = insideTemperature;
+        this.humidity = humidity;
+        this.weight = weight;
+        this.accelerometer = accelerometer;
+        this.battery = battery;
+
+    }
 
     public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight) {
         this.hiveId = hiveId;
@@ -90,6 +119,22 @@ public class HiveBaseInfo {
 
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public boolean isAccelerometer() {
+        return accelerometer;
+    }
+
+    public void setAccelerometer(boolean accelerometer) {
+        this.accelerometer = accelerometer;
+    }
+
+    public float getBattery() {
+        return battery;
+    }
+
+    public void setBattery(float battery) {
+        this.battery = battery;
     }
 }
 

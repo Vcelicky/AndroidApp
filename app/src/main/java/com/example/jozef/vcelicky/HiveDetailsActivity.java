@@ -79,16 +79,17 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
 
         Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
         ts.set(1995, 2, 29, 11, 22) ;
-        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 69, new GregorianCalendar(1995, 2, 29, 11, 20)));
-        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Alfa", 40 , 43, 68, 50, new GregorianCalendar(1995, 2, 29, 11, 30)));
-        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Alfa", 30 , 42, 68, 60, new GregorianCalendar(1995, 2, 29, 11, 40)));
-        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Alfa", 40 , 45, 50, 53, new GregorianCalendar(1995, 2, 29, 11, 50)));
-        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Alfa", 35 , 43, 68, 56, new GregorianCalendar(1995, 2, 29, 12, 00)));
-        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Alfa", 32 , 49, 61, 89, new GregorianCalendar(1995, 2, 29, 12, 10)));
-        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 20)));
-        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 30)));
-        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 40)));
-        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 50)));
+        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
+        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Alfa", 40 , 43, 68, 50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
+        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Alfa", 30 , 42, 68, 60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
+        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Alfa", 40 , 45, 50, 53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
+        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Alfa", 35 , 43, 68, 56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
+        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Alfa", 32 , 49, 61, 89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
+        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
+        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
+        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
+        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 50),true,99));
+
     }
 
 
@@ -119,8 +120,8 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
                     ///////////////////////
                     int it = 0;
                     int ot = 0;
-                    int h = 0;
-                    int p = 0;
+                    int h = 0,w = 0, b = 0;
+                    boolean p = true;
 
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i=0;i<jsonArray.length();i++){
@@ -129,6 +130,8 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
                         for(int j=0;j<jsonArray2.length();j++){
                             JSONObject jo= jsonArray2.getJSONObject(j);
                             String type = jo.getString("typ");
+
+                            int valueTypesCount = 6; // make this constant later or change this code
 
                             if (type.equals("IT")) {
                                 Log.d(TAG, "found IT : ");
@@ -144,7 +147,15 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
                             }
                             if (type.equals("P")) {
                                 Log.d(TAG, "found P : ");
-                                //TODO P (proximity is not in this model) need HOTFIX // Weight is mising
+                                p = jo.getBoolean("hodnota");
+                            }
+                            if (type.equals("W")) {
+                                Log.d(TAG, "found W : ");
+                                w = jo.getInt("hodnota");
+                            }
+                            if (type.equals("B")) {
+                                Log.d(TAG, "found B : ");
+                                b = jo.getInt("hodnota");
                             }
                             String timeStamp = jo.getString("cas");
                             GregorianCalendar timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
@@ -153,9 +164,9 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
                             Log.d(TAG, "Cas: "+timeStamp);
 
                             recordValue++;
-                            if (recordValue == 4) {                     // every record have 4 values after that new record is processed
+                            if (recordValue == valueTypesCount) {                     // every record have 4 values after that new record is processed
                                 Log.d(TAG, "I will add new record to list: ");
-                                hiveList.add(new HiveBaseInfo(0, "hiveNameIsNotUsedHere", ot, it, h, 0,timeStampGregCal));
+                                hiveList.add(new HiveBaseInfo(0, "hiveNameIsNotUsedHere", ot, it, h, w,timeStampGregCal,p,b));
                                 menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
                                 menuListView.setAdapter(allAdapter);
                                 recordValue = 0;

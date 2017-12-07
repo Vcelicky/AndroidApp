@@ -49,6 +49,16 @@ public class AdapterHiveDetails extends ArrayAdapter<HiveBaseInfo> {
         TextView textWeight = (TextView) customView.findViewById(R.id.textWeight);
         textWeight.setText(String.valueOf("W:"+hiveList.get(position).getWeight())+"kg");
 
+        TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
+        if ((hiveList.get(position).isAccelerometer())){
+            textAccelerometer.setText("A: OK");
+        }else{
+            textAccelerometer.setText("A: Úľ je prevrátený");
+        }
+        TextView textBattery = (TextView) customView.findViewById(R.id.textBattery);
+        textBattery.setText(String.valueOf("B:"+hiveList.get(position).getBattery())+"%");
+
+
         return customView;
     }
 }

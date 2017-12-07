@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -128,4 +129,60 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="192dp" />
+
+    <TextView
+        android:id="@+id/textAccelerometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Accelerometer"
+        app:layout_constraintStart_toEndOf="@+id/ImageAccelerometer"
+        app:layout_constraintTop_toBottomOf="@+id/textWeight"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textBattery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.4"
+        android:text="Battery"
+        app:layout_constraintStart_toEndOf="@+id/ImageBattery"
+        app:layout_constraintTop_toBottomOf="@+id/textInHumidity" />
+
+    <ImageView
+        android:id="@+id/ImageAccelerometer"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="0.1"
+        android:tint="@color/colorRed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textWeight"
+        app:srcCompat="?android:attr/textSelectHandle" />
+
+    <ImageView
+        android:id="@+id/ImageBattery"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="0.1"
+        android:tint="@color/colorGreen"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/textInHumidity"
+        app:srcCompat="?android:attr/textSelectHandle" />
+
+
+
+
 </android.support.constraint.ConstraintLayout>

@@ -31,6 +31,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role_id";
+    private static final String KEY_TOKEN = "token";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,7 +42,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_ROLE + " TEXT" + ")";
+                + KEY_EMAIL + " TEXT UNIQUE," + KEY_ROLE + " TEXT"
+                +  KEY_TOKEN + " TEXT" +")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -60,13 +62,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email, String role) {
+    public void addUser(int user_id, String name, String email, int role, String token) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, user_id); // User ID
         values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_ROLE, role); // Email
+        values.put(KEY_ROLE, role); // User Role
+        values.put(KEY_TOKEN, token); // Token
 
         // Inserting Row
         long id = db.insert(TABLE_USER, null, values);
@@ -87,9 +91,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("role", cursor.getString(3));
+            user.put("id", cursor.getString(1));
+            user.put("name", cursor.getString(2));
+            user.put("email", cursor.getString(3));
+            user.put("role_id", String.valueOf(cursor.getInt(4)));
+            user.put("token", cursor.getString(5));
         }
         cursor.close();
         db.close();

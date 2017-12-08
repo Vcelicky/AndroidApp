@@ -22,6 +22,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
+import com.example.jozef.vcelicky.helper.FieldChecker;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
 
@@ -163,8 +164,8 @@ public class LoginActivity extends AppCompatActivity {
                         session.setLogin(true);
 
                         // Now store the user in SQLite
-                        String id = response.getString("id");
-                        String role = response.getString("role_id");
+                        int user_id = Integer.parseInt(response.getString("id"));
+                        int role = Integer.parseInt(response.getString("role_id"));
                         String token = response.getString("token");
 
                         JSONObject user = response.getJSONObject("user");
@@ -172,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
                         String email = user.getString("email");
 
                         // Inserting row in users table
-                        db.addUser(name, email, role);
+                        db.addUser(user_id, name, email, role, token);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -281,7 +282,7 @@ public class LoginActivity extends AppCompatActivity {
             editPassAgain.setError(getString(R.string.error_field_required));
             focusView = editPassAgain;
             cancel = true;
-        } else if(!isPasswordValid(passAgain)) {
+        } else if(!FieldChecker.isPasswordValid(passAgain)) {
             editPassAgain.setError(getString(R.string.error_invalid_password));
             focusView = editPassAgain;
             cancel = true;
@@ -292,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
             editPass.setError(getString(R.string.error_field_required));
             focusView = editPass;
             cancel = true;
-        } else if(!isPasswordValid(pass)) {
+        } else if(!FieldChecker.isPasswordValid(pass)) {
             editPass.setError(getString(R.string.error_invalid_password));
             focusView = editPass;
             cancel = true;
@@ -303,7 +304,7 @@ public class LoginActivity extends AppCompatActivity {
             editMail.setError(getString(R.string.error_field_required));
             focusView = editMail;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!FieldChecker.isEmailValid(email)) {
             editMail.setError(getString(R.string.error_invalid_email));
             focusView = editMail;
             cancel = true;
@@ -314,7 +315,7 @@ public class LoginActivity extends AppCompatActivity {
             editName.setError(getString(R.string.error_field_required));
             focusView = editName;
             cancel = true;
-        } else if(!isNameValid(name)){
+        } else if(!FieldChecker.isNameValid(name)){
             editName.setError(getString(R.string.error_invalid_name));
             focusView = editName;
             cancel = true;
@@ -398,17 +399,5 @@ public class LoginActivity extends AppCompatActivity {
                 focusView.requestFocus();
             }
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        return email.contains("@") && email.contains(".");
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() >= 8;
-    }
-
-    private boolean isNameValid(String name){
-        return name.contains(" ");
     }
 }

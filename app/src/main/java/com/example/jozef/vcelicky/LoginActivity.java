@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.v("LoginAct", "Startin' activity");
+        Log.i("LoginAct", "Startin' activity");
         mail = findViewById(R.id.editMail);
         pass = findViewById(R.id.editPass);
         main = findViewById(R.id.mainLayout);
@@ -75,6 +75,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
+            if(!isOnline()){
+                Toast.makeText(getApplicationContext(),
+                        "Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná", Toast.LENGTH_LONG)
+                        .show();
+            }
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -114,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(getApplicationContext(),
-                        "No connection to the Internet", Toast.LENGTH_LONG)
+                        "Žiadne pripojenie k internetu", Toast.LENGTH_LONG)
                         .show();
             }
         }
@@ -328,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
             if (pass.equals(passAgain)) {
                 String tag_json_obj = "json_obj_req";
 
-                pDialog.setMessage("Registration in progress ...");
+                pDialog.setMessage("Registrácia sa spracováva...");
                 showDialog();
 
                 JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -353,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editPassAgain.setText("");
                             } else {
                                 String errMsg = response.getString("error_msg");
-                                Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Nepodarilo sa registrovať, používateľ s daným e-mailom už existuje. Skúste znova", Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             // JSON error

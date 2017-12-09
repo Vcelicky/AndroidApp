@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notifications) {
        
         } else if (id == R.id.nav_logout) {
+//            ConstraintLayout logout = findViewById(R.id.logout);
+//            logout.setVisibility(View.VISIBLE);
             SessionManager session = new SessionManager(getApplicationContext());
             if(session.isLoggedIn()){
                 session.setLogin(false);

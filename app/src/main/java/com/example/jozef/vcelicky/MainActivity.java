@@ -16,29 +16,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
 
 // jakub dev branch
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
     int userId = 3;
@@ -64,8 +59,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-/////////////////
-
+        // load
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
@@ -188,7 +182,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public String loadHiveNames(){
             // Tag used to cancel the request
 
@@ -281,8 +274,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
         );
-
-
     }
 
     public void createTestData(){
@@ -330,6 +321,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // Methods which open new activity based on selected menuItem
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

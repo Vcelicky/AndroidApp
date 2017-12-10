@@ -17,10 +17,7 @@ public class HiveBaseInfo {
     float weight;
     boolean accelerometer;
     float battery;
-
     GregorianCalendar timeStamp;
-
-
 
     public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight, GregorianCalendar timeStamp, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
@@ -43,7 +40,6 @@ public class HiveBaseInfo {
         this.weight = weight;
         this.accelerometer = accelerometer;
         this.battery = battery;
-
     }
 
     public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight) {

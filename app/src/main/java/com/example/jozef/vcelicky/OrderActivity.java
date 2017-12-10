@@ -59,7 +59,11 @@ public class OrderActivity extends AppCompatActivity {
         String phone = editPhone.getText().toString().trim();
         int devCount = 0;
         if(!editDevCount.getText().toString().isEmpty()) {
-            devCount = Integer.parseInt(editDevCount.getText().toString());
+            try {
+                devCount = Integer.parseInt(editDevCount.getText().toString());
+            }catch(Exception e){
+                devCount = 0;
+            }
         }
         String notes = editNotes.getText().toString().trim();
 
@@ -75,6 +79,10 @@ public class OrderActivity extends AppCompatActivity {
         // Check for empty phone number
         if (TextUtils.isEmpty(phone)){
             editPhone.setError(getString(R.string.error_field_required));
+            focusView = editPhone;
+            cancel = true;
+        } else if(!FieldChecker.isPhoneNumberValid(phone)){
+            editPhone.setError(getString(R.string.error_invalid_phone));
             focusView = editPhone;
             cancel = true;
         }

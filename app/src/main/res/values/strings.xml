@@ -10,6 +10,7 @@
     <string name="error_invalid_email">Neplatná e-mailová adresa</string>
     <string name="error_invalid_password">Heslo je krátke (min 8 znakov)</string>
     <string name="error_invalid_name">Zadajte meno a priezvisko</string>
+    <string name="error_invalid_phone">Neplatný formát (použite len čísla)</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">Povinné pole</string>
     <string name="error_not_equal_password">Heslá sa nezhodujú</string>

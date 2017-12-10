@@ -113,6 +113,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for empty data in the form
         if(!email.isEmpty() && !password.isEmpty()){
+            if(!FieldChecker.isEmailValid(email)){
+                main.setAlpha((float)0.5);
+                error.setVisibility(View.VISIBLE);
+                return;
+            }
             // login user
             if(isOnline()) {
                 checkLogin(email, password);
@@ -148,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_json_obj = "json_obj_req";
 
-        pDialog.setMessage("Logging in ...");
+        pDialog.setMessage("Prebieha prihlasovanie ...");
         showDialog();
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -204,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
+                        "Nastala chyba počas prihlasovania", Toast.LENGTH_LONG).show();
                 hideDialog();
             }
         }) {

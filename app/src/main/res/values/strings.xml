@@ -21,4 +21,23 @@
 
     <string name="action_settings">Edituj</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+    <!-- General strings -->
+    <string name="team">VČELIČKY TEAM</string>
+    <string name="team_mail">fiittp20@gmail.com</string>
+    <string name="team_web">http://team20–17.studenti.fiit.stuba.sk/</string>
+    <string name="thank">Ďakujeme, že využívate náš produkt</string>
+    <string name="team_members">Členovia tímu</string>
+    <string name="kovacik">Ing. Tomáš Kováčik, PhD.</string>
+    <string name="baska">Bc. Barbora Čelesová</string>
+    <string name="tomik">Bc. Tomáš Koreň</string>
+    <string name="pully">Bc. Jakub Pullmann</string>
+    <string name="miso">Bc. Michal Puškáš</string>
+    <string name="matus">Bc. Matúš Sosňak</string>
+    <string name="peto">Bc. Peter Štofaňák</string>
+    <string name="jozko">Bc. Jozef Vaľko</string>
+    <string name="description">
+        V spolupráci s firmou SimpleCell sme vytvorili projekt na monitorovanie včelích úľov. Pomocou získaných informácií chceme pomôcť včelárom výrazne znížiť počet rutinných inšpekcií, odhaliť rojenie či choroby včiel. Na tieto účely využívame Arduino mega 2560, ktoré zhromažďuje informácie zo senzorov. Ide napríklad o senzor teploty, vlhkosti, tenzometer či akcelerometer na odhalenie prevalenia úľa alebo prípadného kradnutia. Včelárom využívajúcim našu technológiu poskytneme štatistické informácie z krátkodobého ale aj dlhodobého hľadiska a v prípade náhlej zmeny ich upozorňujeme prostredníctvom emailov, notifikácii v aplikácii alebo SMS.
+    </string>
+
 </resources>

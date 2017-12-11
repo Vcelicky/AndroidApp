@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
              
-        } else if (id == R.id.nav_order){
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -128,6 +129,9 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
              
+        } else if (id == R.id.nav_order){
+            Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

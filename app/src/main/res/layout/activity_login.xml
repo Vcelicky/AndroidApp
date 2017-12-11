@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.14999998"
-            app:srcCompat="@drawable/bee_logo" />
+            app:srcCompat="@drawable/logo200x200" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout"
@@ -334,7 +334,7 @@
             app:srcCompat="@drawable/contact_logo" />
 
         <EditText
-            android:id="@+id/editMail"
+            android:id="@+id/editRegMail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -352,7 +352,7 @@
             app:layout_constraintVertical_bias="0.060000002" />
 
         <EditText
-            android:id="@+id/editPass"
+            android:id="@+id/editRegPass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -395,11 +395,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editMail"
-            app:layout_constraintEnd_toStartOf="@+id/editMail"
+            app:layout_constraintBottom_toBottomOf="@+id/editRegMail"
+            app:layout_constraintEnd_toStartOf="@+id/editRegMail"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editMail"
+            app:layout_constraintTop_toTopOf="@+id/editRegMail"
             app:srcCompat="@drawable/mail_logo" />
 
         <ImageView
@@ -410,11 +410,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editPass"
-            app:layout_constraintEnd_toStartOf="@+id/editPass"
+            app:layout_constraintBottom_toBottomOf="@+id/editRegPass"
+            app:layout_constraintEnd_toStartOf="@+id/editRegPass"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editPass"
+            app:layout_constraintTop_toTopOf="@+id/editRegPass"
             app:srcCompat="@drawable/key_logo" />
 
         <ImageView
@@ -441,9 +441,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorAccent"
+            android:onClick="register"
             android:text="Vytvoriť účet"
             android:textAllCaps="false"
-            android:onClick="register"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

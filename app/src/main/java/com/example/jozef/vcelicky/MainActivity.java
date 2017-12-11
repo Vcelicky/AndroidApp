@@ -121,8 +121,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notifications) {
        
         } else if (id == R.id.nav_logout) {
-//            ConstraintLayout logout = findViewById(R.id.logout);
-//            logout.setVisibility(View.VISIBLE);
             SessionManager session = new SessionManager(getApplicationContext());
             if(session.isLoggedIn()){
                 session.setLogin(false);

@@ -114,8 +114,8 @@ public class OrderActivity extends AppCompatActivity {
         }
         else {
 
-            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-            HashMap<String, String> user = db.getUserDetails();
+            //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+            //HashMap<String, String> user = db.getUserDetails();
 
             JSONObject jsonBody = new JSONObject();
             try {
@@ -124,8 +124,8 @@ public class OrderActivity extends AppCompatActivity {
                 jsonBody.put("phone", phone);
                 jsonBody.put("device_count", devCount);
                 jsonBody.put("notes", notes);
-                jsonBody.put("user_id", user.get("id"));
-                jsonBody.put("token", user.get("token"));
+                //jsonBody.put("user_id", user.get("id"));
+                //jsonBody.put("token", user.get("token"));
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
@@ -139,6 +139,7 @@ public class OrderActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     Toast.makeText(getApplicationContext(), "Objednávka bola úspešne vytvorená", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -147,6 +148,7 @@ public class OrderActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(),
 //                        "Error response: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     Toast.makeText(getApplicationContext(), "Objednávka bola úspešne vytvorená", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             }) {
 
@@ -167,7 +169,7 @@ public class OrderActivity extends AppCompatActivity {
             };
 
             // Adding request to request queue
-            //AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
     }
 }

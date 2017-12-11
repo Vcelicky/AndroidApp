@@ -12,5 +12,5 @@ public class AppConfig {
     public static String URL_REGISTER = "http://147.175.149.151/BeeWebpage/public/register/user";
 
     // Server order create url
-    public static String URL_ORDER = "http://147.175.149.151/BeeWebpage/public/order/new";
+    public static String URL_ORDER = "http://147.175.149.151/BeeWebpage/public/order/new2";
 }

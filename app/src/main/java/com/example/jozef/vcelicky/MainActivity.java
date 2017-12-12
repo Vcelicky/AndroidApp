@@ -28,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+
+import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
 import java.util.ArrayList;
 
@@ -330,8 +332,10 @@ public class MainActivity extends AppCompatActivity
        
         } else if (id == R.id.nav_logout) {
             SessionManager session = new SessionManager(getApplicationContext());
+            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
             if(session.isLoggedIn()){
                 session.setLogin(false);
+                db.deleteUsers();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();

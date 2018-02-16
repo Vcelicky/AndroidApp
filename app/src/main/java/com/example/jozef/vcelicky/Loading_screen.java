@@ -18,7 +18,7 @@ public class Loading_screen extends AppCompatActivity {
         CountDownTimer timer = new CountDownTimer(2000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //test comment
+
             }
 
             @Override

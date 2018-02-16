@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,13 +28,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import java.util.ArrayList;
-
-// jakub dev branch
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
     int userId = 3;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // load
+
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
 
                 try {
-                    ///////////////////////
                     int it = 0;
                     int ot = 0;
                     int h = 0,b = 0, w = 0;
@@ -141,7 +139,6 @@ public class MainActivity extends AppCompatActivity
 
 
                     Log.d(TAG, "Hivelist lenght : "+hiveList.size());
-////////////////////////////
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -182,6 +179,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     public String loadHiveNames(){
             // Tag used to cancel the request
 
@@ -206,8 +204,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "Load Hive Server Response: " + response.toString());
 
                 try {
-                    ///////////////////////
-
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject json = jsonArray.getJSONObject(i);
@@ -216,10 +212,6 @@ public class MainActivity extends AppCompatActivity
                         hiveNames.add(name);
                     }
                     loadHiveBaseInfo();
-
-
-
-////////////////////////////
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -274,6 +266,8 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
         );
+
+
     }
 
     public void createTestData(){
@@ -321,7 +315,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Methods which open new activity based on selected menuItem
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -329,16 +322,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_about_project) {
-            // Handle the camera action
+          Intent intent = new Intent(MainActivity.this, OpisActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-
+       
         } else if (id == R.id.nav_logout) {
-
+            SessionManager session = new SessionManager(getApplicationContext());
+            if(session.isLoggedIn()){
+                session.setLogin(false);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+             
+        } else if (id == R.id.nav_order){
+            Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+            startActivity(intent);
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

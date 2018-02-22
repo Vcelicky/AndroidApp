@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class HiveDetailsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HiveDetailsActivity extends MainActivity{
 
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     int hiveID;
@@ -244,9 +244,6 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
 
     }
 
-
-
-
     @Override
 
     public void onBackPressed() {
@@ -279,26 +276,4 @@ public class HiveDetailsActivity extends AppCompatActivity implements Navigation
 
         return super.onOptionsItemSelected(item);
     }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_about_project) {
-            // Handle the camera action
-        } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_notifications) {
-
-        } else if (id == R.id.nav_logout) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
 }

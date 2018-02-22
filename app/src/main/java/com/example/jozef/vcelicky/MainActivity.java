@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity
         loadHiveNames();
         createTestData();
 
+        //just a test get from database
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        Log.i(TAG, db.getUserDetails().get("name"));
     }
 
     public void loadHiveBaseInfo(){

@@ -42,11 +42,15 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
+    
     int userId;
     ArrayList<String> hiveNames =  new ArrayList<>();
     String token ;
+    
     final String TAG = "MainActivity";
     ArrayAdapter<HiveBaseInfo> allAdapter;
+    String token;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         token =  db.getUserDetails().get("token");
        userId = Integer.parseInt(db.getUserDetails().get("id"));
@@ -78,7 +83,6 @@ public class MainActivity extends AppCompatActivity
 
         loadHiveNames();
         createTestData();
-
     }
 
     public void loadHiveBaseInfo(){
@@ -344,8 +348,10 @@ public class MainActivity extends AppCompatActivity
             notifyThis("Title","This is SPARTA");
         } else if (id == R.id.nav_logout) {
             SessionManager session = new SessionManager(getApplicationContext());
+            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
             if(session.isLoggedIn()){
                 session.setLogin(false);
+                db.deleteUsers();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();

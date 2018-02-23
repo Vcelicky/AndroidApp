@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Login Response: " + response.toString());
+                Log.i(TAG, "Login Response: " + response.toString());
                 hideDialog();
 
                 try {

@@ -48,13 +48,11 @@ public class HiveDetailsActivity extends MainActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Intent intent = getIntent();
-        // hiveId
+
         hiveID =  intent.getIntExtra("hiveId",0);
         hiveName = intent.getExtras().getString("hiveName");
         token =  intent.getExtras().getString("token");
         toolbar.setTitle("Včelí úľ "+hiveName);
-        setSupportActionBar(toolbar);
-
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,9 +68,7 @@ public class HiveDetailsActivity extends MainActivity{
         allAdapter = new AdapterHiveDetails(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
         menuListView.setAdapter(allAdapter);
-
         loadHiveBaseInfoServerReq(hiveName);
-
     }
 
     public void createTestData(){
@@ -91,7 +87,6 @@ public class HiveDetailsActivity extends MainActivity{
         hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 50),true,99));
 
     }
-
 
     public void loadHiveBaseInfoServerReq( String hiveName){
 
@@ -216,8 +211,6 @@ public class HiveDetailsActivity extends MainActivity{
 
 
     }
-
-
     // parse date from tomo API time format (day.month.year.hour.minute)
     public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
         String[] timeStampParts = timeStamp.split("\\.", -1);
@@ -245,7 +238,6 @@ public class HiveDetailsActivity extends MainActivity{
     }
 
     @Override
-
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
-    int userId = 3;
     ArrayList<String> hiveNames =  new ArrayList<>();
-    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMifQ.NWOjv_uDNmgUU4sYWN3-wkCCjo4d-berGfRWC3FQ-9g";
     final String TAG = "MainActivity";
     ArrayAdapter<HiveBaseInfo> allAdapter;
+    String token;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //just a test get from database
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        token = db.getUserDetails().get("token");
+        userId = Integer.parseInt(db.getUserDetails().get("id"));
+
+        Log.i(TAG, db.getUserDetails().get("name"));
+        Log.i(TAG, db.getUserDetails().get("token"));
+        Log.i(TAG, db.getUserDetails().get("id"));
 
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveListView);
@@ -68,10 +76,6 @@ public class MainActivity extends AppCompatActivity
 
         loadHiveNames();
         createTestData();
-
-        //just a test get from database
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        Log.i(TAG, db.getUserDetails().get("name"));
     }
 
     public void loadHiveBaseInfo(){

@@ -63,8 +63,9 @@ public class HiveDetailsActivity extends MainActivity{
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-/////////////////
-        createTestData();
+
+        // Just fake data for testing
+        //createTestData();
         allAdapter = new AdapterHiveDetails(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
         menuListView.setAdapter(allAdapter);

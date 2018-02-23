@@ -42,10 +42,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
-    
-    int userId;
+
     ArrayList<String> hiveNames =  new ArrayList<>();
-    String token ;
     
     final String TAG = "MainActivity";
     ArrayAdapter<HiveBaseInfo> allAdapter;
@@ -82,7 +80,9 @@ public class MainActivity extends AppCompatActivity
         hiveClicked();
 
         loadHiveNames();
-        createTestData();
+
+        // Just fake data for testing
+        //createTestData();
     }
 
     public void loadHiveBaseInfo(){

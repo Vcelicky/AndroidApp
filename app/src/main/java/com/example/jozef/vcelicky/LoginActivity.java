@@ -3,6 +3,7 @@ package com.example.jozef.vcelicky;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.constraint.ConstraintLayout;
@@ -62,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         editMail = findViewById(R.id.editRegMail);
         editPass = findViewById(R.id.editRegPass);
         editPassAgain = findViewById(R.id.editPassAgain);
-
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -188,7 +188,6 @@ public class LoginActivity extends AppCompatActivity {
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 MainActivity.class);
-                        //intent.putExtra("token", token);
                         startActivity(intent);
                         finish();
                     } else {

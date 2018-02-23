@@ -1,9 +1,14 @@
 package com.example.jozef.vcelicky;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,6 +33,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+
+import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
 import java.util.ArrayList;
 
@@ -35,9 +42,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
-    int userId = 3;
+    int userId;
     ArrayList<String> hiveNames =  new ArrayList<>();
-    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMifQ.NWOjv_uDNmgUU4sYWN3-wkCCjo4d-berGfRWC3FQ-9g";
+    String token ;
     final String TAG = "MainActivity";
     ArrayAdapter<HiveBaseInfo> allAdapter;
 
@@ -58,6 +65,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        token =  db.getUserDetails().get("token");
+       userId = Integer.parseInt(db.getUserDetails().get("id"));
+        Log.d("hotfix", "Token: " + token);
+        Log.d("hotfix", "UserID: " + userId);
 
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveListView);
@@ -73,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "Loading hives");
         for (String hive : hiveNames) {
             Log.d(TAG, "Loading data for : " + hive);
+            Log.d("hotfix", "Loading data for : " + hive);
             loadHiveBaseInfoServerReq(hive);
         }
     }
@@ -179,7 +192,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public String loadHiveNames(){
             // Tag used to cancel the request
 
@@ -208,14 +220,15 @@ public class MainActivity extends AppCompatActivity
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject json = jsonArray.getJSONObject(i);
                         String name=json.getString("name");
-                        Log.d(TAG, "Hive : " + name);
+                        Log.d("hotfix", "Loading Hive name: " + name);
                         hiveNames.add(name);
                     }
-                    loadHiveBaseInfo();
+                     loadHiveBaseInfo();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.d("hotfix", "Hotfix2 Error: " + e.getMessage());
                 }
 
             }
@@ -226,6 +239,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.d("hotfix", "Hotfix Error: " + error.getMessage());
             }
         }) {
 
@@ -327,7 +341,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-       
+            notifyThis("Title","This is SPARTA");
         } else if (id == R.id.nav_logout) {
             SessionManager session = new SessionManager(getApplicationContext());
             if(session.isLoggedIn()){
@@ -344,5 +358,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void notifyThis(String title, String message) {
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this.getApplicationContext());
+        b.setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.logo200x200)
+                .setTicker("{Vcelicky Notification Message}")
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentInfo("INFO");
+
+        NotificationManager nm = (NotificationManager) this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(1, b.build());
     }
 }

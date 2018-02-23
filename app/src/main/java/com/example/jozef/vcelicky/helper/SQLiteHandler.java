@@ -46,7 +46,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 +  KEY_TOKEN + " TEXT" +")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
-        Log.d(TAG, "Database tables created");
+        Log.i(TAG, "Database tables created");
     }
 
     // Upgrading database
@@ -76,7 +76,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         long id = db.insert(TABLE_USER, null, values);
         db.close(); // Closing database connection
 
-        Log.d(TAG, "New user inserted into sqlite: " + id);
+        Log.i(TAG, "New user inserted into sqlite: " + id);
+        Log.i(TAG, values.toString());
     }
 
     /**
@@ -91,16 +92,16 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("id", cursor.getString(1));
-            user.put("name", cursor.getString(2));
-            user.put("email", cursor.getString(3));
-            user.put("role_id", String.valueOf(cursor.getInt(4)));
-            user.put("token", cursor.getString(5));
+            user.put("id", cursor.getString(0));
+            user.put("name", cursor.getString(1));
+            user.put("email", cursor.getString(2));
+            user.put("role_id", String.valueOf(cursor.getInt(3)));
+            user.put("token", cursor.getString(4));
         }
         cursor.close();
         db.close();
         // return user
-        Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
+        Log.i(TAG, "Fetching user from Sqlite: " + user.toString());
 
         return user;
     }
@@ -114,7 +115,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.delete(TABLE_USER, null, null);
         db.close();
 
-        Log.d(TAG, "Deleted all user info from sqlite");
+        Log.i(TAG, "Deleted all users info from sqlite");
     }
 
 }

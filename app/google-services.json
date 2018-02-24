@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "292643058908",
+    "firebase_url": "https://beesnotification.firebaseio.com",
+    "project_id": "beesnotification",
+    "storage_bucket": "beesnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292643058908:android:1a46d7c7e7308d8d",
+        "android_client_info": {
+          "package_name": "com.example.jozef.vcelicky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292643058908-8t26viqj7p1ftn09lhiva2k98ikb1hms.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATcJzeFT9e_klFjcoSqfhM6mvV6hnxQsc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

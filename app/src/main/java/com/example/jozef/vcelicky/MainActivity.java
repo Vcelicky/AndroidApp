@@ -36,6 +36,8 @@ import java.io.UnsupportedEncodingException;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -80,6 +82,11 @@ public class MainActivity extends AppCompatActivity
         hiveClicked();
 
         loadHiveNames();
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("firebase", "Firebase Token: " + token);
+        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+//firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
         //createTestData();

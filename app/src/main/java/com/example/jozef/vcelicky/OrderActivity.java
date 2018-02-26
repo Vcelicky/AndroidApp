@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,12 @@ public class OrderActivity extends AppCompatActivity {
         editPhone = findViewById(R.id.editPhone);
         editDevCount = findViewById(R.id.editDevCount);
         editNotes = findViewById(R.id.editNotes);
+
+        //Arrow back
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public void send(View view){
@@ -172,4 +179,11 @@ public class OrderActivity extends AppCompatActivity {
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

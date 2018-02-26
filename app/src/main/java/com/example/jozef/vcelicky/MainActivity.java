@@ -1,7 +1,11 @@
 package com.example.jozef.vcelicky;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity
         menuListView = (ListView) findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
         hiveClicked();
-
         loadHiveNames();
 
         // Just fake data for testing
@@ -344,18 +347,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notifications) {
             notifyThis("Title","This is SPARTA");
         } else if (id == R.id.nav_logout) {
-            SessionManager session = new SessionManager(getApplicationContext());
-            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-            ConstraintLayout proceedWithLogout = findViewById(R.id.logout);
-            proceedWithLogout.setVisibility(View.VISIBLE);
-//            if(session.isLoggedIn()){
-//                session.setLogin(false);
-//                db.deleteUsers();
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-             
+            showLogoutAlertDialog();
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(MainActivity.this, OrderActivity.class);
             startActivity(intent);
@@ -379,4 +371,31 @@ public class MainActivity extends AppCompatActivity
         NotificationManager nm = (NotificationManager) this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(1, b.build());
     }
+
+    public void showLogoutAlertDialog(){
+        AlertDialog.Builder logoutAlert = new AlertDialog.Builder(MainActivity.this)
+                .setMessage(R.string.proceed_with_logout)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SessionManager session = new SessionManager(getApplicationContext());
+                        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+                        if (session.isLoggedIn()) {
+                            session.setLogin(false);
+                            db.deleteUsers();
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        logoutAlert.show();
+    }
+
 }

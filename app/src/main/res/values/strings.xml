@@ -50,4 +50,9 @@
     <string name="numOfDevs">Počet zariadení</string>
     <string name="notes">Poznámky</string>
 
+    <!--User actions related strings-->
+    <string name="proceed_with_logout">Chcete pokračovať v odhlásení?</string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
+
 </resources>

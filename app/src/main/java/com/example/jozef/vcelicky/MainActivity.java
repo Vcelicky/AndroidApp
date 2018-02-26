@@ -67,10 +67,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         token =  db.getUserDetails().get("token");
-       userId = Integer.parseInt(db.getUserDetails().get("id"));
+        userId = Integer.parseInt(db.getUserDetails().get("id"));
         Log.d("hotfix", "Token: " + token);
         Log.d("hotfix", "UserID: " + userId);
 
@@ -192,8 +191,6 @@ public class MainActivity extends AppCompatActivity
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-
     }
 
     public String loadHiveNames(){
@@ -349,13 +346,15 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             SessionManager session = new SessionManager(getApplicationContext());
             SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-            if(session.isLoggedIn()){
-                session.setLogin(false);
-                db.deleteUsers();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            ConstraintLayout proceedWithLogout = findViewById(R.id.logout);
+            proceedWithLogout.setVisibility(View.VISIBLE);
+//            if(session.isLoggedIn()){
+//                session.setLogin(false);
+//                db.deleteUsers();
+//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
              
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(MainActivity.this, OrderActivity.class);

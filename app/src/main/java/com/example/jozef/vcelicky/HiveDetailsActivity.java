@@ -1,6 +1,7 @@
 package com.example.jozef.vcelicky;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class HiveDetailsActivity extends MainActivity{
 
@@ -65,11 +72,26 @@ public class HiveDetailsActivity extends MainActivity{
         navigationView.setNavigationItemSelectedListener(this);
 
         // Just fake data for testing
-        //createTestData();
+        createTestData();
         allAdapter = new AdapterHiveDetails(this, hiveList);
         menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
         menuListView.setAdapter(allAdapter);
         loadHiveBaseInfoServerReq(hiveName);
+
+        LineChart chart = (LineChart) findViewById(R.id.chart);
+        List<Entry> entries = new ArrayList<Entry>();
+        entries.add(new Entry(1, 5));
+        entries.add(new Entry(2, 6));
+        entries.add(new Entry(3, 7));
+        entries.add(new Entry(4, 8));
+        LineDataSet dataSet = new LineDataSet(entries, "Teplota");
+        LineData lineData = new LineData();
+        lineData.addDataSet(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(true);
+        chart.getAxisRight().setEnabled(false);
     }
 
     public void createTestData(){

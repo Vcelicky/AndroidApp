@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         loadHiveNames();
 
         // Just fake data for testing
-        //createTestData();
+        createTestData();
     }
 
     public void loadHiveBaseInfo(){
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, " Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
+                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -200,16 +200,16 @@ public class MainActivity extends AppCompatActivity
             // Tag used to cancel the request
 
         Log.d(TAG, "Load Hive method");
-             String tag_json_obj = "json_obj_req";
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("user_id", userId);
-                jsonBody.put("token", token);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-            final String requestBody = jsonBody.toString();
+        String tag_json_obj = "json_obj_req";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("user_id", userId);
+            jsonBody.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        final String requestBody = jsonBody.toString();
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
+                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
                 Log.d("hotfix", "Hotfix Error: " + error.getMessage());
             }
         }) {

@@ -55,4 +55,9 @@
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
 
+    <!--Button texts-->
+    <string name="temperature">Teplota</string>
+    <string name="humidity">Vlhkosť</string>
+    <string name="weight">Hmotnosť</string>
+
 </resources>

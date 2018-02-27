@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -53,6 +54,27 @@ public class HiveDetailsActivity extends MainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hive_details);
 
+        TabHost host = findViewById(R.id.tabHost);
+        host.setup();
+
+        //Tab 1 setup
+        TabHost.TabSpec spec = host.newTabSpec("temperature");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator(getString((R.string.temperature)));
+        host.addTab(spec);
+
+        //Tab 2 setup
+        spec = host.newTabSpec("humidity");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator(getString(R.string.humidity));
+        host.addTab(spec);
+
+        //Tab 3 setup
+        spec = host.newTabSpec("weight");
+        spec.setContent(R.id.tab3);
+        spec.setIndicator(getString(R.string.weight));
+        host.addTab(spec);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Intent intent = getIntent();
 
@@ -78,7 +100,7 @@ public class HiveDetailsActivity extends MainActivity{
         menuListView.setAdapter(allAdapter);
         loadHiveBaseInfoServerReq(hiveName);
 
-        LineChart chart = (LineChart) findViewById(R.id.chart);
+        LineChart chart = (LineChart) findViewById(R.id.tempChart);
         List<Entry> entries = new ArrayList<Entry>();
         entries.add(new Entry(1, 5));
         entries.add(new Entry(2, 6));

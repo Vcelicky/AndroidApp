@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     int it = 0;
                     int ot = 0;
-                    int h = 0,b = 0, w = 0;
+                    int oh = 0, ih = 0, b = 0, w = 0;
                     boolean p = false;
 
                     JSONArray jsonArray = response.getJSONArray("data");
@@ -135,9 +135,13 @@ public class MainActivity extends AppCompatActivity
                             Log.d(TAG, "found OT : ");
                             ot = json.getInt("hodnota");
                         }
-                        if (type.equals("H")) {
-                            Log.d(TAG, "found H : ");
-                            h = json.getInt("hodnota");
+                        if (type.equals("OH")) {
+                            Log.d(TAG, "found OH : ");
+                            oh = json.getInt("hodnota");
+                        }
+                        if (type.equals("IH")) {
+                            Log.d(TAG, "found IH : ");
+                            ih = json.getInt("hodnota");
                         }
                         if (type.equals("P")) {
                             Log.d(TAG, "found P : ");
@@ -152,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                             b = json.getInt("hodnota");
                         }
                     }
-                    hiveList.add(new HiveBaseInfo(0, hiveName, ot , it, h, w, p, b));
+                    hiveList.add(new HiveBaseInfo(0, hiveName, ot , it, oh, ih, w, p, b));
                     menuListView = (ListView) findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
 
@@ -289,16 +293,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void createTestData(){
-        hiveList.add(new HiveBaseInfo(1234, "Alfa", 55 , 45, 70, 69,  true,99));
-        hiveList.add(new HiveBaseInfo(1235, "Beta", 40 , 43, 68, 50,true,99));
-        hiveList.add(new HiveBaseInfo(1236, "Gama", 30 , 42, 68, 60,false,99));
-        hiveList.add(new HiveBaseInfo(1237, "Delta", 40 , 45, 50, 53,true,99));
-        hiveList.add(new HiveBaseInfo(1238, "Pomaranč", 35 , 43, 68, 56,true,99));
-        hiveList.add(new HiveBaseInfo(1239, "Žehlička", 32 , 49, 61, 89,true,99));
-        hiveList.add(new HiveBaseInfo(1240, "Imro", 36 , 45, 68, 66,true,99));
-        hiveList.add(new HiveBaseInfo(1241, "Kýbeľ", 36 , 45, 68, 66,true,99));
-        hiveList.add(new HiveBaseInfo(1242, "Stolička", 36 , 45, 68, 66,true,99));
-        hiveList.add(new HiveBaseInfo(1243, "Slniečko", 36 , 45, 68, 66,true,99));
+        hiveList.add(new HiveBaseInfo(1234, "Alfa", 55 , 45, 70, 80, 69,  true,99));
+        hiveList.add(new HiveBaseInfo(1235, "Beta", 40 , 43, 68, 85,50,true,99));
+        hiveList.add(new HiveBaseInfo(1236, "Gama", 30 , 42, 68, 82,60,false,99));
+        hiveList.add(new HiveBaseInfo(1237, "Delta", 40 , 45, 50, 81,53,true,99));
+        hiveList.add(new HiveBaseInfo(1238, "Pomaranč", 35 , 43, 68, 75,56,true,99));
+        hiveList.add(new HiveBaseInfo(1239, "Žehlička", 32 , 49, 61, 70,89,true,99));
+        hiveList.add(new HiveBaseInfo(1240, "Imro", 36 , 45, 68, 60,66,true,99));
+        hiveList.add(new HiveBaseInfo(1241, "Kýbeľ", 36 , 45, 68, 75,66,true,99));
+        hiveList.add(new HiveBaseInfo(1242, "Stolička", 36 , 45, 68, 78,66,true,99));
+        hiveList.add(new HiveBaseInfo(1243, "Slniečko", 36 , 45, 68, 80,66,true,99));
     }
 
     @Override

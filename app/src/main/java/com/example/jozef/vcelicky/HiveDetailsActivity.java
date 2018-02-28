@@ -42,13 +42,14 @@ import java.util.List;
 
 public class HiveDetailsActivity extends MainActivity{
 
-    ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
+    ArrayList<HiveBaseInfo> hiveList;
     int hiveID;
     String token;
     final String TAG = "HiveDetailsActivity";
-    ArrayAdapter<HiveBaseInfo> allAdapter;
     String hiveName;
     ListView menuListView;
+    LineChart chart;
+    List<Entry> entries;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +76,18 @@ public class HiveDetailsActivity extends MainActivity{
         spec.setIndicator(getString(R.string.weight));
         host.addTab(spec);
 
+        //Tab 4 setup
+        spec = host.newTabSpec("battery");
+        spec.setContent(R.id.tab4);
+        spec.setIndicator(getString(R.string.battery));
+        host.addTab(spec);
+
+        //Tab 5 setup
+        spec = host.newTabSpec("accelerometer");
+        spec.setContent(R.id.tab5);
+        spec.setIndicator(getString(R.string.accelerometer));
+        host.addTab(spec);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Intent intent = getIntent();
 
@@ -95,167 +108,239 @@ public class HiveDetailsActivity extends MainActivity{
 
         // Just fake data for testing
         createTestData();
-        allAdapter = new AdapterHiveDetails(this, hiveList);
-        menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
-        menuListView.setAdapter(allAdapter);
-        loadHiveBaseInfoServerReq(hiveName);
 
-        LineChart chart = (LineChart) findViewById(R.id.tempChart);
-        List<Entry> entries = new ArrayList<Entry>();
-        entries.add(new Entry(1, 5));
-        entries.add(new Entry(2, 6));
-        entries.add(new Entry(3, 7));
-        entries.add(new Entry(4, 8));
-        LineDataSet dataSet = new LineDataSet(entries, "Teplota");
+        //Temperature tab
+        ArrayAdapter<HiveBaseInfo> temperatureAdapter;
+        temperatureAdapter = new AdapterHiveTemperatureDetails(this, hiveList);
+        menuListView = findViewById(R.id.temperatureListView);
+        menuListView.setAdapter(temperatureAdapter);
+        chart = findViewById(R.id.temperatureChart);
+        entries = new ArrayList<Entry>();
+        float xIndex = 0;
+        for(HiveBaseInfo value : hiveList){
+            entries.add(new Entry(xIndex, value.getInsideTemperature()));
+            xIndex++;
+        }
+        LineDataSet dataSet = new LineDataSet(entries, "Vnútorná teplota");
         LineData lineData = new LineData();
+        lineData.addDataSet(dataSet);
+//        xIndex = 0;
+//        for(HiveBaseInfo value : hiveList){
+//            entries.add(new Entry(xIndex, value.getOutsideTemperature()));
+//            xIndex++;
+//        }
+//        dataSet = new LineDataSet(entries, "Vonkajšia teplota");
+//        lineData.addDataSet(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(true);
+        chart.getAxisRight().setEnabled(false);
+
+        //Humidity tab
+        ArrayAdapter<HiveBaseInfo> humidityAdapter;
+        humidityAdapter = new AdapterHiveHumidityDetails(this, hiveList);
+        menuListView = findViewById(R.id.humidityListView);
+        menuListView.setAdapter(humidityAdapter);
+        chart = findViewById(R.id.humidityChart);
+        entries = new ArrayList<Entry>();
+        xIndex = 0;
+        for(HiveBaseInfo value : hiveList){
+            entries.add(new Entry(xIndex, value.getInsideHumidity()));
+            xIndex++;
+        }
+        dataSet = new LineDataSet(entries, "Vlhkosť");
+        lineData = new LineData();
         lineData.addDataSet(dataSet);
         chart.setData(lineData);
         chart.invalidate();
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         chart.getXAxis().setEnabled(true);
         chart.getAxisRight().setEnabled(false);
+
+        //Weight tab
+        ArrayAdapter<HiveBaseInfo> weightAdapter;
+        weightAdapter = new AdapterHiveWeightDetails(this, hiveList);
+        menuListView = findViewById(R.id.weightListView);
+        menuListView.setAdapter(weightAdapter);
+        chart = findViewById(R.id.weightChart);
+        entries = new ArrayList<Entry>();
+        xIndex = 0;
+        for(HiveBaseInfo value : hiveList){
+            entries.add(new Entry(xIndex, value.getWeight()));
+            xIndex++;
+        }
+        dataSet = new LineDataSet(entries, "Hmotnosť");
+        lineData = new LineData();
+        lineData.addDataSet(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(true);
+        chart.getAxisRight().setEnabled(false);
+
+        //Battery tab
+        ArrayAdapter<HiveBaseInfo> batteryAdapter;
+        batteryAdapter = new AdapterHiveBatteryDetails(this, hiveList);
+        menuListView = findViewById(R.id.batteryListView);
+        menuListView.setAdapter(batteryAdapter);
+        chart = findViewById(R.id.batteryChart);
+        entries = new ArrayList<Entry>();
+        xIndex = 0;
+        for(HiveBaseInfo value : hiveList){
+            entries.add(new Entry(xIndex, value.getBattery()));
+            xIndex++;
+        }
+        dataSet = new LineDataSet(entries, "Batéria");
+        lineData = new LineData();
+        lineData.addDataSet(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(true);
+        chart.getAxisRight().setEnabled(false);
+
+        //No need to load real data if there aren't any :)
+        //loadHiveBaseInfoServerReq(hiveName);
     }
 
     public void createTestData(){
-
+        hiveList = new ArrayList<>();
         Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
         ts.set(1995, 2, 29, 11, 22) ;
-        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
-        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Alfa", 40 , 43, 68, 50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
-        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Alfa", 30 , 42, 68, 60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
-        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Alfa", 40 , 45, 50, 53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
-        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Alfa", 35 , 43, 68, 56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
-        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Alfa", 32 , 49, 61, 89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
-        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
-        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
-        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
-        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 66, new GregorianCalendar(1995, 2, 29, 12, 50),true,99));
+        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
+        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
+        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
+        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
+        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
+        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
+        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
+        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
+        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
+        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
 
     }
 
-    public void loadHiveBaseInfoServerReq( String hiveName){
-
-        Log.d(TAG, "Load Hive Details Info method");
-        String tag_json_obj = "json_obj_req";
-        JSONObject jsonBody = new JSONObject();
-
-        Log.d(TAG, ": " + hiveName);
-        Log.d(TAG, ": " + token);
-        try {
-            jsonBody.put("device_name", hiveName);
-            jsonBody.put("token", token);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        final String requestBody = jsonBody.toString();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_GET_HIVE_INFO_DETAILS, null, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
-
-                try {
-                    ///////////////////////
-                    int it = 0;
-                    int ot = 0;
-                    int h = 0,w = 0, b = 0;
-                    boolean p = true;
-
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONArray jsonArray2 = jsonArray.getJSONArray(i); // proccess additional []
-                        int recordValue = 0;
-                        for(int j=0;j<jsonArray2.length();j++){
-                            JSONObject jo= jsonArray2.getJSONObject(j);
-                            String type = jo.getString("typ");
-
-                            int valueTypesCount = 6; // make this constant later or change this code
-
-                            if (type.equals("IT")) {
-                                Log.d(TAG, "found IT : ");
-                                it = jo.getInt("hodnota");
-                            }
-                            if (type.equals("OT")) {
-                                Log.d(TAG, "found OT : ");
-                                ot = jo.getInt("hodnota");
-                            }
-                            if (type.equals("H")) {
-                                Log.d(TAG, "found H : ");
-                                h = jo.getInt("hodnota");
-                            }
-                            if (type.equals("P")) {
-                                Log.d(TAG, "found P : ");
-                                p = jo.getBoolean("hodnota");
-                            }
-                            if (type.equals("W")) {
-                                Log.d(TAG, "found W : ");
-                                w = jo.getInt("hodnota");
-                            }
-                            if (type.equals("B")) {
-                                Log.d(TAG, "found B : ");
-                                b = jo.getInt("hodnota");
-                            }
-                            String timeStamp = jo.getString("cas");
-                            GregorianCalendar timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
-                            // parse date from tomo API time format (day.month.year.hour.minute)
-
-                            Log.d(TAG, "Cas: "+timeStamp);
-
-                            recordValue++;
-                            if (recordValue == valueTypesCount) {                     // every record have 4 values after that new record is processed
-                                Log.d(TAG, "I will add new record to list: ");
-                                hiveList.add(new HiveBaseInfo(0, "hiveNameIsNotUsedHere", ot, it, h, w,timeStampGregCal,p,b));
-                                menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
-                                menuListView.setAdapter(allAdapter);
-                                recordValue = 0;
-                            }
-                        }
-
-                    }
-
-////////////////////////////
-                } catch (Exception e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Log.e(TAG, "Login Error: " + e.getMessage());
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee){
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-
-
-    }
+//    public void loadHiveBaseInfoServerReq( String hiveName){
+//
+//        Log.d(TAG, "Load Hive Details Info method");
+//        String tag_json_obj = "json_obj_req";
+//        JSONObject jsonBody = new JSONObject();
+//
+//        Log.d(TAG, ": " + hiveName);
+//        Log.d(TAG, ": " + token);
+//        try {
+//            jsonBody.put("device_name", hiveName);
+//            jsonBody.put("token", token);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//        final String requestBody = jsonBody.toString();
+//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+//                AppConfig.URL_GET_HIVE_INFO_DETAILS, null, new Response.Listener<JSONObject>() {
+//
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
+//
+//                try {
+//                    ///////////////////////
+//                    int it = 0;
+//                    int ot = 0;
+//                    int h = 0,w = 0, b = 0;
+//                    boolean p = true;
+//
+//                    JSONArray jsonArray = response.getJSONArray("data");
+//                    for(int i=0;i<jsonArray.length();i++){
+//                        JSONArray jsonArray2 = jsonArray.getJSONArray(i); // proccess additional []
+//                        int recordValue = 0;
+//                        for(int j=0;j<jsonArray2.length();j++){
+//                            JSONObject jo= jsonArray2.getJSONObject(j);
+//                            String type = jo.getString("typ");
+//
+//                            int valueTypesCount = 6; // make this constant later or change this code
+//
+//                            if (type.equals("IT")) {
+//                                Log.d(TAG, "found IT : ");
+//                                it = jo.getInt("hodnota");
+//                            }
+//                            if (type.equals("OT")) {
+//                                Log.d(TAG, "found OT : ");
+//                                ot = jo.getInt("hodnota");
+//                            }
+//                            if (type.equals("H")) {
+//                                Log.d(TAG, "found H : ");
+//                                h = jo.getInt("hodnota");
+//                            }
+//                            if (type.equals("P")) {
+//                                Log.d(TAG, "found P : ");
+//                                p = jo.getBoolean("hodnota");
+//                            }
+//                            if (type.equals("W")) {
+//                                Log.d(TAG, "found W : ");
+//                                w = jo.getInt("hodnota");
+//                            }
+//                            if (type.equals("B")) {
+//                                Log.d(TAG, "found B : ");
+//                                b = jo.getInt("hodnota");
+//                            }
+//                            String timeStamp = jo.getString("cas");
+//                            GregorianCalendar timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
+//                            // parse date from tomo API time format (day.month.year.hour.minute)
+//
+//                            Log.d(TAG, "Cas: "+timeStamp);
+//
+//                            recordValue++;
+//                            if (recordValue == valueTypesCount) {                     // every record have 4 values after that new record is processed
+//                                Log.d(TAG, "I will add new record to list: ");
+//                                hiveList.add(new HiveBaseInfo(0, "hiveNameIsNotUsedHere", ot, it, h, w,timeStampGregCal,p,b));
+//                                menuListView = (ListView) findViewById(R.id.hiveDetailsListView);
+//                                menuListView.setAdapter(allAdapter);
+//                                recordValue = 0;
+//                            }
+//                        }
+//
+//                    }
+//
+//                } catch (Exception e) {
+//                    // JSON error
+//                    e.printStackTrace();
+//                    Log.e(TAG, "Login Error: " + e.getMessage());
+//                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e(TAG, "Login Error: " + error.getMessage());
+//                Toast.makeText(getApplicationContext(),
+//                        error.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        }) {
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/json; charset=utf-8";
+//            }
+//
+//            @Override
+//            public byte[] getBody() {
+//                try {
+//                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+//                } catch (UnsupportedEncodingException uee){
+//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+//                    return null;
+//                }
+//            }
+//
+//        };
+//
+//        // Adding request to request queue
+//        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+//    }
     // parse date from tomo API time format (day.month.year.hour.minute)
     public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
         String[] timeStampParts = timeStamp.split("\\.", -1);

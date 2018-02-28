@@ -13,50 +13,55 @@ public class HiveBaseInfo {
     String hiveName;
     float outsideTemperature;
     float insideTemperature;
-    float humidity;
+    float outsideHumidity;
+    float insideHumidity;
     float weight;
     boolean accelerometer;
     float battery;
     GregorianCalendar timeStamp;
 
-    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight, GregorianCalendar timeStamp, boolean accelerometer, float battery) {
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, GregorianCalendar timeStamp, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
         this.insideTemperature = insideTemperature;
-        this.humidity = humidity;
+        this.outsideHumidity = outsideHumidity;
+        this.insideHumidity = insideHumidity;
         this.weight = weight;
         this.accelerometer = accelerometer;
         this.battery = battery;
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight, boolean accelerometer, float battery) {
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
         this.insideTemperature = insideTemperature;
-        this.humidity = humidity;
+        this.outsideHumidity = outsideHumidity;
+        this.insideHumidity = insideHumidity;
         this.weight = weight;
         this.accelerometer = accelerometer;
         this.battery = battery;
     }
 
-    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight) {
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
         this.insideTemperature = insideTemperature;
-        this.humidity = humidity;
+        this.outsideHumidity = outsideHumidity;
+        this.insideHumidity = insideHumidity;
         this.weight = weight;
     }
 
-    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float humidity, float weight,GregorianCalendar timeStamp ) {
+    public HiveBaseInfo(int hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight,GregorianCalendar timeStamp ) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
         this.insideTemperature = insideTemperature;
-        this.humidity = humidity;
+        this.outsideHumidity = outsideHumidity;
+        this.insideHumidity = insideHumidity;
         this.weight = weight;
         this.timeStamp = timeStamp;
     }
@@ -101,12 +106,20 @@ public class HiveBaseInfo {
         this.insideTemperature = insideTemperature;
     }
 
-    public float getHumidity() {
-        return humidity;
+    public float getOutsideHumidity() {
+        return outsideHumidity;
     }
 
-    public void setHumidity(float humidity) {
-        this.humidity = humidity;
+    public void setOutsideHumidity(float humidity) {
+        this.outsideHumidity = humidity;
+    }
+
+    public float getInsideHumidity() {
+        return insideHumidity;
+    }
+
+    public void setInsideHumidity(float humidity) {
+        this.insideHumidity = humidity;
     }
 
     public float getWeight() {

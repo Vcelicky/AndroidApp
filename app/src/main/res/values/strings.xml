@@ -59,5 +59,7 @@
     <string name="temperature">Teplota</string>
     <string name="humidity">Vlhkosť</string>
     <string name="weight">Hmotnosť</string>
+    <string name="battery">Batéria</string>
+    <string name="accelerometer">Pozícia</string>
 
 </resources>

@@ -19,10 +19,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </HorizontalScrollView>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -36,14 +41,14 @@
                     android:orientation="vertical">
 
                     <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/tempChart"
+                        android:id="@+id/temperatureChart"
                         android:layout_width="match_parent"
                         android:layout_height="180dp">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
                     <ListView
-                        android:id="@+id/hiveDetailsListView"
+                        android:id="@+id/temperatureListView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
@@ -55,6 +60,18 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/humidityChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp">
+
+                    </com.github.mikephil.charting.charts.LineChart>
+
+                    <ListView
+                        android:id="@+id/humidityListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -62,6 +79,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/weightChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp">
+
+                    </com.github.mikephil.charting.charts.LineChart>
+
+                    <ListView
+                        android:id="@+id/weightListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/batteryChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp">
+
+                    </com.github.mikephil.charting.charts.LineChart>
+
+                    <ListView
+                        android:id="@+id/batteryListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/accelerometerChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp">
+
+                    </com.github.mikephil.charting.charts.LineChart>
+
+                    <ListView
+                        android:id="@+id/accelerometerListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
                 </LinearLayout>
             </FrameLayout>

@@ -1,16 +1,11 @@
 package com.example.jozef.vcelicky;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
@@ -44,15 +39,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static String TAG = "MainActivity";
+
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ListView menuListView;
-
-    ArrayList<String> hiveNames =  new ArrayList<>();
-    
-    final String TAG = "MainActivity";
+    ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
-    String token;
-    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,37 +65,37 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        token =  db.getUserDetails().get("token");
-        userId = Integer.parseInt(db.getUserDetails().get("id"));
-        Log.d("hotfix", "Token: " + token);
-        Log.d("hotfix", "UserID: " + userId);
+        String token =  db.getUserDetails().get("token");
+        int userId = Integer.parseInt(db.getUserDetails().get("id"));
+        Log.i(TAG, "Token: " + token);
+        Log.i(TAG, "UserID: " + userId);
 
         allAdapter = new AdapterHive(this, hiveList);
-        menuListView = (ListView) findViewById(R.id.hiveListView);
+        menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
-        hiveClicked();
-        loadHiveNames();
+        hiveClicked(token);
+        loadHiveNames(userId, token);
 
         // Just fake data for testing
-        createTestData();
+        //createTestData();
     }
 
-    public void loadHiveBaseInfo(){
+    public void loadHiveBaseInfo(int userId, String token){
         Log.d(TAG, "Loading hives");
-        for (String hive : hiveNames) {
-            Log.d(TAG, "Loading data for : " + hive);
-            Log.d("hotfix", "Loading data for : " + hive);
-            loadHiveBaseInfoServerReq(hive);
+        for (HiveBaseInfo hive : hiveIDs) {
+            Log.i(TAG, "Loading data for : " + hive.getHiveId());
+            loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token);
         }
     }
 
-    public void loadHiveBaseInfoServerReq(final String hiveName){
+    public void loadHiveBaseInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
 
-        Log.d(TAG, "Load Hive BASE Info method");
+        Log.i(TAG, "Load Hive BASE Info method");
         String tag_json_obj = "json_obj_req";
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("device_name", hiveName);
+            jsonBody.put("user_id", userId);
+            jsonBody.put("device_id", hiveId);
             jsonBody.put("token", token);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -114,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
+                Log.i(TAG, "Load Hive Base Info From Server Response: " + response.toString());
 
                 try {
                     int it = 0;
@@ -122,50 +115,55 @@ public class MainActivity extends AppCompatActivity
                     int oh = 0, ih = 0, b = 0, w = 0;
                     boolean p = false;
 
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    for(int i=0;i<jsonArray.length();i++){
+                    //Temporary variable because of wrong returning JSON from server array in array
+                    JSONArray tempJsonArray = response.getJSONArray("data");
+                    JSONArray jsonArray =  tempJsonArray.getJSONArray(0);
+                    for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
 
                         String type = json.getString("typ");
                         if (type.equals("IT")) {
-                            Log.d(TAG, "found IT : ");
-                            it = json.getInt("hodnota");
+                            Log.i(TAG, "found IT : ");
+                            try {
+                                it = json.getInt("hodnota");
+                            }catch(Exception e){
+                                Log.i(TAG, "NULL value loaded, saving variable with 0");
+                            }
                         }
                         if (type.equals("OT")) {
-                            Log.d(TAG, "found OT : ");
+                            Log.i(TAG, "found OT : ");
                             ot = json.getInt("hodnota");
                         }
                         if (type.equals("OH")) {
-                            Log.d(TAG, "found OH : ");
+                            Log.i(TAG, "found OH : ");
                             oh = json.getInt("hodnota");
                         }
                         if (type.equals("IH")) {
-                            Log.d(TAG, "found IH : ");
+                            Log.i(TAG, "found IH : ");
                             ih = json.getInt("hodnota");
                         }
                         if (type.equals("P")) {
-                            Log.d(TAG, "found P : ");
+                            Log.i(TAG, "found P : ");
                             p = json.getBoolean("hodnota");
                         }
                         if (type.equals("W")) {
-                            Log.d(TAG, "found W : ");
+                            Log.i(TAG, "found W : ");
                             w = json.getInt("hodnota");
                         }
                         if (type.equals("B")) {
-                            Log.d(TAG, "found B : ");
+                            Log.i(TAG, "found B : ");
                             b = json.getInt("hodnota");
                         }
                     }
-                    hiveList.add(new HiveBaseInfo(0, hiveName, ot , it, oh, ih, w, p, b));
-                    menuListView = (ListView) findViewById(R.id.hiveListView);
+                    hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot , it, oh, ih, w, p, b));
+                    menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
 
-
-                    Log.d(TAG, "Hivelist lenght : "+hiveList.size());
+                    Log.i(TAG, "Hivelist lenght : " + hiveList.size());
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -200,10 +198,10 @@ public class MainActivity extends AppCompatActivity
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
-    public String loadHiveNames(){
+    public void loadHiveNames(final int userId, final String token){
             // Tag used to cancel the request
 
-        Log.d(TAG, "Load Hive method");
+        Log.i(TAG, "Load Hive method");
         String tag_json_obj = "json_obj_req";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -211,32 +209,32 @@ public class MainActivity extends AppCompatActivity
             jsonBody.put("token", token);
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return;
         }
         final String requestBody = jsonBody.toString();
 
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_GETHIVES, null, new Response.Listener<JSONObject>() {
+                AppConfig.URL_GET_HIVES, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Load Hive Server Response: " + response.toString());
+                Log.i(TAG, "Load Hive Server Response: " + response.toString());
 
                 try {
                     JSONArray jsonArray = response.getJSONArray("data");
-                    for(int i=0;i<jsonArray.length();i++){
+                    for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
-                        String name=json.getString("name");
-                        Log.d("hotfix", "Loading Hive name: " + name);
-                        hiveNames.add(name);
+                        String hiveName = json.getString("location");
+                        String hiveId = json.getString("device_id");
+                        Log.i(TAG, "Loaded Hive: " + json.toString());
+                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName));
                     }
-                     loadHiveBaseInfo();
+                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.d("hotfix", "Hotfix2 Error: " + e.getMessage());
+                    Log.i(TAG, "Hotfix2 Error: " + e.getMessage());
                 }
 
             }
@@ -247,7 +245,6 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                Log.d("hotfix", "Hotfix Error: " + error.getMessage());
             }
         }) {
 
@@ -271,19 +268,18 @@ public class MainActivity extends AppCompatActivity
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
-        return null;
     }
 
-    public void hiveClicked(){
+    public void hiveClicked(final String token){
         menuListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                         HiveBaseInfo device = (HiveBaseInfo) parent.getAdapter().getItem(position);
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
-                        i.putExtra("hiveId",device.getHiveId());
-                        i.putExtra("hiveName",device.getHiveName());
-                        i.putExtra("token",token);
+                        i.putExtra("hiveId", device.getHiveId());
+                        i.putExtra("hiveName", device.getHiveName());
+                        i.putExtra("token", token);
                         startActivity(i);
                     }
                 }
@@ -293,16 +289,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void createTestData(){
-        hiveList.add(new HiveBaseInfo(1234, "Alfa", 55 , 45, 70, 80, 69,  true,99));
-        hiveList.add(new HiveBaseInfo(1235, "Beta", 40 , 43, 68, 85,50,true,99));
-        hiveList.add(new HiveBaseInfo(1236, "Gama", 30 , 42, 68, 82,60,false,99));
-        hiveList.add(new HiveBaseInfo(1237, "Delta", 40 , 45, 50, 81,53,true,99));
-        hiveList.add(new HiveBaseInfo(1238, "Pomaranč", 35 , 43, 68, 75,56,true,99));
-        hiveList.add(new HiveBaseInfo(1239, "Žehlička", 32 , 49, 61, 70,89,true,99));
-        hiveList.add(new HiveBaseInfo(1240, "Imro", 36 , 45, 68, 60,66,true,99));
-        hiveList.add(new HiveBaseInfo(1241, "Kýbeľ", 36 , 45, 68, 75,66,true,99));
-        hiveList.add(new HiveBaseInfo(1242, "Stolička", 36 , 45, 68, 78,66,true,99));
-        hiveList.add(new HiveBaseInfo(1243, "Slniečko", 36 , 45, 68, 80,66,true,99));
+        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
+        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
+        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
+        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
+        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
+        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
+        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
+        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
+        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
+        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
     }
 
     @Override

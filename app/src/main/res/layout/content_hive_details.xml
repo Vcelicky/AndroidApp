@@ -120,13 +120,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/accelerometerChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp">
-
-                    </com.github.mikephil.charting.charts.LineChart>
-
                     <ListView
                         android:id="@+id/accelerometerListView"
                         android:layout_width="match_parent"

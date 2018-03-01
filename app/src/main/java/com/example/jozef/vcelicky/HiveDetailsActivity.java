@@ -58,56 +58,55 @@ public class HiveDetailsActivity extends MainActivity{
         TabHost host = findViewById(R.id.tabHost);
         host.setup();
 
-        //Tab 1 setup
-        TabHost.TabSpec spec = host.newTabSpec("temperature");
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(getString((R.string.temperature)));
-        host.addTab(spec);
-
-        //Tab 2 setup
-        spec = host.newTabSpec("humidity");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(getString(R.string.humidity));
-        host.addTab(spec);
-
-        //Tab 3 setup
-        spec = host.newTabSpec("weight");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator(getString(R.string.weight));
-        host.addTab(spec);
-
-        //Tab 4 setup
-        spec = host.newTabSpec("battery");
-        spec.setContent(R.id.tab4);
-        spec.setIndicator(getString(R.string.battery));
-        host.addTab(spec);
-
-        //Tab 5 setup
-        spec = host.newTabSpec("accelerometer");
-        spec.setContent(R.id.tab5);
-        spec.setIndicator(getString(R.string.accelerometer));
-        host.addTab(spec);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         Intent intent = getIntent();
-
         hiveID =  intent.getIntExtra("hiveId",0);
         hiveName = intent.getExtras().getString("hiveName");
         token =  intent.getExtras().getString("token");
-        toolbar.setTitle("Včelí úľ "+hiveName);
+        toolbar.setTitle("Včelí úľ " + hiveName);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Just fake data for testing
-        createTestData();
+        //createTestData();
+
+        //Tab 1 setup (Temperature)
+        TabHost.TabSpec spec = host.newTabSpec("temperature");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator(getString((R.string.temperature)));
+        host.addTab(spec);
+
+        //Tab 2 setup (Humidity)
+        spec = host.newTabSpec("humidity");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator(getString(R.string.humidity));
+        host.addTab(spec);
+
+        //Tab 3 setup (Weight)
+        spec = host.newTabSpec("weight");
+        spec.setContent(R.id.tab3);
+        spec.setIndicator(getString(R.string.weight));
+        host.addTab(spec);
+
+        //Tab 4 setup (Battery)
+        spec = host.newTabSpec("battery");
+        spec.setContent(R.id.tab4);
+        spec.setIndicator(getString(R.string.battery));
+        host.addTab(spec);
+
+        //Tab 5 setup (Position)
+        spec = host.newTabSpec("accelerometer");
+        spec.setContent(R.id.tab5);
+        spec.setIndicator(getString(R.string.accelerometer));
+        host.addTab(spec);
 
         //Temperature tab
         ArrayAdapter<HiveBaseInfo> temperatureAdapter;
@@ -208,16 +207,16 @@ public class HiveDetailsActivity extends MainActivity{
         hiveList = new ArrayList<>();
         Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
         ts.set(1995, 2, 29, 11, 22) ;
-        hiveList.add(new HiveBaseInfo(1234, "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
-        hiveList.add(new HiveBaseInfo(1235, "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
-        hiveList.add(new HiveBaseInfo(1236, "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
-        hiveList.add(new HiveBaseInfo(1237, "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
-        hiveList.add(new HiveBaseInfo(1238, "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
-        hiveList.add(new HiveBaseInfo(1239, "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
-        hiveList.add(new HiveBaseInfo(1240, "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
-        hiveList.add(new HiveBaseInfo(1241, "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
-        hiveList.add(new HiveBaseInfo(1242, "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
-        hiveList.add(new HiveBaseInfo(1243, "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
+        hiveList.add(new HiveBaseInfo("1234", "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
+        hiveList.add(new HiveBaseInfo("1235", "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
+        hiveList.add(new HiveBaseInfo("1236", "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
+        hiveList.add(new HiveBaseInfo("1237", "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
+        hiveList.add(new HiveBaseInfo("1238", "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
+        hiveList.add(new HiveBaseInfo("1239", "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
+        hiveList.add(new HiveBaseInfo("1240", "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
+        hiveList.add(new HiveBaseInfo("1241", "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
+        hiveList.add(new HiveBaseInfo("1242", "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
+        hiveList.add(new HiveBaseInfo("1243", "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
 
     }
 
@@ -245,7 +244,6 @@ public class HiveDetailsActivity extends MainActivity{
 //                Log.d(TAG, "Load Hive Base Info From Server Response: " + response.toString());
 //
 //                try {
-//                    ///////////////////////
 //                    int it = 0;
 //                    int ot = 0;
 //                    int h = 0,w = 0, b = 0;
@@ -341,6 +339,7 @@ public class HiveDetailsActivity extends MainActivity{
 //        // Adding request to request queue
 //        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 //    }
+
     // parse date from tomo API time format (day.month.year.hour.minute)
     public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
         String[] timeStampParts = timeStamp.split("\\.", -1);

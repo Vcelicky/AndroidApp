@@ -121,38 +121,38 @@ public class MainActivity extends AppCompatActivity
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
 
-                        String type = json.getString("typ");
-                        if (type.equals("IT")) {
-                            Log.i(TAG, "found IT : ");
-                            try {
+                        try {
+                            String type = json.getString("typ");
+                            if (type.equals("IT")) {
+                                Log.i(TAG, "found IT : ");
                                 it = json.getInt("hodnota");
-                            }catch(Exception e){
-                                Log.i(TAG, "NULL value loaded, saving variable with 0");
                             }
-                        }
-                        if (type.equals("OT")) {
-                            Log.i(TAG, "found OT : ");
-                            ot = json.getInt("hodnota");
-                        }
-                        if (type.equals("OH")) {
-                            Log.i(TAG, "found OH : ");
-                            oh = json.getInt("hodnota");
-                        }
-                        if (type.equals("IH")) {
-                            Log.i(TAG, "found IH : ");
-                            ih = json.getInt("hodnota");
-                        }
-                        if (type.equals("P")) {
-                            Log.i(TAG, "found P : ");
-                            p = json.getBoolean("hodnota");
-                        }
-                        if (type.equals("W")) {
-                            Log.i(TAG, "found W : ");
-                            w = json.getInt("hodnota");
-                        }
-                        if (type.equals("B")) {
-                            Log.i(TAG, "found B : ");
-                            b = json.getInt("hodnota");
+                            if (type.equals("OT")) {
+                                Log.i(TAG, "found OT : ");
+                                ot = json.getInt("hodnota");
+                            }
+                            if (type.equals("OH")) {
+                                Log.i(TAG, "found OH : ");
+                                oh = json.getInt("hodnota");
+                            }
+                            if (type.equals("IH")) {
+                                Log.i(TAG, "found IH : ");
+                                ih = json.getInt("hodnota");
+                            }
+                            if (type.equals("P")) {
+                                Log.i(TAG, "found P : ");
+                                p = json.getBoolean("hodnota");
+                            }
+                            if (type.equals("W")) {
+                                Log.i(TAG, "found W : ");
+                                w = json.getInt("hodnota");
+                            }
+                            if (type.equals("B")) {
+                                Log.i(TAG, "found B : ");
+                                b = json.getInt("hodnota");
+                            }
+                        }catch(Exception e){
+                            Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
                     }
                     hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot , it, oh, ih, w, p, b));
@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
-                        i.putExtra("token", token);
                         startActivity(i);
                     }
                 }
@@ -288,18 +287,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void createTestData(){
-        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
-        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
-        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
-        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
-        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
-        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
-        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
-        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
-        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
-        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
-    }
+//    public void createTestData(){
+//        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
+//        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
+//        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
+//        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
+//        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
+//        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
+//        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
+//    }
 
     @Override
     public void onBackPressed() {

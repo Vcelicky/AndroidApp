@@ -38,6 +38,9 @@ import java.io.UnsupportedEncodingException;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -78,6 +81,12 @@ public class MainActivity extends AppCompatActivity
         menuListView.setAdapter(allAdapter);
         hiveClicked(token);
         loadHiveNames(userId, token);
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().subscribeToTopic("hives");
+        Log.d("firebase", "Firebase Token: " + token);
+        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+//firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
         //createTestData();
@@ -347,7 +356,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-            notifyThis("Title","This is SPARTA");
+
         } else if (id == R.id.nav_logout) {
             showLogoutAlertDialog();
         } else if (id == R.id.nav_order){
@@ -359,22 +368,7 @@ public class MainActivity extends AppCompatActivity
         return true;
 
     }
-
-    public void notifyThis(String title, String message) {
-        NotificationCompat.Builder b = new NotificationCompat.Builder(this.getApplicationContext());
-        b.setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.logo200x200)
-                .setTicker("{Vcelicky Notification Message}")
-                .setContentTitle(title)
-                .setContentText(message)
-                .setContentInfo("INFO");
-
-        NotificationManager nm = (NotificationManager) this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(1, b.build());
-    }
-
+    
     public void showLogoutAlertDialog(){
         AlertDialog.Builder logoutAlert = new AlertDialog.Builder(MainActivity.this)
                 .setMessage(R.string.proceed_with_logout)
@@ -400,5 +394,4 @@ public class MainActivity extends AppCompatActivity
                 });
         logoutAlert.show();
     }
-
 }

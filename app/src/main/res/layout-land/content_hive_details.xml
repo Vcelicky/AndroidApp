@@ -43,7 +43,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/temperatureChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="match_parent">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
@@ -63,7 +63,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/humidityChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="match_parent">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
@@ -83,7 +83,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/weightChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="match_parent">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
@@ -103,7 +103,7 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/batteryChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="match_parent">
 
                     </com.github.mikephil.charting.charts.LineChart>
 

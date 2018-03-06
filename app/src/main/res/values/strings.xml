@@ -51,4 +51,16 @@
     <string name="team_web">http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/#</string>
 
 
+    <!--User actions related strings-->
+    <string name="proceed_with_logout">Chcete pokračovať v odhlásení?</string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
+
+    <!--Button texts-->
+    <string name="temperature">Teplota</string>
+    <string name="humidity">Vlhkosť</string>
+    <string name="weight">Hmotnosť</string>
+    <string name="battery">Batéria</string>
+    <string name="accelerometer">Pozícia</string>
+
 </resources>

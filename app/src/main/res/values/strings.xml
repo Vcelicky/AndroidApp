@@ -28,7 +28,6 @@
     <!-- General strings -->
     <string name="team">VČELIČKY TEAM</string>
     <string name="team_mail">fiittp20@gmail.com</string>
-    <string name="team_web">http://team20–17.studenti.fiit.stuba.sk/</string>
     <string name="thank">Ďakujeme, že využívate náš produkt</string>
     <string name="team_members">Členovia tímu</string>
     <string name="kovacik">Ing. Tomáš Kováčik, PhD.</string>
@@ -49,5 +48,19 @@
     <string name="phone">Telefónne číslo</string>
     <string name="numOfDevs">Počet zariadení</string>
     <string name="notes">Poznámky</string>
+    <string name="team_web">http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/#</string>
+
+
+    <!--User actions related strings-->
+    <string name="proceed_with_logout">Chcete pokračovať v odhlásení?</string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
+
+    <!--Button texts-->
+    <string name="temperature">Teplota</string>
+    <string name="humidity">Vlhkosť</string>
+    <string name="weight">Hmotnosť</string>
+    <string name="battery">Batéria</string>
+    <string name="accelerometer">Pozícia</string>
 
 </resources>

@@ -40,8 +40,11 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         TextView textInTemperature =   (TextView) customView.findViewById(R.id.textInTemperature);
         textInTemperature.setText( String.valueOf("T:"+hiveList.get(position).getInsideTemperature())+"°C (vnútorná)");
 
-        TextView textHumidity = (TextView) customView.findViewById(R.id.textInHumidity);
-        textHumidity.setText(String.valueOf("H:"+hiveList.get(position).getHumidity())+"%");
+        TextView textOutHumidity = customView.findViewById(R.id.textOutHumidity);
+        textOutHumidity.setText(String.valueOf("H:"+hiveList.get(position).getOutsideHumidity())+"% (vonkajšia)");
+
+        TextView textInHumidity = customView.findViewById(R.id.textInHumidity);
+        textInHumidity.setText(String.valueOf("H:"+hiveList.get(position).getInsideHumidity())+"% (vnútorná)");
 
         TextView textWeight = (TextView) customView.findViewById(R.id.textWeight);
         textWeight.setText(String.valueOf("W:"+hiveList.get(position).getWeight())+"kg");

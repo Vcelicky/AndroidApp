@@ -24,6 +24,7 @@
 
     <string name="action_settings">Edituj</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="action_show_all">Zobraz merania</string>
 
     <!-- General strings -->
     <string name="team">VČELIČKY TEAM</string>

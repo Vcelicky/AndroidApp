@@ -53,7 +53,7 @@ public class AdapterHiveDetails extends ArrayAdapter<HiveBaseInfo> {
         textWeight.setText(String.valueOf("W:"+hiveList.get(position).getWeight())+"kg");
 
         TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
-        if ((hiveList.get(position).isAccelerometer())){
+        if (!(hiveList.get(position).isAccelerometer())){
             textAccelerometer.setText("A: OK");
         }else{
             textAccelerometer.setText("A: Úľ je prevrátený");

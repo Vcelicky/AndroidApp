@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
                         startActivity(i);
+                        finish();
                     }
                 }
         );

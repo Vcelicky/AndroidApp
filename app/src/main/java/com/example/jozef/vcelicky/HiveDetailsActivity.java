@@ -429,6 +429,7 @@ public class HiveDetailsActivity extends MainActivity{
             i.putExtra("hiveId", hiveList.get(0).getHiveId());
             i.putExtra("hiveName", hiveList.get(0).getHiveName());
             startActivity(i);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

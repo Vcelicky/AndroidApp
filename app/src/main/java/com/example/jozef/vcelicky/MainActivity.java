@@ -43,7 +43,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "MainActivity";
@@ -54,21 +54,9 @@ public class MainActivity extends AppCompatActivity
     ArrayAdapter<HiveBaseInfo> allAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Prehľad úľov");
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        baseActivityActivateToolbarAndSideBar();
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
@@ -79,16 +67,22 @@ public class MainActivity extends AppCompatActivity
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
-        hiveClicked(token);
+        hiveClicked();
         loadHiveNames(userId, token);
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         Log.d("firebase", "Firebase Token: " + firebaseToken);
+        Log.d("firebase", "SPARTA + TAG:" + TAG);
 //firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
         //createTestData();
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_main;
     }
 
     public void loadHiveBaseInfo(int userId, String token){
@@ -281,7 +275,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void hiveClicked(final String token){
+    public void hiveClicked(){
         menuListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
@@ -299,16 +293,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 //    public void createTestData(){
-//        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
-//        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
-//        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
-//        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
-//        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
-//        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
-//        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
+//        notificationInfoList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
 //    }
 
     @Override
@@ -355,7 +349,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-
+            Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             showLogoutAlertDialog();
         } else if (id == R.id.nav_order){

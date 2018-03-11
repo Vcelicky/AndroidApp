@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         Log.d("firebase", "Firebase Token: " + firebaseToken);
-        Log.d("firebase", "SPARTA + TAG:" + TAG);
+
 //firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
@@ -292,18 +292,16 @@ public class MainActivity extends BaseActivity
 
     }
 
-//    public void createTestData(){
-//        notificationInfoList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
-//        notificationInfoList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
-//    }
+//        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
+//        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
+//        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
+//        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
+//        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
+//        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
+//        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
+//        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
 
     @Override
     public void onBackPressed() {

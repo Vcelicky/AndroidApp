@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -11,9 +12,16 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "fcmMessagingService";
+    public ArrayList<NotificationInfo> notificationInfoList=new ArrayList<>();
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -30,6 +38,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
             sendNotification(title_text,text);  // delete later///////////////////////////////////////////////////////////////////////////////////
+
+            loadNotificationInfoListFromSharedPreferencies();
+            notificationInfoList.add(0,new NotificationInfo(title_text,text, hive_name, hive_id));
+
+            if(notificationInfoList.size() > 10)
+                notificationInfoList.remove(notificationInfoList.size()-1);
+
+            Log.d(TAG, "list Print " + notificationInfoList);
+            saveNotificationInfoListFromSharedPreferencies();
+
+
             notificationObservable = NotificationObservable.getInstance();
             notificationObservable.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
             notificationObservable.myNotifyObservers();
@@ -56,6 +75,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 /*ID of notification*/, notifiBuilder.build());
+    }
+
+
+    public void loadNotificationInfoListFromSharedPreferencies(){
+        notificationInfoList.clear();
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive",getApplicationContext().MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = mPrefs.getString("myJson", "");
+        Log.d(TAG, "loadedPreferencies " + mPrefs.getString("myJson", ""));
+        if (json.isEmpty()) {
+            notificationInfoList.clear();
+        } else {
+            Type type = new TypeToken<List<NotificationInfo>>() {
+            }.getType();
+            notificationInfoList = gson.fromJson(json, type);
+        }
+    }
+    public void saveNotificationInfoListFromSharedPreferencies(){
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive", getApplicationContext().MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(notificationInfoList);
+        Log.d(TAG, "saving list Print " + notificationInfoList);
+        Log.d(TAG, "saving list json " + json);
+        prefsEditor.putString("myJson", json);
+        Log.d(TAG, "savingPreferencies " + mPrefs.getString("myJson", ""));
+   //     prefsEditor.commit();
+        prefsEditor.commit();
+        Log.d(TAG, "savingPreferencies " + mPrefs.getString("myJson", ""));
     }
 
 }

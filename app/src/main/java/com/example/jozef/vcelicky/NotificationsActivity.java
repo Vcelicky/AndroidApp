@@ -3,11 +3,8 @@ package com.example.jozef.vcelicky;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -64,10 +61,12 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 
     }
     public void loadNotificationInfoListFromSharedPreferencies(){
+        Log.d("fcmMessagingService", "Notification activity list first size " + notificationInfoList.size());
         notificationInfoList.clear();
         SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive",getApplicationContext().MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString("myJson", "");
+        Log.d("fcmMessagingService", "Notification activity loading prefs " + mPrefs.getString("myJson", ""));
         if (json.isEmpty()) {
             notificationInfoList.clear();
         } else {
@@ -75,16 +74,9 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             }.getType();
             notificationInfoList = gson.fromJson(json, type);
         }
-    }
-    public void saveNotificationInfoListFromSharedPreferencies(){
-        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive", getApplicationContext().MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(notificationInfoList);
-        prefsEditor.putString("myJson", json);
-        prefsEditor.commit();
-    }
+  //      refreshListView();
 
+    }
 
     @Override
     public void update( final Observable observable, Object o) {
@@ -96,12 +88,11 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    NotificationObservable notificationObservable = (NotificationObservable)observable;
-                    notificationInfoList.add(0, notificationObservable.getNotificationInfo());
-                    if(notificationInfoList.size() > 10)
-                        notificationInfoList.remove(notificationInfoList.size()-1);
-                    saveNotificationInfoListFromSharedPreferencies();
-                    refreshListView();
+                    loadNotificationInfoListFromSharedPreferencies();
+                    allAdapter = new AdapterNotifications(getApplicationContext(),notificationInfoList );
+                    menuListView = findViewById(R.id.hiveListView);
+                    menuListView.setAdapter(allAdapter);
+
                 }
             });
         }

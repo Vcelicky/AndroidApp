@@ -31,23 +31,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data: " + remoteMessage.getData());
-            sendNotification("aaaaa");  // delete later///////////////////////////////////////////////////////////////////////////////////
-            userDataRepository = UserDataRepository.getInstance();
-            userDataRepository.setNotificationInfo(new NotificationInfo("Úlik pri malej dolinke","This si text", "Umbakarna", "36B7B0"));
-            userDataRepository.myNotifyObservers();
-        }
 
-        if(remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Mesage body:" + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            String title_text = remoteMessage.getData().get("title_text");
+            String text = remoteMessage.getData().get("text");
+            String hive_id = remoteMessage.getData().get("hive_id");
+            String hive_name = remoteMessage.getData().get("hive_name");
+            sendNotification(title_text,text);  // delete later///////////////////////////////////////////////////////////////////////////////////
+            userDataRepository = UserDataRepository.getInstance();
+            userDataRepository.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
+            userDataRepository.myNotifyObservers();
         }
     }
 
-    /**
-     * Dispay the notification
-     * @param body
-     */
-    private void sendNotification(String body) {
+    private void sendNotification(String title, String text) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -58,8 +54,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notifiBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Firebase Cloud Messaging")
-                .setContentText(body)
+                .setContentTitle(title)
+                .setContentText(text)
                 .setAutoCancel(true)
                 .setSound(notificationSound)
                 .setContentIntent(pendingIntent);

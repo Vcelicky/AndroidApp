@@ -32,7 +32,7 @@ public class AdapterNotifications extends ArrayAdapter<NotificationInfo> {
         //vyber i-ty prvok z listu
         // Device i = items.get(position);
           TextView textHiveName = (TextView) customView.findViewById(R.id.hive_name);
-          textHiveName.setText(notificationsList.get(position).getHiveName());
+          textHiveName.setText(notificationsList.get(position).getViewTitleText());
 //
         TextView textOutTemperature = (TextView) customView.findViewById(R.id.textOutTemperature);
         textOutTemperature.setText(notificationsList.get(position).getViewText());

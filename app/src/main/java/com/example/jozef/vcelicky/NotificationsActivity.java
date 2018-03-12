@@ -103,7 +103,9 @@ public class NotificationsActivity extends BaseActivity implements Observer {
                 @Override
                 public void run() {
                     UserDataRepository userDataRepository = (UserDataRepository)observable;
-                    notificationInfoList.add(userDataRepository.getNotificationInfo());
+                    notificationInfoList.add(0,userDataRepository.getNotificationInfo());
+                    if(notificationInfoList.size() > 10)
+                        notificationInfoList.remove(notificationInfoList.size()-1);
                     saveNotificationInfoListFromSharedPreferencies();
                     refreshListView();
                 }
@@ -155,7 +157,8 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             startActivity(intent);
         } else if (id == R.id.nav_profile) {
             Log.d("BasicActivity", "Profile");
-            notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke","This si text", "Trnava2", "36B7B0"));
+            notificationInfoList.clear();
+            notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke2","This si text", "Trnava2", "36B7B0"));
             saveNotificationInfoListFromSharedPreferencies();
             refreshListView();
 

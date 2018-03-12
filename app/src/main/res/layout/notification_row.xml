@@ -20,14 +20,12 @@
 
     <TextView
         android:id="@+id/textOutTemperature"
-        android:layout_width="125dp"
-        android:layout_height="34dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="0.4"
         android:text="Out temperature"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hive_name" />
 

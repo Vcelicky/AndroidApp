@@ -35,10 +35,10 @@ public class NotificationsActivity extends BaseActivity implements NavigationVie
 //        Log.i(TAG, "Token: " + token);
 //        Log.i(TAG, "UserID: " + userId);
 
-        notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "umbakarna", "Úlik pri jazierku"));
-        notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke","This si text", "umbakarna2", "Úlik pri malej dolinke"));
-        notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "umbakarna3", "Úlik pri jazierku"));
-        notificationInfoList.add(new NotificationInfo("This is title text 4","This si text", "umbakarna4", "25"));
+        notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "Bratislava", "Úlik pri jazierku"));
+        notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke","This si text", "Trnava", "Úlik pri malej dolinke"));
+        notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "Sliač", "Úlik pri jazierku"));
+        notificationInfoList.add(new NotificationInfo("This is title text 4","This si text", "Handlová", "25"));
         allAdapter = new AdapterNotifications(this, notificationInfoList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);

@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseActivityActivateToolbarAndSideBar();
+//       NotificationArchive.getInstance();
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
@@ -281,6 +282,8 @@ public class MainActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                         HiveBaseInfo device = (HiveBaseInfo) parent.getAdapter().getItem(position);
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
+                        Log.i(TAG, "SPARTA: hiveId: " + device.getHiveId());
+                        Log.i(TAG, "SPARTA: hiveName " + device.getHiveName());
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
                         startActivity(i);

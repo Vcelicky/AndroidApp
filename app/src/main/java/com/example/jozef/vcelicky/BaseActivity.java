@@ -18,11 +18,14 @@ import android.view.MenuItem;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
 
+import java.util.ArrayList;
+
 /**
  * Created by MSI on 8. 3. 2018.
  */
 
 public abstract class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener  {
+
 
 
     @Override
@@ -135,7 +138,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                 });
         logoutAlert.show();
     }
-
 
 }
 

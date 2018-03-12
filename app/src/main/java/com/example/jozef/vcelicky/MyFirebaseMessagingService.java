@@ -13,16 +13,23 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private static final String TAG = "firebase";
+    private static final String TAG = "fcmMessagingService";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        UserDataRepository userDataRepository;
+        int notificationListSize = NotificationArchive.getInstance().getNotificationInfoList().size()+1;
+        NotificationArchive.getInstance().getNotificationInfoList().add(new NotificationInfo("Úlik pri malej dolinke","This si text", "Mesto"+notificationListSize, "36B7B0"));
 
         Log.d(TAG, "FROM:" + remoteMessage.getFrom());
 
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data: " + remoteMessage.getData());
+            sendNotification("aaaaa");  // delete later///////////////////////////////////////////////////////////////////////////////////
+            userDataRepository = UserDataRepository.getInstance();
+            userDataRepository.myNotifyObservers();
+
         }
 
         //Check if the message contains notification

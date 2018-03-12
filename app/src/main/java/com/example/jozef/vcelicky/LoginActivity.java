@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("LoginAct", "Prihlasujem bez overenia...");
         }
         //Arrow back
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        Toolbar toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

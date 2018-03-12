@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         Log.d("firebase", "Firebase Token: " + firebaseToken);
-//firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
+        //firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
         //createTestData();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         final String requestBody = jsonBody.toString();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 AppConfig.URL_GET_HIVE_INFO, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity
                     int ot = 0;
                     int oh = 0, ih = 0, b = 0, w = 0;
                     boolean p = false;
+                    long time;
 
                     //Temporary variable because of wrong returning JSON from server array in array
                     JSONArray tempJsonArray = response.getJSONArray("data");
@@ -169,8 +170,10 @@ public class MainActivity extends AppCompatActivity
                     hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot , it, oh, ih, w, p, b));
                     menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
-
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
+
+                    SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+                    //db.addMeasurement();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -224,7 +227,7 @@ public class MainActivity extends AppCompatActivity
         }
         final String requestBody = jsonBody.toString();
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 AppConfig.URL_GET_HIVES, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -240,7 +243,7 @@ public class MainActivity extends AppCompatActivity
                         Log.i(TAG, "Loaded Hive: " + json.toString());
                         hiveIDs.add(new HiveBaseInfo(hiveId, hiveName));
                     }
-                     loadHiveBaseInfo(userId, token);
+                    loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();

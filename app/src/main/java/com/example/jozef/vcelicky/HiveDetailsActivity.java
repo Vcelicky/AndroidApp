@@ -47,7 +47,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class HiveDetailsActivity extends BaseActivity{
+public class HiveDetailsActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
@@ -394,5 +395,9 @@ public class HiveDetailsActivity extends BaseActivity{
         }
         return new GregorianCalendar(year, month, day, hour, minute, second);
     }
+
+
+
+
 
 }

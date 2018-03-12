@@ -43,8 +43,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
 
     private static String TAG = "MainActivity";
 
@@ -282,8 +281,8 @@ public class MainActivity extends BaseActivity
                     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                         HiveBaseInfo device = (HiveBaseInfo) parent.getAdapter().getItem(position);
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
-                        i.putExtra("hiveId:", device.getHiveId());
-                        i.putExtra("hiveName:", device.getHiveName());
+                        i.putExtra("hiveId", device.getHiveId());
+                        i.putExtra("hiveName", device.getHiveName());
                         startActivity(i);
 
                     }

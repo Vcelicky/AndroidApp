@@ -47,8 +47,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class HiveDetailsActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class HiveDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();

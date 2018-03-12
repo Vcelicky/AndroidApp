@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 
-public class NotificationsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NotificationsActivity extends BaseActivity  {
 
     private static String TAG = "NotificatonsActivity";
 

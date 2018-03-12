@@ -14,6 +14,11 @@ import java.util.Observable;
         private int mAge;
         private static UserDataRepository INSTANCE = null;
 
+
+
+    NotificationInfo notificationInfo;
+
+
         private UserDataRepository() {
         }
 
@@ -46,7 +51,13 @@ import java.util.Observable;
             return mAge;
         }
 
+    public NotificationInfo getNotificationInfo() {
+        return notificationInfo;
+    }
 
+    public void setNotificationInfo(NotificationInfo notificationInfo) {
+        this.notificationInfo = notificationInfo;
+    }
 
 
 

@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -11,6 +12,12 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "fcmMessagingService";
@@ -18,8 +25,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         UserDataRepository userDataRepository;
-        int notificationListSize = NotificationArchive.getInstance().getNotificationInfoList().size()+1;
-        NotificationArchive.getInstance().getNotificationInfoList().add(new NotificationInfo("Úlik pri malej dolinke","This si text", "Mesto"+notificationListSize, "36B7B0"));
 
         Log.d(TAG, "FROM:" + remoteMessage.getFrom());
 
@@ -28,11 +33,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data: " + remoteMessage.getData());
             sendNotification("aaaaa");  // delete later///////////////////////////////////////////////////////////////////////////////////
             userDataRepository = UserDataRepository.getInstance();
+            userDataRepository.setNotificationInfo(new NotificationInfo("Úlik pri malej dolinke","This si text", "Umbakarna", "36B7B0"));
             userDataRepository.myNotifyObservers();
-
         }
-
-        //Check if the message contains notification
 
         if(remoteMessage.getNotification() != null) {
             Log.d(TAG, "Mesage body:" + remoteMessage.getNotification().getBody());
@@ -62,8 +65,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
         notifiBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
 
-
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 /*ID of notification*/, notifiBuilder.build());
     }
+
 }

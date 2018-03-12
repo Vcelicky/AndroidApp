@@ -1,7 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import android.os.Handler;
-
 import java.util.Observable;
 
 
@@ -9,23 +7,23 @@ import java.util.Observable;
  * Created by MSI on 12. 3. 2018.
  */
 
-    public class UserDataRepository extends Observable {
+    public class NotificationObservable extends Observable {
         private String mFullName;
         private int mAge;
-        private static UserDataRepository INSTANCE = null;
+        private static NotificationObservable INSTANCE = null;
 
 
 
     NotificationInfo notificationInfo;
 
 
-        private UserDataRepository() {
+        private NotificationObservable() {
         }
 
         // Returns a single instance of this class, creating it if necessary.
-        public static UserDataRepository getInstance() {
+        public static NotificationObservable getInstance() {
             if(INSTANCE == null) {
-                INSTANCE = new UserDataRepository();
+                INSTANCE = new NotificationObservable();
             }
             return INSTANCE;
         }

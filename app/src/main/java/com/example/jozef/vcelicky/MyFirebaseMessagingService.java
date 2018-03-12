@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -12,19 +11,13 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "fcmMessagingService";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        UserDataRepository userDataRepository;
+        NotificationObservable notificationObservable;
 
         Log.d(TAG, "FROM:" + remoteMessage.getFrom());
 
@@ -37,9 +30,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
             sendNotification(title_text,text);  // delete later///////////////////////////////////////////////////////////////////////////////////
-            userDataRepository = UserDataRepository.getInstance();
-            userDataRepository.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
-            userDataRepository.myNotifyObservers();
+            notificationObservable = NotificationObservable.getInstance();
+            notificationObservable.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
+            notificationObservable.myNotifyObservers();
         }
     }
 

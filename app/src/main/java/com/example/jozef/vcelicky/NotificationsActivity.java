@@ -3,7 +3,6 @@ package com.example.jozef.vcelicky;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -54,16 +53,11 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             Log.d(TAG, "Cant load from shared preferencies");
         }
 
- //       notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "Bratislava", "36B7B7"));
-        notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke","This si text", "Trnava", "36B7B0"));
- //       notificationInfoList.add(new NotificationInfo("Úlik pri jazierku","This si text", "Sliač", "Úlik pri jazierku"));
- //       notificationInfoList.add(new NotificationInfo("This is title text 4","This si text", "Handlová", "25"));
-
         allAdapter = new AdapterNotifications(this,notificationInfoList );
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
 
-        mUserDataRepositoryObservable = UserDataRepository.getInstance();
+        mUserDataRepositoryObservable = NotificationObservable.getInstance();
         mUserDataRepositoryObservable.addObserver(this);
         hiveClicked();
  //     createTestData();
@@ -96,14 +90,14 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     public void update( final Observable observable, Object o) {
         Log.d(TAG, "Update run");
 
-        if (observable instanceof UserDataRepository) {
-            Log.d(TAG, "Update run UserDataRepository type");
+        if (observable instanceof NotificationObservable) {
+            Log.d(TAG, "Update run NotificationObservable type");
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    UserDataRepository userDataRepository = (UserDataRepository)observable;
-                    notificationInfoList.add(0,userDataRepository.getNotificationInfo());
+                    NotificationObservable notificationObservable = (NotificationObservable)observable;
+                    notificationInfoList.add(0, notificationObservable.getNotificationInfo());
                     if(notificationInfoList.size() > 10)
                         notificationInfoList.remove(notificationInfoList.size()-1);
                     saveNotificationInfoListFromSharedPreferencies();
@@ -116,10 +110,8 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UserDataRepository.getInstance().deleteObserver(this);
+        NotificationObservable.getInstance().deleteObserver(this);
     }
-
-
 
     public void refreshListView(){
         allAdapter.notifyDataSetChanged();
@@ -143,39 +135,6 @@ public class NotificationsActivity extends BaseActivity implements Observer {
                     }
                 }
         );
-    }
-
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_about_project) {
-            Intent intent = new Intent(NotificationsActivity.this, OpisActivity.class);
-            Log.d("BasicActivity", "AboutProject");
-            startActivity(intent);
-        } else if (id == R.id.nav_profile) {
-            Log.d("BasicActivity", "Profile");
-            notificationInfoList.clear();
-            notificationInfoList.add(new NotificationInfo("Úlik pri malej dolinke2","This si text", "Trnava2", "36B7B0"));
-            saveNotificationInfoListFromSharedPreferencies();
-            refreshListView();
-
-
-        } else if (id == R.id.nav_notifications) {
-            Intent intent = new Intent(NotificationsActivity.this, NotificationsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_logout) {
-            showLogoutAlertDialog();
-            Log.d("BasicActivity", "LogOut");
-        } else if (id == R.id.nav_order){
-            Intent intent = new Intent(NotificationsActivity.this, OrderActivity.class);
-            startActivity(intent);
-        }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
 }

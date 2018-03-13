@@ -253,22 +253,27 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.temperatureListView);
         menuListView.setAdapter(temperatureAdapter);
         chart = findViewById(R.id.temperatureChart);
+        ArrayList<ILineDataSet> datasets = new ArrayList<ILineDataSet>();
+        //Outside temperature
         entries = new ArrayList<Entry>();
         for(int i = hiveList.size() - 1; i >= 0; i--){
             entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getOutsideTemperature()));
         }
-        LineDataSet dataSet = new LineDataSet(entries, "Vnútorná teplota");
+        LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
+        dataSet.setColor(Color.RED);
+        dataSet.setCircleColor(Color.RED);
+        datasets.add(dataSet);
+        //Inside temperature
+        entries = new ArrayList<Entry>();
+        for(int i = hiveList.size() - 1; i >= 0; i--){
+            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getInsideTemperature()));
+        }
+        dataSet = new LineDataSet(entries, "Vnútorná teplota");
         dataSet.setColor(Color.BLUE);
         dataSet.setCircleColor(Color.BLUE);
-        LineData lineData = new LineData();
-        lineData.addDataSet(dataSet);
-//        xIndex = 0;
-//        for(HiveBaseInfo value : notificationInfoList){
-//            entries.add(new Entry(xIndex, value.getOutsideTemperature()));
-//            xIndex++;
-//        }
-//        dataSet = new LineDataSet(entries, "Vonkajšia teplota");
-//        lineData.addDataSet(dataSet);
+        datasets.add(dataSet);
+        //Mapping data on chart
+        LineData lineData = new LineData(datasets);
         chart.setData(lineData);
         chart.invalidate();
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -283,7 +288,7 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.humidityListView);
         menuListView.setAdapter(humidityAdapter);
         chart = findViewById(R.id.humidityChart);
-        ArrayList<ILineDataSet> datasets = new ArrayList<ILineDataSet>();
+        datasets = new ArrayList<ILineDataSet>();
         //Outside humidity
         entries = new ArrayList<Entry>();
         for(int i = hiveList.size() - 1; i >= 0; i--){
@@ -302,6 +307,7 @@ public class HiveDetailsActivity extends BaseActivity {
         dataSet.setColor(Color.BLUE);
         dataSet.setCircleColor(Color.BLUE);
         datasets.add(dataSet);
+        //Mapping data on chart
         lineData = new LineData(datasets);
         chart.setData(lineData);
         chart.invalidate();
@@ -324,6 +330,7 @@ public class HiveDetailsActivity extends BaseActivity {
         dataSet = new LineDataSet(entries, "Hmotnosť");
         dataSet.setColor(Color.BLUE);
         dataSet.setCircleColor(Color.BLUE);
+        //Mapping data on chart
         lineData = new LineData();
         lineData.addDataSet(dataSet);
         chart.setData(lineData);
@@ -347,6 +354,7 @@ public class HiveDetailsActivity extends BaseActivity {
         dataSet = new LineDataSet(entries, "Batéria");
         dataSet.setColor(Color.BLUE);
         dataSet.setCircleColor(Color.BLUE);
+        //Mapping data on chart
         lineData = new LineData();
         lineData.addDataSet(dataSet);
         chart.setData(lineData);
@@ -394,9 +402,4 @@ public class HiveDetailsActivity extends BaseActivity {
         }
         return new GregorianCalendar(year, month, day, hour, minute, second);
     }
-
-
-
-
-
 }

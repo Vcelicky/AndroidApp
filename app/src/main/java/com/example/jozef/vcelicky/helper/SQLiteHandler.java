@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
@@ -23,8 +24,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "android_api";
 
-    // Login table name
+    // Table names
     private static final String TABLE_USER = "user";
+    private static final String TABLE_MEASUREMENTS = "measurements";
 
     // Login Table Columns names
     private static final String KEY_ID = "id";
@@ -32,6 +34,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role_id";
     private static final String KEY_TOKEN = "token";
+
+    // Measurement table column names
+    private static final String KEY_TIME = "time";
+    private static final String KEY_TEMPIN = "tempIn";
+    private static final String KEY_TEMPOUT = "tempOut";
+    private static final String KEY_HUMIIN = "humiIn";
+    private static final String KEY_HUMIOUT = "humiOut";
+    private static final String KEY_WEIGHT = "weight";
+    private static final String KEY_POSITION = "position";
+    private static final String KEY_DEVICENAME = "deviceName";
+    private static final String KEY_BATTERY = "battery";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,10 +54,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + " ("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_ROLE + " TEXT,"
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_ROLE + " TEXT,"
                 +  KEY_TOKEN + " TEXT" +")";
         db.execSQL(CREATE_LOGIN_TABLE);
+
+        String CREATE_MEASUREMENT_TABLE = "CREATE TABLE " + TABLE_MEASUREMENTS + " ("
+                + KEY_TIME + " BIGINT PRIMARY KEY,"
+                + KEY_TEMPIN + " INTEGER,"
+                + KEY_TEMPOUT + " INTEGER,"
+                + KEY_HUMIIN + " INTEGER,"
+                + KEY_HUMIOUT + " INTEGER,"
+                + KEY_WEIGHT + " INTEGER,"
+                + KEY_POSITION + " BOOLEAN,"
+                + KEY_BATTERY + " INTEGER,"
+                + KEY_DEVICENAME + " TEXT" + ")";
+        db.execSQL(CREATE_MEASUREMENT_TABLE);
 
         Log.i(TAG, "Database tables created");
     }
@@ -54,6 +81,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEASUREMENTS);
 
         // Create tables again
         onCreate(db);
@@ -116,6 +144,28 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
 
         Log.i(TAG, "Deleted all users info from sqlite");
+    }
+
+    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TIME, time);
+        values.put(KEY_TEMPIN, tempIn);
+        values.put(KEY_TEMPOUT, tempOut);
+        values.put(KEY_HUMIIN, humiIn);
+        values.put(KEY_HUMIOUT, humiOut);
+        values.put(KEY_WEIGHT, weight);
+        values.put(KEY_POSITION, position);
+        values.put(KEY_BATTERY, battery);
+        values.put(KEY_DEVICENAME, deviceName);
+
+        // Inserting Row
+        long id = db.insert(TABLE_MEASUREMENTS, null, values);
+        db.close(); // Closing database connection
+
+        Log.i(TAG, "New measurement inserted into sqlite: " + id);
+        Log.i(TAG, values.toString());
     }
 
 }

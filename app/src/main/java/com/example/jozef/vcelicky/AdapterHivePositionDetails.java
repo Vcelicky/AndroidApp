@@ -37,7 +37,7 @@ public class AdapterHivePositionDetails extends ArrayAdapter<HiveBaseInfo> {
         textHiveName.setText(ts.get(Calendar.DAY_OF_MONTH)+"."+ts.get(Calendar.MONTH)+"."+ts.get(Calendar.YEAR)+" "+timeFormat.format(ts.getTime()));
 
         TextView textAccelerometer = customView.findViewById(R.id.textAccelerometer);
-        if ((hiveList.get(position).isAccelerometer())){
+        if (!(hiveList.get(position).isAccelerometer())){
             textAccelerometer.setText("A: OK");
         }else{
             textAccelerometer.setText("A: Úľ je prevrátený");

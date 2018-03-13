@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
+        <activity android:name=".NotificationsActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main2"

@@ -63,6 +63,9 @@ public class MainActivity extends BaseActivity {
         baseActivityActivateToolbarAndSideBar();
 //       NotificationArchive.getInstance();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Prehľad úľov");
+
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
         int userId = Integer.parseInt(db.getUserDetails().get("id"));

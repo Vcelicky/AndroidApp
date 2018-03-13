@@ -10,8 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -43,8 +44,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_HUMIOUT = "humiOut";
     private static final String KEY_WEIGHT = "weight";
     private static final String KEY_POSITION = "position";
-    private static final String KEY_DEVICENAME = "deviceName";
     private static final String KEY_BATTERY = "battery";
+    private static final String KEY_DEVICENAME = "deviceName";
+    private static final String KEY_DEVICEID = "deviceId";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -70,7 +72,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_WEIGHT + " INTEGER,"
                 + KEY_POSITION + " BOOLEAN,"
                 + KEY_BATTERY + " INTEGER,"
-                + KEY_DEVICENAME + " TEXT" + ")";
+                + KEY_DEVICENAME + " TEXT,"
+                + KEY_DEVICEID + " TEXT" + ")";
         db.execSQL(CREATE_MEASUREMENT_TABLE);
 
         Log.i(TAG, "Database tables created");
@@ -146,7 +149,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, "Deleted all users info from sqlite");
     }
 
-    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName){
+    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName, String deviceId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -159,6 +162,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_POSITION, position);
         values.put(KEY_BATTERY, battery);
         values.put(KEY_DEVICENAME, deviceName);
+        values.put(KEY_DEVICEID, deviceId);
 
         // Inserting Row
         long id = db.insert(TABLE_MEASUREMENTS, null, values);
@@ -168,4 +172,62 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, values.toString());
     }
 
+    public boolean isMeasurement(long time){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
+                + " WHERE " + KEY_TIME + " IS " + time;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.getCount() > 0){
+            cursor.close();
+            db.close();
+            return true;
+        }
+        cursor.close();
+        db.close();
+        return false;
+    }
+
+    public List <HashMap<String, String>> getActualMeasurement() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<HashMap<String, String>> devices = new ArrayList<>();
+        List<String> deviceIds = new ArrayList<>();
+        String selectQuery = "SELECT " + KEY_DEVICEID
+                + " FROM " + TABLE_MEASUREMENTS
+                + " GROUP BY " + KEY_DEVICEID;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                deviceIds.add(cursor.getString(0));
+            }while(cursor.moveToNext());
+        }
+        Log.i(TAG, "Number of devices: " + cursor.getCount());
+        for(id : deviceIds){
+            HashMap<String, String> actual = new HashMap<String, String>();
+            selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
+                    + " WHERE " + KEY_DEVICEID + " IS " +
+                    + " ORDER BY " + KEY_TIME + " DESC LIMIT 1";
+            cursor = db.rawQuery(selectQuery, null);
+            // Move to first row
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0) {
+                actual.put("time", String.valueOf(cursor.getLong(0)));
+                actual.put("tempIn", String.valueOf(cursor.getInt(1)));
+                actual.put("tempOut", String.valueOf(cursor.getInt(2)));
+                actual.put("humiIn", String.valueOf(cursor.getInt(3)));
+                actual.put("humiOut", String.valueOf(cursor.getInt(4)));
+                actual.put("weight", String.valueOf(cursor.getInt(5)));
+                actual.put("position", cursor.getString(6));
+                actual.put("battery", String.valueOf(cursor.getInt(7)));
+                actual.put("deviceName", cursor.getString(8));
+                actual.put("deviceId", cursor.getString(9));
+                devices.add(actual);
+            }
+        }
+        cursor.close();
+        db.close();
+        // return actual measurement
+        Log.i(TAG, "Fetching actual measurement from Sqlite: " + actual.toString());
+        return devices;
+    }
 }

@@ -46,6 +46,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity {
@@ -71,10 +72,22 @@ public class MainActivity extends BaseActivity {
         int userId = Integer.parseInt(db.getUserDetails().get("id"));
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
-
+        List<HashMap<String, String>> devices = db.getActualMeasurement();
+        HashMap<String, String> actual = devices.get(0);
+        hiveList.add(new HiveBaseInfo(
+                actual.get("deviceId"),
+                actual.get("deviceName"),
+                Float.parseFloat(actual.get("tempOut")),
+                Float.parseFloat(actual.get("tempIn")),
+                Float.parseFloat(actual.get("humiOut")),
+                Float.parseFloat(actual.get("humiIn")),
+                Float.parseFloat(actual.get("weight")),
+                Boolean.parseBoolean(actual.get("position")),
+                Float.parseFloat(actual.get("battery"))));
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
+
         hiveClicked();
         loadHiveNames(userId, token);
 
@@ -179,7 +192,13 @@ public class MainActivity extends BaseActivity {
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
 
                     SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-                    db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveId);
+                    if(!db.isMeasurement(time)) {
+                        db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                    }
+                    else{
+                        Log.i(TAG, "Record already exists in databse");
+                    }
+
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();

@@ -63,13 +63,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         String CREATE_MEASUREMENT_TABLE = "CREATE TABLE " + TABLE_MEASUREMENTS + " ("
                 + KEY_TIME + " BIGINT PRIMARY KEY,"
-                + KEY_TEMPIN + " SMALLINT,"
-                + KEY_TEMPOUT + " SMALLINT,"
-                + KEY_HUMIIN + " SMALLINT,"
-                + KEY_HUMIOUT + " SMALLINT,"
-                + KEY_WEIGHT + " SMALLINT,"
+                + KEY_TEMPIN + " INTEGER,"
+                + KEY_TEMPOUT + " INTEGER,"
+                + KEY_HUMIIN + " INTEGER,"
+                + KEY_HUMIOUT + " INTEGER,"
+                + KEY_WEIGHT + " INTEGER,"
                 + KEY_POSITION + " BOOLEAN,"
-                + KEY_BATTERY + " SMALLINT,"
+                + KEY_BATTERY + " INTEGER,"
                 + KEY_DEVICENAME + " TEXT" + ")";
         db.execSQL(CREATE_MEASUREMENT_TABLE);
 
@@ -146,7 +146,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, "Deleted all users info from sqlite");
     }
 
-    public void addMeasurement(long time, short tempIn, short tempOut, short humiIn, short humiOut, short weight, boolean position, short battery, String deviceName){
+    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();

@@ -24,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -42,6 +44,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         final String requestBody = jsonBody.toString();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 AppConfig.URL_GET_HIVE_INFO, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -125,7 +130,7 @@ public class MainActivity extends AppCompatActivity
                     int ot = 0;
                     int oh = 0, ih = 0, b = 0, w = 0;
                     boolean p = false;
-                    long time;
+                    long time = 0;
 
                     //Temporary variable because of wrong returning JSON from server array in array
                     JSONArray tempJsonArray = response.getJSONArray("data");
@@ -163,6 +168,12 @@ public class MainActivity extends AppCompatActivity
                                 Log.i(TAG, "found B : ");
                                 b = json.getInt("hodnota");
                             }
+                            if(time == 0){
+                                String timestamp = json.getString("cas");
+                                time = parseDateFromVcelickaApi(timestamp).getTimeInMillis();
+                                Log.i(TAG, "Timestamp from record is: " + timestamp);
+                                Log.i(TAG, "Timestamp from record is: " + time);
+                            }
                         }catch(Exception e){
                             Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
@@ -173,7 +184,7 @@ public class MainActivity extends AppCompatActivity
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
 
                     SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-                    //db.addMeasurement();
+                    db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveId);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -227,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         }
         final String requestBody = jsonBody.toString();
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 AppConfig.URL_GET_HIVES, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -279,8 +290,8 @@ public class MainActivity extends AppCompatActivity
 
         };
 
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
 
     }
 
@@ -396,5 +407,36 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
         logoutAlert.show();
+    }
+
+    // parse date from tomo API time format (day.month.year.hour.minute)
+    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
+        String[] timeStampParts = timeStamp.split(" ", -1);
+        String[] dateParts = timeStampParts[0].split("-", -1);
+        String[] timeParts = timeStampParts[1].split(":", -1);
+        int year=0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+        for (int s = 0; s < dateParts.length; s++) {
+            if (s == 0) {
+                year = Integer.parseInt(dateParts[s]);
+            }
+            if (s == 1) {
+                month = Integer.parseInt(dateParts[s]) - 1;
+            }
+            if (s == 2) {
+                day = Integer.parseInt(dateParts[s]);
+            }
+        }
+        for(int s = 0; s < timeParts.length; s++){
+            if (s == 0){
+                hour = Integer.parseInt(timeParts[s]);
+            }
+            if (s == 1){
+                minute = Integer.parseInt(timeParts[s]);
+            }
+            if (s == 2){
+                second = Integer.parseInt(timeParts[s]);
+            }
+        }
+        return new GregorianCalendar(year, month, day, hour, minute, second);
     }
 }

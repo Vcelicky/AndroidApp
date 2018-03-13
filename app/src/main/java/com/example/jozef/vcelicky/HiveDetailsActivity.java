@@ -376,37 +376,6 @@ public class HiveDetailsActivity extends MainActivity{
         menuListView.setAdapter(positionAdapter);
     }
 
-    // parse date from tomo API time format (day.month.year.hour.minute)
-    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
-        String[] timeStampParts = timeStamp.split(" ", -1);
-        String[] dateParts = timeStampParts[0].split("-", -1);
-        String[] timeParts = timeStampParts[1].split(":", -1);
-        int year=0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
-        for (int s = 0; s < dateParts.length; s++) {
-            if (s == 0) {
-                year = Integer.parseInt(dateParts[s]);
-            }
-            if (s == 1) {
-                month = Integer.parseInt(dateParts[s]);
-            }
-            if (s == 2) {
-                day = Integer.parseInt(dateParts[s]);
-            }
-        }
-        for(int s = 0; s < timeParts.length; s++){
-            if (s == 0){
-                hour = Integer.parseInt(timeParts[s]);
-            }
-            if (s == 1){
-                minute = Integer.parseInt(timeParts[s]);
-            }
-            if (s == 2){
-                second = Integer.parseInt(timeParts[s]);
-            }
-        }
-        return new GregorianCalendar(year, month, day, hour, minute, second);
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

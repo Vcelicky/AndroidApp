@@ -76,11 +76,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            if(!isOnline()){
-                Toast.makeText(getApplicationContext(),
-                        "Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná", Toast.LENGTH_LONG)
-                        .show();
-            }
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -243,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
         for (String key : params.keySet()) {
             if (params.get(key) != null) {
                 sbPost.append("\r\n" + "--" + BOUNDARY + "\r\n");
-                sbPost.append("Content-Disposition: form-data; name=\"" + key + "\"" + "\r\n\r\n");
+                sbPost.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append("\r\n\r\n");
                 sbPost.append(params.get(key));
             }
         }
@@ -408,7 +403,6 @@ public class LoginActivity extends AppCompatActivity {
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
             } else {
                 editPassAgain.setError(getString(R.string.error_not_equal_password));
-                focusView = editPassAgain;
                 editPass.setError(getString(R.string.error_not_equal_password));
                 focusView = editPass;
                 focusView.requestFocus();

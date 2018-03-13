@@ -1,8 +1,5 @@
 package com.example.jozef.vcelicky.helper;
 
-/**
- * Created by Jozef on 10. 11. 2017.
- */
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -115,7 +112,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
      * Getting user data from database
      * */
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -193,7 +190,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         List<String> deviceIds = new ArrayList<>();
         String selectQuery = "SELECT " + KEY_DEVICEID
                 + " FROM " + TABLE_MEASUREMENTS
-                + " GROUP BY " + KEY_DEVICEID;
+                + " GROUP BY " + KEY_DEVICEID
+                + " ORDER BY " + KEY_DEVICENAME;
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
@@ -202,11 +200,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         Log.i(TAG, "Number of devices: " + cursor.getCount());
-        for(id : deviceIds){
-            HashMap<String, String> actual = new HashMap<String, String>();
+        for(int i = 0; i < deviceIds.size(); i++){
+            HashMap<String, String> actual = new HashMap<>();
             selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
-                    + " WHERE " + KEY_DEVICEID + " IS " +
-                    + " ORDER BY " + KEY_TIME + " DESC LIMIT 1";
+                    + " WHERE " + KEY_DEVICEID + "='" + deviceIds.get(i)
+                    + "' ORDER BY " + KEY_TIME + " DESC LIMIT 1";
             cursor = db.rawQuery(selectQuery, null);
             // Move to first row
             cursor.moveToFirst();
@@ -222,12 +220,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 actual.put("deviceName", cursor.getString(8));
                 actual.put("deviceId", cursor.getString(9));
                 devices.add(actual);
+                Log.i(TAG, "Fetching actual measurement from Sqlite: " + actual.toString());
             }
         }
         cursor.close();
         db.close();
         // return actual measurement
-        Log.i(TAG, "Fetching actual measurement from Sqlite: " + actual.toString());
         return devices;
     }
 }

@@ -43,8 +43,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
 
     private static String TAG = "MainActivity";
 
@@ -54,21 +53,10 @@ public class MainActivity extends AppCompatActivity
     ArrayAdapter<HiveBaseInfo> allAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Prehľad úľov");
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        baseActivityActivateToolbarAndSideBar();
+//       NotificationArchive.getInstance();
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
@@ -79,16 +67,22 @@ public class MainActivity extends AppCompatActivity
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
-        hiveClicked(token);
+        hiveClicked();
         loadHiveNames(userId, token);
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         Log.d("firebase", "Firebase Token: " + firebaseToken);
+
 //firebase token: dWuOZ_we-y8:APA91bHYvghrQNzcoXprgEXsVFp5W_G3XwRIRAaBA_fsH2zweYisyPv0LJoBOQSbpxhh0bHx4dQKLkj5CLfRbn2MKmdFLC47XuD9SmGtzUb0_LRA1bJJ_UlnK2owdJxLUqHW0l9BhE12
 
         // Just fake data for testing
         //createTestData();
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_main;
     }
 
     public void loadHiveBaseInfo(int userId, String token){
@@ -281,16 +275,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void hiveClicked(final String token){
+    public void hiveClicked(){
         menuListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                         HiveBaseInfo device = (HiveBaseInfo) parent.getAdapter().getItem(position);
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
+                        Log.i(TAG, "SPARTA: hiveId: " + device.getHiveId());
+                        Log.i(TAG, "SPARTA: hiveName " + device.getHiveName());
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
                         startActivity(i);
+
                     }
                 }
         );
@@ -298,7 +295,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-//    public void createTestData(){
 //        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
 //        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
 //        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
@@ -309,88 +305,5 @@ public class MainActivity extends AppCompatActivity
 //        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
 //        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
 //        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
-//    }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_about_project) {
-          Intent intent = new Intent(MainActivity.this, OpisActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_profile) {
-
-        } else if (id == R.id.nav_notifications) {
-
-        } else if (id == R.id.nav_logout) {
-            showLogoutAlertDialog();
-        } else if (id == R.id.nav_order){
-            Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-            startActivity(intent);
-        }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-
-    }
-    
-    public void showLogoutAlertDialog(){
-        AlertDialog.Builder logoutAlert = new AlertDialog.Builder(MainActivity.this)
-                .setMessage(R.string.proceed_with_logout)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SessionManager session = new SessionManager(getApplicationContext());
-                        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-                        if (session.isLoggedIn()) {
-                            session.setLogin(false);
-                            db.deleteUsers();
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-        logoutAlert.show();
-    }
 }

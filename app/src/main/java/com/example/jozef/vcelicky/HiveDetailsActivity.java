@@ -47,38 +47,29 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class HiveDetailsActivity extends MainActivity{
+public class HiveDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hive_details);
+        baseActivityActivateToolbarAndSideBar();
 
         TabHost host = findViewById(R.id.tabHost);
         host.setup();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
         Intent intent = getIntent();
         String hiveId =  intent.getExtras().getString("hiveId");
         String hiveName = intent.getExtras().getString("hiveName");
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Včelí úľ " + hiveName);
-        setSupportActionBar(toolbar);
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
         int userId = Integer.parseInt(db.getUserDetails().get("id"));
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token);
 
@@ -117,21 +108,26 @@ public class HiveDetailsActivity extends MainActivity{
     }
 
 //    public void createTestData(){
-//        hiveList = new ArrayList<>();
+//        notificationInfoList = new ArrayList<>();
 //        Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
 //        ts.set(1995, 2, 29, 11, 22) ;
-//        hiveList.add(new HiveBaseInfo("1234", "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
-//        hiveList.add(new HiveBaseInfo("1235", "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
-//        hiveList.add(new HiveBaseInfo("1236", "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
-//        hiveList.add(new HiveBaseInfo("1237", "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
-//        hiveList.add(new HiveBaseInfo("1238", "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
-//        hiveList.add(new HiveBaseInfo("1239", "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
-//        hiveList.add(new HiveBaseInfo("1240", "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
-//        hiveList.add(new HiveBaseInfo("1241", "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
-//        hiveList.add(new HiveBaseInfo("1242", "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
-//        hiveList.add(new HiveBaseInfo("1243", "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
+//        notificationInfoList.add(new HiveBaseInfo("1234", "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1235", "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1236", "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1237", "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1238", "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1239", "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1240", "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1241", "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1242", "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
+//        notificationInfoList.add(new HiveBaseInfo("1243", "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
 //    }
 
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_hive_details;
+    }
 
     public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
 
@@ -267,7 +263,7 @@ public class HiveDetailsActivity extends MainActivity{
         LineData lineData = new LineData();
         lineData.addDataSet(dataSet);
 //        xIndex = 0;
-//        for(HiveBaseInfo value : hiveList){
+//        for(HiveBaseInfo value : notificationInfoList){
 //            entries.add(new Entry(xIndex, value.getOutsideTemperature()));
 //            xIndex++;
 //        }
@@ -399,34 +395,8 @@ public class HiveDetailsActivity extends MainActivity{
         return new GregorianCalendar(year, month, day, hour, minute, second);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

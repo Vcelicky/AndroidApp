@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.jozef.vcelicky.HiveBaseInfo;
+
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -245,5 +248,37 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return recent;
+    }
+
+    public ArrayList<HiveBaseInfo> getAllMeasurements(String id){
+        ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
+                + " WHERE " + KEY_DEVICEID + "='" + id
+                + "' ORDER BY " + KEY_TIME + " DESC";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            HiveBaseInfo record;
+            for(int i = 0; i < cursor.getCount(); i++){
+                record = new HiveBaseInfo();
+                record.setTime(cursor.getLong(0));
+                record.setInsideTemperature(cursor.getInt(1));
+                record.setOutsideTemperature(cursor.getInt(2));
+                record.setInsideHumidity(cursor.getInt(3));
+                record.setOutsideHumidity(cursor.getInt(4));
+                record.setWeight(cursor.getInt(5));
+                record.setAccelerometer(Boolean.parseBoolean(cursor.getString(6)));
+                record.setBattery(cursor.getInt(7));
+                record.setHiveName(cursor.getString(8));
+                record.setHiveId(cursor.getString(9));
+                hiveList.add(record);
+                cursor.moveToNext();
+                Log.i(TAG, "Fetching measurement from SQLite: " + record.getTime());
+            }
+        }
+        cursor.close();
+        db.close();
+        return hiveList;
     }
 }

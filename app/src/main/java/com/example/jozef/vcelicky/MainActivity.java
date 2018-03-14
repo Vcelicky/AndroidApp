@@ -55,6 +55,8 @@ public class MainActivity extends BaseActivity {
         final int userId = Integer.parseInt(db.getUserDetails().get("id"));
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
+
+        //TODO change SQL method to return directly HiveBaseInfo array list
         List<HashMap<String, String>> devices = db.getActualMeasurement();
         for(int i = 0; i < devices.size(); i++) {
             HashMap<String, String> actual = devices.get(i);

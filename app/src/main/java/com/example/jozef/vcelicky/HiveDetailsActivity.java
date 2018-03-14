@@ -102,7 +102,7 @@ public class HiveDetailsActivity extends BaseActivity {
         spec.setIndicator(getString(R.string.accelerometer));
         host.addTab(spec);
 
-        setupGUI();
+        setupGUI(hiveId);
 
         if(!isOnline()){
             Toast.makeText(getApplicationContext(),
@@ -143,7 +143,6 @@ public class HiveDetailsActivity extends BaseActivity {
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
             from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
         }
-        hiveList.clear();
         loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
     }
 
@@ -221,14 +220,13 @@ public class HiveDetailsActivity extends BaseActivity {
                             }
                             String timeStamp = jo.getString("cas");
                             timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
-                            // parse date from tomo API time format (day.month.year.hour.minute)
                             }
-                        Log.i(TAG, "I will add new record to databse with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
+                        Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
                         Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
-                        //hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot, it, oh, ih, w, p, b, timeStampGregCal));
                         db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
-                        swipeRefreshLayout.setRefreshing(false);
                     }
+                    swipeRefreshLayout.setRefreshing(false);
+                    setupGUI(hiveId);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -265,13 +263,18 @@ public class HiveDetailsActivity extends BaseActivity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
-    private void setupGUI() {
+    private void setupGUI(String hiveId) {
         ListView menuListView;
         LineChart chart;
         List<Entry> entries;
 
-        //Get entries for database
-        //TODO make call to DB for all entries matching concrete hive and display them on screen
+        //Get entries from database
+        hiveList.clear();
+        hiveList = db.getAllMeasurements(hiveId);
+        for(HiveBaseInfo hive : hiveList){
+            String time = dateFormat.format(new Date(hive.getTime()));
+            hive.setTimeStamp(parseDateFromVcelickaApi(time));
+        }
 
         //Temperature tab
         ArrayAdapter<HiveBaseInfo> temperatureAdapter;
@@ -279,20 +282,20 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.temperatureListView);
         menuListView.setAdapter(temperatureAdapter);
         chart = findViewById(R.id.temperatureChart);
-        ArrayList<ILineDataSet> datasets = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> datasets = new ArrayList<>();
         //Outside temperature
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getOutsideTemperature()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
         dataSet.setColor(Color.RED);
         dataSet.setCircleColor(Color.RED);
         datasets.add(dataSet);
         //Inside temperature
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getInsideTemperature()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
         }
         dataSet = new LineDataSet(entries, "Vnútorná teplota");
         dataSet.setColor(Color.BLUE);
@@ -314,20 +317,20 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.humidityListView);
         menuListView.setAdapter(humidityAdapter);
         chart = findViewById(R.id.humidityChart);
-        datasets = new ArrayList<ILineDataSet>();
+        datasets = new ArrayList<>();
         //Outside humidity
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getOutsideHumidity()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
         }
         dataSet = new LineDataSet(entries, "Vonkajšia vlhkosť");
         dataSet.setColor(Color.RED);
         dataSet.setCircleColor(Color.RED);
         datasets.add(dataSet);
         //Inside humidity
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getInsideHumidity()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
         }
         dataSet = new LineDataSet(entries, "Vnútorná vlhkosť");
         dataSet.setColor(Color.BLUE);
@@ -349,9 +352,9 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.weightListView);
         menuListView.setAdapter(weightAdapter);
         chart = findViewById(R.id.weightChart);
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getWeight()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
         }
         dataSet = new LineDataSet(entries, "Hmotnosť");
         dataSet.setColor(Color.BLUE);
@@ -373,9 +376,9 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.batteryListView);
         menuListView.setAdapter(batteryAdapter);
         chart = findViewById(R.id.batteryChart);
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getBattery()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
         }
         dataSet = new LineDataSet(entries, "Batéria");
         dataSet.setColor(Color.BLUE);

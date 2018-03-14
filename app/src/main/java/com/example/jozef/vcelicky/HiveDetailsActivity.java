@@ -48,6 +48,8 @@ public class HiveDetailsActivity extends BaseActivity {
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     SwipeRefreshLayout swipeRefreshLayout;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    SQLiteHandler db;
+    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +66,11 @@ public class HiveDetailsActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Včelí úľ " + hiveName);
 
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
         final String token =  db.getUserDetails().get("token");
         final int userId = Integer.parseInt(db.getUserDetails().get("id"));
+
+        session = new SessionManager(getApplicationContext());
 
         //Tab 1 setup (Temperature)
         TabHost.TabSpec spec = host.newTabSpec("temperature");
@@ -98,6 +102,8 @@ public class HiveDetailsActivity extends BaseActivity {
         spec.setIndicator(getString(R.string.accelerometer));
         host.addTab(spec);
 
+        setupGUI();
+
         if(!isOnline()){
             Toast.makeText(getApplicationContext(),
                     R.string.no_service, Toast.LENGTH_LONG)
@@ -127,8 +133,6 @@ public class HiveDetailsActivity extends BaseActivity {
     }
 
     private void update(String hiveId, String hiveName, int userId, String token){
-        SessionManager session = new SessionManager(getApplicationContext());
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String from = dateFormat.format(new Date(0));
         String to = dateFormat.format(new Date().getTime());
         if(session.isFirstTime()) {
@@ -137,7 +141,7 @@ public class HiveDetailsActivity extends BaseActivity {
         }
         else{
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
-            from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1));
+            from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
         }
         hiveList.clear();
         loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
@@ -219,11 +223,12 @@ public class HiveDetailsActivity extends BaseActivity {
                             timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
                             // parse date from tomo API time format (day.month.year.hour.minute)
                             }
-                        Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));
-                        Log.i(TAG, "Float value of timestamp: " + timeStampGregCal.getTime().getTime());
-                        hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot, it, oh, ih, w, p, b, timeStampGregCal));
+                        Log.i(TAG, "I will add new record to databse with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
+                        Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
+                        //hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot, it, oh, ih, w, p, b, timeStampGregCal));
+                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
-                    setupGUI();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -264,6 +269,9 @@ public class HiveDetailsActivity extends BaseActivity {
         ListView menuListView;
         LineChart chart;
         List<Entry> entries;
+
+        //Get entries for database
+        //TODO make call to DB for all entries matching concrete hive and display them on screen
 
         //Temperature tab
         ArrayAdapter<HiveBaseInfo> temperatureAdapter;

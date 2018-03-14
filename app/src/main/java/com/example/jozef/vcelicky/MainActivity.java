@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity {
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
+    SQLiteHandler db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Prehľad úľov");
 
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
         final String token =  db.getUserDetails().get("token");
         final int userId = Integer.parseInt(db.getUserDetails().get("id"));
         Log.i(TAG, "Token: " + token);
@@ -202,7 +203,6 @@ public class MainActivity extends BaseActivity {
                     menuListView.setAdapter(allAdapter);
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
 
-                    SQLiteHandler db = new SQLiteHandler(getApplicationContext());
                     if(!db.isMeasurement(time)) {
                         db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
                     }

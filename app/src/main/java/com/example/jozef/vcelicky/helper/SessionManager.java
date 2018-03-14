@@ -26,6 +26,7 @@ public class SessionManager {
     private static final String PREF_NAME = "VcelickyAppLogin";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static final String KEY_IS_FIRST_TIME = "isFirstTime";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -46,4 +47,11 @@ public class SessionManager {
     public boolean isLoggedIn(){
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
+
+    public void setFirstTime(boolean isFirstTime){
+        editor.putBoolean(KEY_IS_FIRST_TIME, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTime(){return pref.getBoolean(KEY_IS_FIRST_TIME, true);}
 }

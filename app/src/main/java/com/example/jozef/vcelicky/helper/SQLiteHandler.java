@@ -228,4 +228,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // return actual measurement
         return devices;
     }
+
+    public long getMostRecentTimeStamp(String id){
+        //TODO get timestamp of most recent record in local database
+        return 0;
+    }
 }

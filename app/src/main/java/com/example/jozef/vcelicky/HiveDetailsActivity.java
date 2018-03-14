@@ -2,16 +2,10 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -26,13 +20,12 @@ import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.HourAxisValueFormatter;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.json.JSONArray;
@@ -40,17 +33,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class HiveDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
+    SwipeRefreshLayout swipeRefreshLayout;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,20 +57,15 @@ public class HiveDetailsActivity extends BaseActivity {
         host.setup();
 
         Intent intent = getIntent();
-        String hiveId =  intent.getExtras().getString("hiveId");
-        String hiveName = intent.getExtras().getString("hiveName");
+        final String hiveId =  intent.getExtras().getString("hiveId");
+        final String hiveName = intent.getExtras().getString("hiveName");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Včelí úľ " + hiveName);
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        String token =  db.getUserDetails().get("token");
-        int userId = Integer.parseInt(db.getUserDetails().get("id"));
-
-        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token);
-
-        // Just fake data for testing
-        //createTestData();
+        final String token =  db.getUserDetails().get("token");
+        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
 
         //Tab 1 setup (Temperature)
         TabHost.TabSpec spec = host.newTabSpec("temperature");
@@ -105,31 +96,55 @@ public class HiveDetailsActivity extends BaseActivity {
         spec.setContent(R.id.tab5);
         spec.setIndicator(getString(R.string.accelerometer));
         host.addTab(spec);
+
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+        }
+        else {
+            update(hiveId, hiveName, userId, token);
+        }
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
     }
 
-//    public void createTestData(){
-//        notificationInfoList = new ArrayList<>();
-//        Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
-//        ts.set(1995, 2, 29, 11, 22) ;
-//        notificationInfoList.add(new HiveBaseInfo("1234", "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1235", "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1236", "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1237", "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1238", "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1239", "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1240", "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1241", "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1242", "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1243", "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
-//    }
+    private void update(String hiveId, String hiveName, int userId, String token){
+        SessionManager session = new SessionManager(getApplicationContext());
+        String from = dateFormat.format(new Date(0));
+        String to = dateFormat.format(new Date().getTime());
+        if(session.isFirstTime()) {
+            session.setFirstTime(false);
+        }
+        else{
 
+        }
+        hiveList.clear();
+        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
+    }
 
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_hive_details;
     }
 
-    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
+    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token, String from, String to){
 
         Log.i(TAG, "Load Hive Details Info method");
         String tag_json_obj = "json_obj_req";
@@ -141,8 +156,8 @@ public class HiveDetailsActivity extends BaseActivity {
             jsonBody.put("user_id", userId);
             jsonBody.put("device_id", hiveId);
             jsonBody.put("token", token);
-            jsonBody.put("from", 0);    //hardcoded from and to because API can't return records based on timestamp
-            jsonBody.put("to", 50);
+            jsonBody.put("from", from);
+            jsonBody.put("to", to);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
@@ -203,22 +218,21 @@ public class HiveDetailsActivity extends BaseActivity {
                         Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));
                         Log.i(TAG, "Float value of timestamp: " + timeStampGregCal.getTime().getTime());
                         hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot, it, oh, ih, w, p, b, timeStampGregCal));
-                        }
+                    }
                     setupGUI();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Log.e(TAG, "Login Error: " + e.getMessage());
-                   //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Reading data error: " + e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
+                Log.e(TAG, "Loading data error response: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        R.string.error_loading_data, Toast.LENGTH_LONG).show();
             }
         }) {
 

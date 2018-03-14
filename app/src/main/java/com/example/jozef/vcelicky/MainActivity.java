@@ -1,32 +1,16 @@
 package com.example.jozef.vcelicky;
 
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,15 +24,12 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
-import com.example.jozef.vcelicky.helper.SessionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -107,7 +88,7 @@ public class MainActivity extends BaseActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         Log.d("firebase", "Firebase Token: " + firebaseToken);
 
-        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -127,8 +108,6 @@ public class MainActivity extends BaseActivity {
                 }
         );
 
-        // Just fake data for testing
-        //createTestData();
     }
 
     @Override

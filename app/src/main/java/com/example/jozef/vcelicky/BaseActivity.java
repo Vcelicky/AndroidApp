@@ -97,6 +97,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             Log.d("BasicActivity", "AboutProject");
             startActivity(intent);
         } else if (id == R.id.nav_profile) {
+            Intent intent = new Intent(BaseActivity.this, ProfilActivity.class);
+            startActivity(intent);
             Log.d("BasicActivity", "Profile");
         } else if (id == R.id.nav_notifications) {
             Intent intent = new Intent(BaseActivity.this, NotificationsActivity.class);

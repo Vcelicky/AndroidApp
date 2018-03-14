@@ -50,6 +50,8 @@
     <string name="numOfDevs">Počet zariadení</string>
     <string name="notes">Poznámky</string>
     <string name="team_web">http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/#</string>
+    <string name="beekeeper">Beekeeper</string>
+    <string name="passwd">Zmena hesla</string>
 
 
     <!--User actions related strings-->

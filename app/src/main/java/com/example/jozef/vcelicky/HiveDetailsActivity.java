@@ -1,6 +1,7 @@
 package com.example.jozef.vcelicky;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
@@ -127,13 +128,16 @@ public class HiveDetailsActivity extends BaseActivity {
 
     private void update(String hiveId, String hiveName, int userId, String token){
         SessionManager session = new SessionManager(getApplicationContext());
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String from = dateFormat.format(new Date(0));
         String to = dateFormat.format(new Date().getTime());
         if(session.isFirstTime()) {
+            Log.i(TAG, "Getting data for the first time");
             session.setFirstTime(false);
         }
         else{
-
+            Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
+            from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1));
         }
         hiveList.clear();
         loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);

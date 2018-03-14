@@ -229,8 +229,21 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return devices;
     }
 
+    // Get most recent time stamp of measurement based on device ID
     public long getMostRecentTimeStamp(String id){
-        //TODO get timestamp of most recent record in local database
-        return 0;
+        long recent = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_TIME
+                + " FROM " + TABLE_MEASUREMENTS
+                + " WHERE " + KEY_DEVICEID + "='" + id
+                + "' ORDER BY " + KEY_TIME + " DESC LIMIT 1";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            recent = cursor.getLong(0);
+        }
+        cursor.close();
+        db.close();
+        return recent;
     }
 }

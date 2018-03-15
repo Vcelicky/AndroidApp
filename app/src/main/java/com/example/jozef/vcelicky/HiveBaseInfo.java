@@ -19,6 +19,7 @@ public class HiveBaseInfo {
     private boolean accelerometer;
     private float battery;
     private GregorianCalendar timeStamp;
+    private long time;
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery, GregorianCalendar timeStamp) {
         this.hiveId = hiveId;
@@ -69,6 +70,10 @@ public class HiveBaseInfo {
     public HiveBaseInfo(String hiveId, String hiveName){
         this.hiveId = hiveId;
         this.hiveName = hiveName;
+    }
+
+    public HiveBaseInfo() {
+
     }
 
     public GregorianCalendar getTimeStamp() {
@@ -149,6 +154,14 @@ public class HiveBaseInfo {
 
     public void setBattery(float battery) {
         this.battery = battery;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }
 

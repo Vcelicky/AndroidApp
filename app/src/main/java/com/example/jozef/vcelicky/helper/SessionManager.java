@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
@@ -36,7 +39,6 @@ public class SessionManager {
     public void setLogin(boolean isLoggedIn) {
 
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
-
         // commit changes
         editor.commit();
 
@@ -46,4 +48,11 @@ public class SessionManager {
     public boolean isLoggedIn(){
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
+
+    public void setFirstTime(String hiveId, boolean isFirstTime){
+        editor.putBoolean(hiveId, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTime(String hiveId){ return pref.getBoolean(hiveId, true); }
 }

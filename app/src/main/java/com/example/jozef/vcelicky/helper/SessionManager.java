@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 public class SessionManager {
     // LogCat tag
@@ -26,6 +29,7 @@ public class SessionManager {
     private static final String PREF_NAME = "VcelickyAppLogin";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static final String KEY_EMAIL = "userEmail";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -47,5 +51,14 @@ public class SessionManager {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
 
+    public void saveUserEmail(String email){
+        editor.putString(KEY_EMAIL, email);
+        editor.commit();
+    }
 
+    public ArrayList<String> getTips(){
+        ArrayList<String> emails = new ArrayList<>();
+        emails.add(pref.getString(KEY_EMAIL, null));
+        return emails;
+    }
 }

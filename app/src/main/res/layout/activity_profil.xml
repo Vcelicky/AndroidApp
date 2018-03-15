@@ -161,9 +161,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/DeviceBeekeeper"
+        app:layout_constraintBottom_toBottomOf="@+id/deviceBeekeeper"
         app:layout_constraintStart_toStartOf="@+id/ZariadeniaText"
-        app:layout_constraintTop_toTopOf="@+id/DeviceBeekeeper"
+        app:layout_constraintTop_toTopOf="@+id/deviceBeekeeper"
         app:layout_constraintVertical_bias="0.72"
         app:srcCompat="@drawable/wireless_dev_logo" />
 
@@ -183,7 +183,7 @@
         app:layout_constraintVertical_bias="0.64" />
 
     <TextView
-        android:id="@+id/DeviceBeekeeper"
+        android:id="@+id/deviceBeekeeper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

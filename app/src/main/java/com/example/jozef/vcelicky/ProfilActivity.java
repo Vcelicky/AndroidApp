@@ -29,6 +29,8 @@ public class ProfilActivity extends AppCompatActivity {
         nameBeekeeper.setText(user.get("name"));
         TextView emailBeekeeper = findViewById(R.id.emailBeekeeper);
         emailBeekeeper.setText(user.get("email"));
+        TextView deviceBeekeper = findViewById(R.id.deviceBeekeeper);
+        deviceBeekeper.setText(db.getUserDevicesCount());
     }
 
     @Override

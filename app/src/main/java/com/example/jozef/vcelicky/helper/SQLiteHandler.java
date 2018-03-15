@@ -168,4 +168,19 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, values.toString());
     }
 
+    //TODO change device name to device id after merge
+    public int getUserDevicesCount(){
+        int count = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_DEVICENAME
+                + " FROM " + TABLE_MEASUREMENTS
+                + " GROUP BY " + KEY_DEVICENAME;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count;
+    }
+
 }

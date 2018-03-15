@@ -2,9 +2,13 @@ package com.example.jozef.vcelicky;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,13 +25,9 @@ import com.example.jozef.vcelicky.helper.SessionManager;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-/**
- * Created by MSI on 8. 3. 2018.
- */
-
 public abstract class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener  {
 
-
+    protected static final long CHARTSCALE = 21600000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -126,6 +126,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
                         if (session.isLoggedIn()) {
                             session.setLogin(false);
+                            ArrayList<String> hives = db.getUserHiveIds();
+                            for(String hive : hives){
+                                session.setFirstTime(hive, true);
+                            }
                             db.deleteUsers();
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
@@ -143,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
     }
 
     // parse date from tomo API time format (day.month.year.hour.minute)
-    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
+    public GregorianCalendar parseDateFromVcelickaApi(boolean fromServer, String timeStamp){ //flag fromServer because of stupidity of GregorianCalendar class
         String[] timeStampParts = timeStamp.split(" ", -1);
         String[] dateParts = timeStampParts[0].split("-", -1);
         String[] timeParts = timeStampParts[1].split(":", -1);
@@ -153,7 +157,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                 year = Integer.parseInt(dateParts[s]);
             }
             if (s == 1) {
-                month = Integer.parseInt(dateParts[s]);
+                if(fromServer){
+                    month = Integer.parseInt(dateParts[s]) - 1;
+                }
+                else{
+                    month = Integer.parseInt(dateParts[s]);
+                }
             }
             if (s == 2) {
                 day = Integer.parseInt(dateParts[s]);
@@ -171,6 +180,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             }
         }
         return new GregorianCalendar(year, month, day, hour, minute, second);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = null;
+        if (cm != null) {
+            netInfo = cm.getActiveNetworkInfo();
+        }
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
 

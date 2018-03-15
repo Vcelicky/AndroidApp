@@ -12,6 +12,9 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
@@ -40,7 +43,6 @@ public class SessionManager {
     public void setLogin(boolean isLoggedIn) {
 
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
-
         // commit changes
         editor.commit();
 
@@ -61,4 +63,11 @@ public class SessionManager {
         emails.add(pref.getString(KEY_EMAIL, null));
         return emails;
     }
+  
+    public void setFirstTime(String hiveId, boolean isFirstTime){
+        editor.putBoolean(hiveId, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTime(String hiveId){ return pref.getBoolean(hiveId, true); }
 }

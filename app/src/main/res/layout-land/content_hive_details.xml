@@ -47,10 +47,21 @@
 
                     </com.github.mikephil.charting.charts.LineChart>
 
-                    <ListView
-                        android:id="@+id/temperatureListView"
+                    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/swipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ListView
+                            android:id="@+id/temperatureListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
 
@@ -67,10 +78,21 @@
 
                     </com.github.mikephil.charting.charts.LineChart>
 
-                    <ListView
-                        android:id="@+id/humidityListView"
+                    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/humiditySwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ListView
+                            android:id="@+id/humidityListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
 
@@ -87,10 +109,21 @@
 
                     </com.github.mikephil.charting.charts.LineChart>
 
-                    <ListView
-                        android:id="@+id/weightListView"
+                    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/weightSwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ListView
+                            android:id="@+id/weightListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
 
@@ -107,10 +140,21 @@
 
                     </com.github.mikephil.charting.charts.LineChart>
 
-                    <ListView
-                        android:id="@+id/batteryListView"
+                    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/batterySwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ListView
+                            android:id="@+id/batteryListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
 
@@ -120,10 +164,21 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ListView
-                        android:id="@+id/accelerometerListView"
+                    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/accelerometerSwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ListView
+                            android:id="@+id/accelerometerListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
             </FrameLayout>

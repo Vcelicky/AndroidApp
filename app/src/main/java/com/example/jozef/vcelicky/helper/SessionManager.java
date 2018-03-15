@@ -29,7 +29,6 @@ public class SessionManager {
     private static final String PREF_NAME = "VcelickyAppLogin";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
-    private List<String> hives = new ArrayList<>();
 
     public SessionManager(Context context) {
         this._context = context;
@@ -50,25 +49,11 @@ public class SessionManager {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
 
-
     //TODO set correct values on isFirstTime when logging off
     public void setFirstTime(String hiveId, boolean isFirstTime){
         editor.putBoolean(hiveId, isFirstTime);
         editor.commit();
-        if(!isFirstTime){
-            hives.add(hiveId);
-        }
     }
 
-    public void setFirstTime(boolean isFirstTime){
-        if(isFirstTime){
-            for(String hive : hives){
-                editor.putBoolean(hive, isFirstTime);
-                editor.commit();
-            }
-            hives.clear();
-        }
-    }
-
-    public boolean isFirstTime(String hiveId){return pref.getBoolean(hiveId, true);}
+    public boolean isFirstTime(String hiveId){ return pref.getBoolean(hiveId, true); }
 }

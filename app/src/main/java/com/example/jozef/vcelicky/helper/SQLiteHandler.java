@@ -281,4 +281,26 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
         return hiveList;
     }
+
+    public ArrayList<String> getUserHiveIds(){
+        ArrayList<String> hives = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_DEVICEID
+                + " FROM " + TABLE_MEASUREMENTS
+                + " GROUP BY " + KEY_DEVICEID;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            String hive;
+            for(int i = 0; i < cursor.getCount(); i++){
+                hive = cursor.getString(0);
+                hives.add(hive);
+                cursor.moveToNext();
+                Log.i(TAG, "Fetching device ID from SQLite: " + hive);
+            }
+        }
+        cursor.close();
+        db.close();
+        return hives;
+    }
 }

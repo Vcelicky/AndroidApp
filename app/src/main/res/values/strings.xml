@@ -49,7 +49,9 @@
     <string name="phone">Telefónne číslo</string>
     <string name="numOfDevs">Počet zariadení</string>
     <string name="notes">Poznámky</string>
-    <string name="team_web">http://team20–17.studenti.fiit.stuba.sk/BeeWebpage/public/#</string>
+    <string name="team_web">http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/#</string>
+    <string name="beekeeper">Beekeeper</string>
+    <string name="passwd">Zmena hesla</string>
     <string name="no_service">Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná</string>
     <string name="error_loading_data">Nepodarilo sa načítať dáta zo servera. Kontaktujte svojho administrátora</string>
 

@@ -73,7 +73,7 @@
                 tools:layout_conversion_absoluteHeight="29dp"
                 tools:layout_conversion_absoluteWidth="39dp" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/editMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

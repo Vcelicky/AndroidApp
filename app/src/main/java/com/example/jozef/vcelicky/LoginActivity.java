@@ -12,9 +12,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -39,7 +44,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final String BOUNDARY = "VcelickovyBoundary";
-    private EditText mail, pass;
+    private EditText pass;
+    private AutoCompleteTextView mail;
     private ConstraintLayout main, error, reg;
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -87,6 +93,19 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        pass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (i == EditorInfo.IME_ACTION_DONE)) {
+                    login(null);
+                }
+                return false;
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, session.getTips());
+        mail.setAdapter(adapter);
     }
 
     @Override
@@ -185,6 +204,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Inserting row in users table
                         db.addUser(user_id, name, email, role, token);
+
+                        // Remember user in shared preferences
+                        session.saveUserEmail(email);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,

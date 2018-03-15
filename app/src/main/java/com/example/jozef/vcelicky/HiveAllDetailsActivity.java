@@ -34,16 +34,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class HiveAllDetailsActivity extends MainActivity {
+public class HiveAllDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveAllDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hive_all_details);
+        baseActivityActivateToolbarAndSideBar();
 
         Intent intent = getIntent();
         String hiveId = intent.getExtras().getString("hiveId");
@@ -57,18 +57,14 @@ public class HiveAllDetailsActivity extends MainActivity {
         String token =  db.getUserDetails().get("token");
         int userId = Integer.parseInt(db.getUserDetails().get("id"));
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         allAdapter = new AdapterHiveDetails(this, hiveList);
 
         loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token);
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_hive_all_details;
     }
 
     public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
@@ -184,68 +180,5 @@ public class HiveAllDetailsActivity extends MainActivity {
         };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
-    }
-
-    // parse date from tomo API time format (day.month.year.hour.minute)
-    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
-        String[] timeStampParts = timeStamp.split(" ", -1);
-        String[] dateParts = timeStampParts[0].split("-", -1);
-        String[] timeParts = timeStampParts[1].split(":", -1);
-        int year=0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
-        for (int s = 0; s < dateParts.length; s++) {
-            if (s == 0) {
-                year = Integer.parseInt(dateParts[s]);
-            }
-            if (s == 1) {
-                month = Integer.parseInt(dateParts[s]);
-            }
-            if (s == 2) {
-                day = Integer.parseInt(dateParts[s]);
-            }
-        }
-        for(int s = 0; s < timeParts.length; s++){
-            if (s == 0){
-                hour = Integer.parseInt(timeParts[s]);
-            }
-            if (s == 1){
-                minute = Integer.parseInt(timeParts[s]);
-            }
-            if (s == 2){
-                second = Integer.parseInt(timeParts[s]);
-            }
-        }
-        return new GregorianCalendar(year, month, day, hour, minute, second);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

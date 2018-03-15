@@ -135,9 +135,9 @@ public class HiveDetailsActivity extends BaseActivity {
     private void update(String hiveId, String hiveName, int userId, String token){
         String from = dateFormat.format(new Date(0));
         String to = dateFormat.format(new Date().getTime());
-        if(session.isFirstTime()) {
+        if(session.isFirstTime(hiveId)) {
             Log.i(TAG, "Getting data for the first time");
-            session.setFirstTime(false);
+            session.setFirstTime(hiveId, false);
         }
         else{
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));

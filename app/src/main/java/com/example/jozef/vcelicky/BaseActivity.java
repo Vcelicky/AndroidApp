@@ -152,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                 year = Integer.parseInt(dateParts[s]);
             }
             if (s == 1) {
-                month = Integer.parseInt(dateParts[s]);
+                month = Integer.parseInt(dateParts[s]) - 1;
             }
             if (s == 2) {
                 day = Integer.parseInt(dateParts[s]);

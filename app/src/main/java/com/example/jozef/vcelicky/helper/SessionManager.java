@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
@@ -26,7 +29,7 @@ public class SessionManager {
     private static final String PREF_NAME = "VcelickyAppLogin";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
-    private static final String KEY_IS_FIRST_TIME = "isFirstTime";
+    private List<String> hives = new ArrayList<>();
 
     public SessionManager(Context context) {
         this._context = context;
@@ -37,7 +40,6 @@ public class SessionManager {
     public void setLogin(boolean isLoggedIn) {
 
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
-
         // commit changes
         editor.commit();
 
@@ -48,10 +50,19 @@ public class SessionManager {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
 
-    public void setFirstTime(boolean isFirstTime){
-        editor.putBoolean(KEY_IS_FIRST_TIME, isFirstTime);
+    public void setFirstTime(String hiveId, boolean isFirstTime){
+        editor.putBoolean(hiveId, isFirstTime);
         editor.commit();
+        if(!isFirstTime){
+            hives.add(hiveId);
+        }
     }
 
-    public boolean isFirstTime(){return pref.getBoolean(KEY_IS_FIRST_TIME, true);}
+    public void setFirstTime(boolean isFirstTime){
+        if(isFirstTime){
+            hives.clear();
+        }
+    }
+
+    public boolean isFirstTime(String hiveId){return pref.getBoolean(hiveId, true);}
 }

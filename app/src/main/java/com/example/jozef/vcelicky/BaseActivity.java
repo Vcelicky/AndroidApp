@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 
 public abstract class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener  {
 
-
+    protected static final long CHARTSCALE = 21600000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,7 +145,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
     }
 
     // parse date from tomo API time format (day.month.year.hour.minute)
-    public GregorianCalendar parseDateFromVcelickaApi(String timeStamp){
+    public GregorianCalendar parseDateFromVcelickaApi(boolean fromServer, String timeStamp){ //flag fromServer because of stupidity of GregorianCalendar class
         String[] timeStampParts = timeStamp.split(" ", -1);
         String[] dateParts = timeStampParts[0].split("-", -1);
         String[] timeParts = timeStampParts[1].split(":", -1);
@@ -155,7 +155,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                 year = Integer.parseInt(dateParts[s]);
             }
             if (s == 1) {
-                month = Integer.parseInt(dateParts[s]) - 1;
+                if(fromServer){
+                    month = Integer.parseInt(dateParts[s]) - 1;
+                }
+                else{
+                    month = Integer.parseInt(dateParts[s]);
+                }
             }
             if (s == 2) {
                 day = Integer.parseInt(dateParts[s]);

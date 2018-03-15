@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity {
                             }
                             if(time == 0){
                                 String timestamp = json.getString("cas");
-                                time = parseDateFromVcelickaApi(timestamp).getTimeInMillis();
+                                time = parseDateFromVcelickaApi(true, timestamp).getTimeInMillis();
                                 Log.i(TAG, "Timestamp from record is: " + timestamp);
                                 Log.i(TAG, "Timestamp from record is: " + time);
                             }

@@ -49,7 +49,6 @@ public class SessionManager {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
 
-    //TODO set correct values on isFirstTime when logging off
     public void setFirstTime(String hiveId, boolean isFirstTime){
         editor.putBoolean(hiveId, isFirstTime);
         editor.commit();

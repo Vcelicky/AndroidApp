@@ -1,7 +1,6 @@
 package com.example.jozef.vcelicky;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -46,7 +44,11 @@ public class HiveDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout temperatureSwipeRefreshLayout;
+    SwipeRefreshLayout humiditySwipeRefreshLayout;
+    SwipeRefreshLayout weightSwipeRefreshLayout;
+    SwipeRefreshLayout batterySwipeRefreshLayout;
+    SwipeRefreshLayout accelerometerSwipeRefreshLayout;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
     SQLiteHandler db;
     SessionManager session;
@@ -113,8 +115,8 @@ public class HiveDetailsActivity extends BaseActivity {
             update(hiveId, hiveName, userId, token);
         }
 
-        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(
+        temperatureSwipeRefreshLayout = findViewById(R.id.temperatureSwipeRefresh);
+        temperatureSwipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
@@ -122,7 +124,75 @@ public class HiveDetailsActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(),
                                     R.string.no_service, Toast.LENGTH_LONG)
                                     .show();
-                            swipeRefreshLayout.setRefreshing(false);
+                            temperatureSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        humiditySwipeRefreshLayout = findViewById(R.id.humiditySwipeRefresh);
+        humiditySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            humiditySwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        weightSwipeRefreshLayout = findViewById(R.id.weightSwipeRefresh);
+        weightSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            weightSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        batterySwipeRefreshLayout = findViewById(R.id.batterySwipeRefresh);
+        batterySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            batterySwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        accelerometerSwipeRefreshLayout = findViewById(R.id.accelerometerSwipeRefresh);
+        accelerometerSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            accelerometerSwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
                             update(hiveId, hiveName, userId, token);
@@ -219,13 +289,17 @@ public class HiveDetailsActivity extends BaseActivity {
                                 Log.i(TAG, "Unable to read value in JSON, setting 0");
                             }
                             String timeStamp = jo.getString("cas");
-                            timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
+                            timeStampGregCal = parseDateFromVcelickaApi(true, timeStamp);
                             }
                         Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
                         Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
                         db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
                     }
-                    swipeRefreshLayout.setRefreshing(false);
+                    temperatureSwipeRefreshLayout.setRefreshing(false);
+                    humiditySwipeRefreshLayout.setRefreshing(false);
+                    weightSwipeRefreshLayout.setRefreshing(false);
+                    batterySwipeRefreshLayout.setRefreshing(false);
+                    accelerometerSwipeRefreshLayout.setRefreshing(false);
                     setupGUI(hiveId);
                 } catch (Exception e) {
                     // JSON error
@@ -273,7 +347,7 @@ public class HiveDetailsActivity extends BaseActivity {
         hiveList = db.getAllMeasurements(hiveId);
         for(HiveBaseInfo hive : hiveList){
             String time = dateFormat.format(new Date(hive.getTime()));
-            hive.setTimeStamp(parseDateFromVcelickaApi(time));
+            hive.setTimeStamp(parseDateFromVcelickaApi(false, time));
         }
 
         //Temperature tab
@@ -310,6 +384,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Humidity tab
         ArrayAdapter<HiveBaseInfo> humidityAdapter;
@@ -345,6 +421,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Weight tab
         ArrayAdapter<HiveBaseInfo> weightAdapter;
@@ -369,6 +447,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Battery tab
         ArrayAdapter<HiveBaseInfo> batteryAdapter;
@@ -393,6 +473,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Position tab
         ArrayAdapter<HiveBaseInfo> positionAdapter;

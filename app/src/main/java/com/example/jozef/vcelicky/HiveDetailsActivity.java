@@ -115,6 +115,7 @@ public class HiveDetailsActivity extends BaseActivity {
             update(hiveId, hiveName, userId, token);
         }
 
+        //TODO too much hardcoded, make it simpler!!
         temperatureSwipeRefreshLayout = findViewById(R.id.temperatureSwipeRefresh);
         temperatureSwipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {

@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class HiveAllDetailsActivity extends BaseActivity {
@@ -69,6 +70,8 @@ public class HiveAllDetailsActivity extends BaseActivity {
 
     public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
 
+        String from = dateFormat.format(new Date(0));
+        String to = dateFormat.format(new Date().getTime());
         Log.i(TAG, "Load Hive Details Info method");
         String tag_json_obj = "json_obj_req";
         JSONObject jsonBody = new JSONObject();
@@ -79,8 +82,8 @@ public class HiveAllDetailsActivity extends BaseActivity {
             jsonBody.put("user_id", userId);
             jsonBody.put("device_id", hiveId);
             jsonBody.put("token", token);
-            jsonBody.put("from", 0);    //hardcoded from and to because API can't return records based on timestamp
-            jsonBody.put("to", 50);
+            jsonBody.put("from", from);    //hardcoded from and to because API can't return records based on timestamp
+            jsonBody.put("to", to);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
@@ -135,7 +138,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
                                 Log.i(TAG, "Unable to read value in JSON, setting 0");
                             }
                             String timeStamp = jo.getString("cas");
-                            timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
+                            timeStampGregCal = parseDateFromVcelickaApi(true, timeStamp);
                             // parse date from tomo API time format (day.month.year.hour.minute)
                         }
                         Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));

@@ -6,6 +6,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -49,7 +51,6 @@ public class HiveDetailsActivity extends BaseActivity {
     SwipeRefreshLayout weightSwipeRefreshLayout;
     SwipeRefreshLayout batterySwipeRefreshLayout;
     SwipeRefreshLayout accelerometerSwipeRefreshLayout;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
     SQLiteHandler db;
     SessionManager session;
 

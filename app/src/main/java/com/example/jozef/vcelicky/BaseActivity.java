@@ -22,12 +22,15 @@ import android.view.MenuItem;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener  {
 
     protected static final long CHARTSCALE = 21600000;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

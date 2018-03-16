@@ -30,7 +30,7 @@ public class ProfilActivity extends AppCompatActivity {
         TextView emailBeekeeper = findViewById(R.id.emailBeekeeper);
         emailBeekeeper.setText(user.get("email"));
         TextView deviceBeekeper = findViewById(R.id.deviceBeekeeper);
-        deviceBeekeper.setText(db.getUserDevicesCount());
+        deviceBeekeper.setText(String.valueOf(db.getUserDevicesCount()));
     }
 
     @Override

@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity {
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
+        FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails().get("id"));
         Log.d("firebase", "Firebase Token: " + firebaseToken);
 
         // Just fake data for testing

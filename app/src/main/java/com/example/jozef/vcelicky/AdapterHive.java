@@ -32,7 +32,10 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         //vyber i-ty prvok z listu
        // Device i = items.get(position);
         TextView textHiveName = (TextView) customView.findViewById(R.id.hive_name);
-        textHiveName.setText("Včelí úľ "+hiveList.get(position).getHiveName());
+        textHiveName.setText(hiveList.get(position).getHiveName());
+
+        TextView textHiveLocation = (TextView) customView.findViewById(R.id.hive_location);
+        textHiveLocation.setText(hiveList.get(position).getHiveLocation()+"   ");
 
         TextView textOutTemperature = (TextView) customView.findViewById(R.id.textOutTemperature);
         textOutTemperature.setText(String.valueOf("T:"+hiveList.get(position).getOutsideTemperature())+"°C (vonkajšia)"); // ("Vonkajšia teplota"+"hiveList.get(position).getHiveName()"+"°C");

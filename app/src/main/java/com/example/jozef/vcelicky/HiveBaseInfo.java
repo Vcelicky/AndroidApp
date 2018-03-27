@@ -1,6 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 
 /**
@@ -19,6 +18,7 @@ public class HiveBaseInfo {
     private boolean accelerometer;
     private float battery;
     private GregorianCalendar timeStamp;
+    private String hiveLocation;
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery, GregorianCalendar timeStamp) {
         this.hiveId = hiveId;
@@ -33,7 +33,7 @@ public class HiveBaseInfo {
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
+    public HiveBaseInfo(String hiveId, String hiveName,String hiveLocation, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
@@ -43,6 +43,7 @@ public class HiveBaseInfo {
         this.weight = weight;
         this.accelerometer = accelerometer;
         this.battery = battery;
+        this.hiveLocation = hiveLocation;
     }
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight) {
@@ -66,9 +67,19 @@ public class HiveBaseInfo {
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(String hiveId, String hiveName){
+    public HiveBaseInfo(String hiveId, String hiveName, String hiveLocation){
         this.hiveId = hiveId;
         this.hiveName = hiveName;
+        this.hiveLocation =  hiveLocation;
+    }
+
+
+    public String getHiveLocation() {
+        return hiveLocation;
+    }
+
+    public void setHiveLocation(String hiveLocation) {
+        this.hiveLocation = hiveLocation;
     }
 
     public GregorianCalendar getTimeStamp() {

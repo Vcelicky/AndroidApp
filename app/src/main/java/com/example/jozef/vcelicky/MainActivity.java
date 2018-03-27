@@ -61,7 +61,6 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseActivityActivateToolbarAndSideBar();
-//       NotificationArchive.getInstance();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Prehľad úľov");
@@ -96,11 +95,11 @@ public class MainActivity extends BaseActivity {
         Log.d(TAG, "Loading hives");
         for (HiveBaseInfo hive : hiveIDs) {
             Log.i(TAG, "Loading data for : " + hive.getHiveId());
-            loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token);
+            loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token, hive.getHiveLocation());
         }
     }
 
-    public void loadHiveBaseInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
+    public void loadHiveBaseInfoServerReq(final String hiveId, final String hiveName, int userId, String token, final String hiveLocation){
 
         Log.i(TAG, "Load Hive BASE Info method");
         String tag_json_obj = "json_obj_req";
@@ -174,7 +173,7 @@ public class MainActivity extends BaseActivity {
                             Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
                     }
-                    hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot , it, oh, ih, w, p, b));
+                    hiveList.add(new HiveBaseInfo(hiveId, hiveName,hiveLocation, ot , it, oh, ih, w, p, b));
                     menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
@@ -184,6 +183,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
+                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -192,9 +192,9 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " Error: " + error.getMessage());
+                Log.e(TAG, " ErrorBBB: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -245,10 +245,13 @@ public class MainActivity extends BaseActivity {
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
-                        String hiveName = json.getString("location");
+        //                String hiveName = json.getString("location");
+                        String hiveName = json.getString("uf_name");
+                     //   String hiveLocation = json.getString("location");
+                        String hiveLocation =json.getString("location");
                         String hiveId = json.getString("device_id");
                         Log.i(TAG, "Loaded Hive: " + json.toString());
-                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName));
+                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName,hiveLocation));
                     }
                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {
@@ -265,7 +268,7 @@ public class MainActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        "ErrorAAA: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -306,7 +309,6 @@ public class MainActivity extends BaseActivity {
                     }
                 }
         );
-
 
     }
 

@@ -92,7 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_limit_values) {
+            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -120,10 +122,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(BaseActivity.this, OrderActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_limit_values){
-            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
-            startActivity(intent);
         }
+//        else if (id == R.id.nav_limit_values){
+//            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
+//            startActivity(intent);
+//        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

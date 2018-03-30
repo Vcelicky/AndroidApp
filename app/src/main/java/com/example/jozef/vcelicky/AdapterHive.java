@@ -38,28 +38,28 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         textHiveLocation.setText(hiveList.get(position).getHiveLocation()+"   ");
 
         TextView textOutTemperature = (TextView) customView.findViewById(R.id.textOutTemperature);
-        textOutTemperature.setText(String.valueOf("T:"+hiveList.get(position).getOutsideTemperature())+"°C (vonkajšia)"); // ("Vonkajšia teplota"+"hiveList.get(position).getHiveName()"+"°C");
+        textOutTemperature.setText(String.valueOf(hiveList.get(position).getOutsideTemperature())+"°C (vonkajšia)"); // ("Vonkajšia teplota"+"hiveList.get(position).getHiveName()"+"°C");
 
         TextView textInTemperature =   (TextView) customView.findViewById(R.id.textInTemperature);
-        textInTemperature.setText( String.valueOf("T:"+hiveList.get(position).getInsideTemperature())+"°C (vnútorná)");
+        textInTemperature.setText( String.valueOf(hiveList.get(position).getInsideTemperature())+"°C (vnútorná)");
 
         TextView textOutHumidity = customView.findViewById(R.id.textOutHumidity);
-        textOutHumidity.setText(String.valueOf("H:"+hiveList.get(position).getOutsideHumidity())+"% (vonkajšia)");
+        textOutHumidity.setText(String.valueOf(hiveList.get(position).getOutsideHumidity())+"% (vonkajšia)");
 
         TextView textInHumidity = customView.findViewById(R.id.textInHumidity);
-        textInHumidity.setText(String.valueOf("H:"+hiveList.get(position).getInsideHumidity())+"% (vnútorná)");
+        textInHumidity.setText(String.valueOf(hiveList.get(position).getInsideHumidity())+"% (vnútorná)");
 
         TextView textWeight = (TextView) customView.findViewById(R.id.textWeight);
-        textWeight.setText(String.valueOf("W:"+hiveList.get(position).getWeight())+"kg");
+        textWeight.setText(String.valueOf(hiveList.get(position).getWeight())+"kg");
 
         TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
         if (!(hiveList.get(position).isAccelerometer())){
-            textAccelerometer.setText("A: OK");
+            textAccelerometer.setText("OK");
         }else{
-            textAccelerometer.setText("A: Úľ je prevrátený");
+            textAccelerometer.setText("Úľ je prevrátený");
         }
         TextView textBattery = (TextView) customView.findViewById(R.id.textBattery);
-        textBattery.setText(String.valueOf("B:"+hiveList.get(position).getBattery())+"%");
+        textBattery.setText(String.valueOf(hiveList.get(position).getBattery())+"%");
 
         return customView;
     }

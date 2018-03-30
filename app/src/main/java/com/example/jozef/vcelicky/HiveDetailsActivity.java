@@ -65,7 +65,7 @@ public class HiveDetailsActivity extends BaseActivity {
         String hiveName = intent.getExtras().getString("hiveName");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Včelí úľ " + hiveName);
+        toolbar.setTitle(hiveName);
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         String token =  db.getUserDetails().get("token");
@@ -371,4 +371,27 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.accelerometerListView);
         menuListView.setAdapter(positionAdapter);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_limit_values) {
+            Intent i = new Intent(getApplicationContext(), LimitValuesSettingsActivity.class);
+            Intent intent = getIntent();
+            String hiveId =  intent.getExtras().getString("hiveId");
+            String hiveName = intent.getExtras().getString("hiveName");
+            i.putExtra("hiveId",hiveId);
+            i.putExtra("hiveName", hiveName);
+            startActivity(i);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

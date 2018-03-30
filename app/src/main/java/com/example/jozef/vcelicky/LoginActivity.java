@@ -82,11 +82,14 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            Log.i("LoginAct", "Prihlasujem bez overenia...");
+            // User is already logged in. Let's check token validity
+            if(!db.isExpired()){
+                // His session han't expired yet. Take him to main activity
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                Log.i("LoginAct", "Prihlasujem bez overenia...");
+            }
         }
         //Arrow back
         Toolbar toolbar = findViewById(R.id.toolbar3);
@@ -197,13 +200,15 @@ public class LoginActivity extends AppCompatActivity {
                         int user_id = Integer.parseInt(response.getString("id"));
                         int role = Integer.parseInt(response.getString("role_id"));
                         String token = response.getString("token");
+                        long expires = response.getLong("expires");
 
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
+                        String phone = user.getString("phone");
 
                         // Inserting row in users table
-                        db.addUser(user_id, name, email, role, token);
+                        db.addUser(user_id, name, email, role, token, phone, expires);
 
                         // Remember user in shared preferences
                         session.saveUserEmail(email);

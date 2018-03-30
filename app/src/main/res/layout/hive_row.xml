@@ -175,7 +175,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorGreen"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInHumidity"
         app:srcCompat="@drawable/battery"  />

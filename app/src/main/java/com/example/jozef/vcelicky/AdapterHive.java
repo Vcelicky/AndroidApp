@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,6 +61,20 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         }
         TextView textBattery = (TextView) customView.findViewById(R.id.textBattery);
         textBattery.setText(String.valueOf(hiveList.get(position).getBattery())+"%");
+
+        ImageView imgBattery = (ImageView) customView.findViewById(R.id.imageBattery);
+        if (hiveList.get(position).getBattery()>75){
+            return customView;
+        }
+        if (hiveList.get(position).getBattery()>50){
+            imgBattery.setImageResource(R.drawable.battery_l3);
+            return customView;
+        }
+        if (hiveList.get(position).getBattery()>25){
+            imgBattery.setImageResource(R.drawable.battery_l2);
+            return customView;
+        }
+        imgBattery.setImageResource(R.drawable.battery_l1);
 
         return customView;
     }

@@ -15,9 +15,10 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         Intent intent = getIntent();
         String hiveId =  intent.getExtras().getString("hiveId");
         String hiveName = intent.getExtras().getString("hiveName");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(hiveName);
 
         //Arrow back
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

@@ -49,8 +49,6 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
     EditText edit_text_humidity_out_down_limit;
     EditText edit_text_batery_limit;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

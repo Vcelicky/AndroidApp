@@ -3,7 +3,6 @@ package com.example.jozef.vcelicky;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.constraint.ConstraintLayout;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
@@ -36,7 +34,6 @@ import com.example.jozef.vcelicky.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.i("LoginAct", "Startin' activity");
-        mail = findViewById(R.id.editMail);
+        Log.i(TAG, "Startin' activity");
+        mail = findViewById(R.id.editLocation);
         pass = findViewById(R.id.editPass);
         main = findViewById(R.id.mainLayout);
         error = findViewById(R.id.errorLayout);
@@ -88,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                Log.i("LoginAct", "Prihlasujem bez overenia...");
+                Log.i(TAG, "Prihlasujem bez overenia...");
             }
         }
         //Arrow back
@@ -308,8 +305,8 @@ public class LoginActivity extends AppCompatActivity {
         final String pass = editPass.getText().toString().trim();
         String passAgain = editPassAgain.getText().toString().trim();
 
-        Log.i("LoginAct", "heslo: " + pass);
-        Log.i("LoginAct", "znova: " + passAgain);
+        Log.i(TAG, "heslo: " + pass);
+        Log.i(TAG, "znova: " + passAgain);
 
         boolean cancel = false;
         View focusView = null;

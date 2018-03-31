@@ -55,6 +55,12 @@
     <string name="no_service">Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná</string>
     <string name="error_loading_data">Nepodarilo sa načítať dáta zo servera. Kontaktujte svojho administrátora</string>
 
+    <!--Order Activity strings-->
+    <string name="hive_name">Názov úľa</string>
+    <string name="hive_location">Adresa úľa</string>
+    <string name="notifications">Notifikácie chcem dostávať \nprostredníctvom:</string>
+    <string name="sms">SMS</string>
+
     <!--User actions related strings-->
     <string name="proceed_with_logout">Chcete pokračovať v odhlásení?</string>
     <string name="yes">Áno</string>

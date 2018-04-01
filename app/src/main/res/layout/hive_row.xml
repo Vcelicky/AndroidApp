@@ -71,7 +71,7 @@
         android:layout_marginLeft="6dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorGreen"
+        android:tint="@color/colorRed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
         app:srcCompat="@drawable/temperature" />
@@ -97,6 +97,7 @@
         android:layout_marginLeft="1dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
+        android:tint="@color/colorRed"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
         app:srcCompat="@drawable/temperature"  />
@@ -118,15 +119,14 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="7dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@android:color/holo_blue_dark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textOutTemperature"
         app:srcCompat="@drawable/humidity"
-         />
+        android:layout_marginLeft="7dp" />
 
     <TextView
         android:id="@+id/textOutHumidity"
@@ -144,11 +144,11 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="7dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@android:color/holo_blue_dark"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInTemperature"
         app:srcCompat="@drawable/humidity" />
@@ -170,13 +170,13 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginStart="6dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@color/colorBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textOutHumidity"
-        app:srcCompat="@drawable/acc" />
+        app:srcCompat="@drawable/acc"
+        android:layout_marginLeft="6dp" />
 
     <TextView
         android:id="@+id/textAccelerometer"
@@ -213,16 +213,17 @@
 
     <ImageView
         android:id="@+id/imageWeight"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="13dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_weight="0.1"
+        android:tint="#515151"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textAccelerometer"
-        app:srcCompat="@drawable/weight" />
+        app:srcCompat="@drawable/weight"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textWeight"

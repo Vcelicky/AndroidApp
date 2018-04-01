@@ -29,6 +29,10 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+/**
+ *  This activity is not used at the moment. It is here for future use.
+ */
+
 public class LimitValuesChooseHiveActivity extends BaseActivity {
 
     private static String TAG = "LimitValuesChooseHiveActivity";

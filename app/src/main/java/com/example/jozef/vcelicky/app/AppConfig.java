@@ -19,4 +19,6 @@ public class AppConfig {
     public static String URL_GET_HIVE_INFO = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/measurements/actual";
     public static String URL_GET_HIVE_INFO_DETAILS ="http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/measurements";
     public static String URL_GET_HIVE_LIMIT_VALUES ="http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/device";
+    public static String URL_PUT_SET_LIMIT_VALUES = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/device/limits";
+    public static String URL_PUT_RESET_LIMIT_VALUES = "https://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/device/limits/reset";
 }

@@ -17,6 +17,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -311,6 +312,17 @@ public class MainActivity extends BaseActivity {
         );
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =  getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_limit_values);
+        item.setVisible(false);
+
+        return true;
+    }
+
 
 //        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
 //        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));

@@ -34,6 +34,7 @@ import com.example.jozef.vcelicky.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,6 +87,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 Log.i(TAG, "Prihlasujem bez overenia...");
+            }
+            else{
+                session.setLogin(false);
+                ArrayList<String> hives = db.getUserHiveIds();
+                for(String hive : hives){
+                    session.setFirstTime(hive, true);
+                }
+                db.deleteUsers();
             }
         }
         //Arrow back

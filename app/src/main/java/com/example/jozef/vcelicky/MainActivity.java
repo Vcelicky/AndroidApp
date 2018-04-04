@@ -1,9 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +10,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +20,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -42,14 +35,12 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
-import com.example.jozef.vcelicky.helper.SessionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
@@ -60,6 +51,8 @@ public class MainActivity extends BaseActivity {
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
     int flag = 0;
+    SwipeRefreshLayout swipeRefreshLayout;
+    SQLiteHandler db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,25 +62,69 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Prehľad úľov");
 
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        String token = db.getUserDetails().get("token");
-        int userId = Integer.parseInt(db.getUserDetails().get("id"));
+        db = new SQLiteHandler(getApplicationContext());
+        final String token =  db.getUserDetails().get("token");
+        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
+
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
 
+        //TODO change SQL method to return directly HiveBaseInfo array list
+        List<HashMap<String, String>> devices = db.getActualMeasurement();
+        for(int i = 0; i < devices.size(); i++) {
+            HashMap<String, String> actual = devices.get(i);
+            hiveList.add(new HiveBaseInfo(
+                    actual.get("deviceId"),
+                    actual.get("deviceName"),
+                    Float.parseFloat(actual.get("tempOut")),
+                    Float.parseFloat(actual.get("tempIn")),
+                    Float.parseFloat(actual.get("humiOut")),
+                    Float.parseFloat(actual.get("humiIn")),
+                    Float.parseFloat(actual.get("weight")),
+                    Boolean.parseBoolean(actual.get("position")),
+                    Float.parseFloat(actual.get("battery"))));
+        }
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
+
         hiveClicked();
-        loadHiveNames(userId, token);
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+        }
+        else {
+            hiveIDs.clear();
+            hiveList.clear();
+            loadHiveNames(userId, token);
+        }
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
         FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails().get("id"));
         Log.d("firebase", "Firebase Token: " + firebaseToken);
 
-        // Just fake data for testing
-        //createTestData();
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            hiveIDs.clear();
+                            hiveList.clear();
+                            loadHiveNames(userId, token);
+                        }
+                    }
+                }
+        );
+
     }
 
     @Override
@@ -175,7 +212,7 @@ public class MainActivity extends BaseActivity {
                             }
                             if(time == 0){
                                 String timestamp = json.getString("cas");
-                                time = parseDateFromVcelickaApi(timestamp).getTimeInMillis();
+                                time = parseDateFromVcelickaApi(true, timestamp).getTimeInMillis();
                                 Log.i(TAG, "Timestamp from record is: " + timestamp);
                                 Log.i(TAG, "Timestamp from record is: " + time);
                             }
@@ -192,8 +229,13 @@ public class MainActivity extends BaseActivity {
                     menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
 
-                    SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-                    db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveId);
+                    if(!db.isMeasurement(time)) {
+                        db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                    }
+                    else{
+                        Log.i(TAG, "Record already exists in database");
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -410,17 +452,4 @@ public class MainActivity extends BaseActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
-
-
-//        hiveList.add(new HiveBaseInfo("1234", "Alfa", 55 , 45, 70, 80, 69,  true,99));
-//        hiveList.add(new HiveBaseInfo("1235", "Beta", 40 , 43, 68, 85,50,true,99));
-//        hiveList.add(new HiveBaseInfo("1236", "Gama", 30 , 42, 68, 82,60,false,99));
-//        hiveList.add(new HiveBaseInfo("1237", "Delta", 40 , 45, 50, 81,53,true,99));
-//        hiveList.add(new HiveBaseInfo("1238", "Pomaranč", 35 , 43, 68, 75,56,true,99));
-//        hiveList.add(new HiveBaseInfo("1239", "Žehlička", 32 , 49, 61, 70,89,true,99));
-//        hiveList.add(new HiveBaseInfo("1240", "Imro", 36 , 45, 68, 60,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1241", "Kýbeľ", 36 , 45, 68, 75,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1242", "Stolička", 36 , 45, 68, 78,66,true,99));
-//        hiveList.add(new HiveBaseInfo("1243", "Slniečko", 36 , 45, 68, 80,66,true,99));
-
 }

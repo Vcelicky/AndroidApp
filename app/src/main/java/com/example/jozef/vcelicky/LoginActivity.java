@@ -3,7 +3,6 @@ package com.example.jozef.vcelicky;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.constraint.ConstraintLayout;
@@ -12,15 +11,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
@@ -31,7 +34,6 @@ import com.example.jozef.vcelicky.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +41,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final String BOUNDARY = "VcelickovyBoundary";
-    private EditText mail, pass;
+    private EditText pass;
+    private AutoCompleteTextView mail;
     private ConstraintLayout main, error, reg;
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -54,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.i("LoginAct", "Startin' activity");
-        mail = findViewById(R.id.editMail);
+        Log.i(TAG, "Startin' activity");
+        mail = findViewById(R.id.editLocation);
         pass = findViewById(R.id.editPass);
         main = findViewById(R.id.mainLayout);
         error = findViewById(R.id.errorLayout);
@@ -76,22 +79,33 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            if(!isOnline()){
-                Toast.makeText(getApplicationContext(),
-                        "Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná", Toast.LENGTH_LONG)
-                        .show();
+            // User is already logged in. Let's check token validity
+            if(!db.isExpired()){
+                // His session han't expired yet. Take him to main activity
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                Log.i(TAG, "Prihlasujem bez overenia...");
             }
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            Log.i("LoginAct", "Prihlasujem bez overenia...");
         }
         //Arrow back
         Toolbar toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        pass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (i == EditorInfo.IME_ACTION_DONE)) {
+                    login(null);
+                }
+                return false;
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, session.getTips());
+        mail.setAdapter(adapter);
     }
 
     @Override
@@ -183,13 +197,18 @@ public class LoginActivity extends AppCompatActivity {
                         int user_id = Integer.parseInt(response.getString("id"));
                         int role = Integer.parseInt(response.getString("role_id"));
                         String token = response.getString("token");
+                        long expires = response.getLong("expires");
 
                         JSONObject user = response.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
+                        String phone = user.getString("phone");
 
                         // Inserting row in users table
-                        db.addUser(user_id, name, email, role, token);
+                        db.addUser(user_id, name, email, role, token, phone, expires);
+
+                        // Remember user in shared preferences
+                        session.saveUserEmail(email);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -243,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
         for (String key : params.keySet()) {
             if (params.get(key) != null) {
                 sbPost.append("\r\n" + "--" + BOUNDARY + "\r\n");
-                sbPost.append("Content-Disposition: form-data; name=\"" + key + "\"" + "\r\n\r\n");
+                sbPost.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append("\r\n\r\n");
                 sbPost.append(params.get(key));
             }
         }
@@ -286,8 +305,8 @@ public class LoginActivity extends AppCompatActivity {
         final String pass = editPass.getText().toString().trim();
         String passAgain = editPassAgain.getText().toString().trim();
 
-        Log.i("LoginAct", "heslo: " + pass);
-        Log.i("LoginAct", "znova: " + passAgain);
+        Log.i(TAG, "heslo: " + pass);
+        Log.i(TAG, "znova: " + passAgain);
 
         boolean cancel = false;
         View focusView = null;
@@ -408,7 +427,6 @@ public class LoginActivity extends AppCompatActivity {
                 AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
             } else {
                 editPassAgain.setError(getString(R.string.error_not_equal_password));
-                focusView = editPassAgain;
                 editPass.setError(getString(R.string.error_not_equal_password));
                 focusView = editPass;
                 focusView.requestFocus();

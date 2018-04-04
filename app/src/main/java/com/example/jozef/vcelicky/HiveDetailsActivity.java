@@ -2,11 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,13 +23,12 @@ import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.HourAxisValueFormatter;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.json.JSONArray;
@@ -41,17 +36,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class HiveDetailsActivity extends BaseActivity {
 
     final String TAG = "HiveDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
+    SwipeRefreshLayout temperatureSwipeRefreshLayout;
+    SwipeRefreshLayout humiditySwipeRefreshLayout;
+    SwipeRefreshLayout weightSwipeRefreshLayout;
+    SwipeRefreshLayout batterySwipeRefreshLayout;
+    SwipeRefreshLayout accelerometerSwipeRefreshLayout;
+    SQLiteHandler db;
+    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,20 +64,17 @@ public class HiveDetailsActivity extends BaseActivity {
         host.setup();
 
         Intent intent = getIntent();
-        String hiveId =  intent.getExtras().getString("hiveId");
-        String hiveName = intent.getExtras().getString("hiveName");
+        final String hiveId =  intent.getExtras().getString("hiveId");
+        final String hiveName = intent.getExtras().getString("hiveName");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(hiveName);
 
-        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        String token =  db.getUserDetails().get("token");
-        int userId = Integer.parseInt(db.getUserDetails().get("id"));
+        db = new SQLiteHandler(getApplicationContext());
+        final String token =  db.getUserDetails().get("token");
+        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
 
-        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token);
-
-        // Just fake data for testing
-        //createTestData();
+        session = new SessionManager(getApplicationContext());
 
         //Tab 1 setup (Temperature)
         TabHost.TabSpec spec = host.newTabSpec("temperature");
@@ -106,31 +105,126 @@ public class HiveDetailsActivity extends BaseActivity {
         spec.setContent(R.id.tab5);
         spec.setIndicator(getString(R.string.accelerometer));
         host.addTab(spec);
+
+        setupGUI(hiveId);
+
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+        }
+        else {
+            update(hiveId, hiveName, userId, token);
+        }
+
+        //TODO too much hardcoded, make it simpler!!
+        temperatureSwipeRefreshLayout = findViewById(R.id.temperatureSwipeRefresh);
+        temperatureSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            temperatureSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        humiditySwipeRefreshLayout = findViewById(R.id.humiditySwipeRefresh);
+        humiditySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            humiditySwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        weightSwipeRefreshLayout = findViewById(R.id.weightSwipeRefresh);
+        weightSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            weightSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        batterySwipeRefreshLayout = findViewById(R.id.batterySwipeRefresh);
+        batterySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            batterySwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
+        accelerometerSwipeRefreshLayout = findViewById(R.id.accelerometerSwipeRefresh);
+        accelerometerSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        if(!isOnline()){
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.no_service, Toast.LENGTH_LONG)
+                                    .show();
+                            accelerometerSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        else {
+                            update(hiveId, hiveName, userId, token);
+                        }
+                    }
+                }
+        );
     }
 
-//    public void createTestData(){
-//        notificationInfoList = new ArrayList<>();
-//        Calendar ts =  new GregorianCalendar(1995, 2, 29, 11, 22);
-//        ts.set(1995, 2, 29, 11, 22) ;
-//        notificationInfoList.add(new HiveBaseInfo("1234", "Včelí úľ Alfa", 55 , 45, 70, 80, 69, new GregorianCalendar(1995, 2, 29, 11, 20),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1235", "Včelí úľ Alfa", 40 , 43, 68, 78,50, new GregorianCalendar(1995, 2, 29, 11, 30),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1236", "Včelí úľ Alfa", 30 , 42, 68, 76,60, new GregorianCalendar(1995, 2, 29, 11, 40),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1237", "Včelí úľ Alfa", 40 , 45, 50, 74,53, new GregorianCalendar(1995, 2, 29, 11, 50),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1238", "Včelí úľ Alfa", 35 , 43, 68, 72,56, new GregorianCalendar(1995, 2, 29, 12, 00),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1239", "Včelí úľ Alfa", 32 , 49, 61, 75,89, new GregorianCalendar(1995, 2, 29, 12, 10),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1240", "Včelí úľ Alfa", 36 , 45, 68, 80,66, new GregorianCalendar(1995, 2, 29, 12, 20),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1241", "Včelí úľ Alfa", 36 , 45, 68, 85,66, new GregorianCalendar(1995, 2, 29, 12, 30),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1242", "Včelí úľ Alfa", 36 , 45, 68, 72,66, new GregorianCalendar(1995, 2, 29, 12, 40),true,99));
-//        notificationInfoList.add(new HiveBaseInfo("1243", "Včelí úľ Alfa", 36 , 45, 68, 75,66, new GregorianCalendar(1995, 2, 29, 12, 50),true,98));
-//    }
-
+    private void update(String hiveId, String hiveName, int userId, String token){
+        String from = dateFormat.format(new Date(0));
+        String to = dateFormat.format(new Date().getTime());
+        if(session.isFirstTime(hiveId)) {
+            Log.i(TAG, "Getting data for the first time");
+            session.setFirstTime(hiveId, false);
+        }
+        else{
+            Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
+            from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
+        }
+        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
+    }
 
     @Override
     protected int getLayoutResourceId() {
         return R.layout.activity_hive_details;
     }
 
-    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
+    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token, String from, String to){
 
         Log.i(TAG, "Load Hive Details Info method");
         String tag_json_obj = "json_obj_req";
@@ -142,8 +236,8 @@ public class HiveDetailsActivity extends BaseActivity {
             jsonBody.put("user_id", userId);
             jsonBody.put("device_id", hiveId);
             jsonBody.put("token", token);
-            jsonBody.put("from", 0);    //hardcoded from and to because API can't return records based on timestamp
-            jsonBody.put("to", 50);
+            jsonBody.put("from", from);
+            jsonBody.put("to", to);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
@@ -198,28 +292,31 @@ public class HiveDetailsActivity extends BaseActivity {
                                 Log.i(TAG, "Unable to read value in JSON, setting 0");
                             }
                             String timeStamp = jo.getString("cas");
-                            timeStampGregCal = parseDateFromVcelickaApi(timeStamp);
-                            // parse date from tomo API time format (day.month.year.hour.minute)
+                            timeStampGregCal = parseDateFromVcelickaApi(true, timeStamp);
                             }
-                        Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));
-                        Log.i(TAG, "Float value of timestamp: " + timeStampGregCal.getTime().getTime());
-                        hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot, it, oh, ih, w, p, b, timeStampGregCal));
-                        }
-                    setupGUI();
+                        Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
+                        Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
+                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                    }
+                    temperatureSwipeRefreshLayout.setRefreshing(false);
+                    humiditySwipeRefreshLayout.setRefreshing(false);
+                    weightSwipeRefreshLayout.setRefreshing(false);
+                    batterySwipeRefreshLayout.setRefreshing(false);
+                    accelerometerSwipeRefreshLayout.setRefreshing(false);
+                    setupGUI(hiveId);
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Log.e(TAG, "Login Error: " + e.getMessage());
-                   //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Reading data error: " + e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
+                Log.e(TAG, "Loading data error response: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        R.string.error_loading_data, Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -243,10 +340,18 @@ public class HiveDetailsActivity extends BaseActivity {
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
-    private void setupGUI() {
+    private void setupGUI(String hiveId) {
         ListView menuListView;
         LineChart chart;
         List<Entry> entries;
+
+        //Get entries from database
+        hiveList.clear();
+        hiveList = db.getAllMeasurements(hiveId);
+        for(HiveBaseInfo hive : hiveList){
+            String time = dateFormat.format(new Date(hive.getTime()));
+            hive.setTimeStamp(parseDateFromVcelickaApi(false, time));
+        }
 
         //Temperature tab
         ArrayAdapter<HiveBaseInfo> temperatureAdapter;
@@ -254,20 +359,20 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.temperatureListView);
         menuListView.setAdapter(temperatureAdapter);
         chart = findViewById(R.id.temperatureChart);
-        ArrayList<ILineDataSet> datasets = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> datasets = new ArrayList<>();
         //Outside temperature
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getOutsideTemperature()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
         dataSet.setColor(Color.RED);
         dataSet.setCircleColor(Color.RED);
         datasets.add(dataSet);
         //Inside temperature
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getInsideTemperature()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
         }
         dataSet = new LineDataSet(entries, "Vnútorná teplota");
         dataSet.setColor(Color.BLUE);
@@ -282,6 +387,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Humidity tab
         ArrayAdapter<HiveBaseInfo> humidityAdapter;
@@ -289,20 +396,20 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.humidityListView);
         menuListView.setAdapter(humidityAdapter);
         chart = findViewById(R.id.humidityChart);
-        datasets = new ArrayList<ILineDataSet>();
+        datasets = new ArrayList<>();
         //Outside humidity
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getOutsideHumidity()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
         }
         dataSet = new LineDataSet(entries, "Vonkajšia vlhkosť");
         dataSet.setColor(Color.RED);
         dataSet.setCircleColor(Color.RED);
         datasets.add(dataSet);
         //Inside humidity
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getInsideHumidity()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
         }
         dataSet = new LineDataSet(entries, "Vnútorná vlhkosť");
         dataSet.setColor(Color.BLUE);
@@ -317,6 +424,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Weight tab
         ArrayAdapter<HiveBaseInfo> weightAdapter;
@@ -324,9 +433,9 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.weightListView);
         menuListView.setAdapter(weightAdapter);
         chart = findViewById(R.id.weightChart);
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getWeight()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
         }
         dataSet = new LineDataSet(entries, "Hmotnosť");
         dataSet.setColor(Color.BLUE);
@@ -341,6 +450,8 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Battery tab
         ArrayAdapter<HiveBaseInfo> batteryAdapter;
@@ -348,9 +459,9 @@ public class HiveDetailsActivity extends BaseActivity {
         menuListView = findViewById(R.id.batteryListView);
         menuListView.setAdapter(batteryAdapter);
         chart = findViewById(R.id.batteryChart);
-        entries = new ArrayList<Entry>();
-        for(int i = hiveList.size() - 1; i >= 0; i--){
-            entries.add(new Entry(hiveList.get(i).getTimeStamp().getTime().getTime(), hiveList.get(i).getBattery()));
+        entries = new ArrayList<>();
+        for (int i = hiveList.size() - 1; i >= 0; i--) {
+            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
         }
         dataSet = new LineDataSet(entries, "Batéria");
         dataSet.setColor(Color.BLUE);
@@ -365,12 +476,21 @@ public class HiveDetailsActivity extends BaseActivity {
         chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
         chart.getAxisRight().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMaximum(CHARTSCALE);
+        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
         //Position tab
         ArrayAdapter<HiveBaseInfo> positionAdapter;
         positionAdapter = new AdapterHivePositionDetails(this, hiveList);
         menuListView = findViewById(R.id.accelerometerListView);
         menuListView.setAdapter(positionAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
     }
 
     @Override
@@ -390,9 +510,15 @@ public class HiveDetailsActivity extends BaseActivity {
             i.putExtra("hiveName", hiveName);
             startActivity(i);
             return true;
+          
+        if (id == R.id.action_show_all) {
+            Intent i = new Intent(getApplicationContext(), HiveAllDetailsActivity.class);
+            i.putExtra("hiveId", hiveList.get(0).getHiveId());
+            i.putExtra("hiveName", hiveList.get(0).getHiveName());
+            startActivity(i);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 }

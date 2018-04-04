@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,10 +28,10 @@ import java.util.HashMap;
 
 public class OrderActivity extends AppCompatActivity {
 
+    private static final String TAG = OrderActivity.class.getSimpleName();
     private EditText editName;
-    private EditText editMail;
-    private EditText editPhone;
-    private EditText editDevCount;
+    private EditText editLocation;
+    private CheckBox checkSms, checkEmail;
     private EditText editNotes;
 
     @Override
@@ -39,13 +40,13 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         editName = findViewById(R.id.editName);
-        editMail = findViewById(R.id.editMail);
-        editPhone = findViewById(R.id.editPhone);
-        editDevCount = findViewById(R.id.editDevCount);
+        editLocation = findViewById(R.id.editLocation);
+        checkSms = findViewById(R.id.sms);
+        checkEmail = findViewById(R.id.email);
         editNotes = findViewById(R.id.editNotes);
 
         //Arrow back
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -53,65 +54,32 @@ public class OrderActivity extends AppCompatActivity {
 
     public void send(View view){
         editName.setError(null);
-        editMail.setError(null);
-        editPhone.setError(null);
-        editDevCount.setError(null);
+        editLocation.setError(null);
+        checkSms.setChecked(false);
+        checkEmail.setChecked(false);
         editNotes.setError(null);
 
         boolean cancel = false;
         View focusView = null;
 
         String name = editName.getText().toString().trim();
-        String email = editMail.getText().toString().trim();
-        String phone = editPhone.getText().toString().trim();
-        int devCount = 0;
-        if(!editDevCount.getText().toString().isEmpty()) {
-            try {
-                devCount = Integer.parseInt(editDevCount.getText().toString());
-            }catch(Exception e){
-                devCount = 0;
-            }
-        }
+        String location = editLocation.getText().toString().trim();
+        boolean sms = checkSms.isChecked();
+        boolean email = checkEmail.isChecked();
         String notes = editNotes.getText().toString().trim();
 
         String tag_json_obj = "json_obj_req";
 
-        // Check for empty device count
-        if (devCount == 0){
-            editDevCount.setError(getString(R.string.error_field_required));
-            focusView = editDevCount;
-            cancel = true;
-        }
-
-        // Check for empty phone number
-        if (TextUtils.isEmpty(phone)){
-            editPhone.setError(getString(R.string.error_field_required));
-            focusView = editPhone;
-            cancel = true;
-        } else if(!FieldChecker.isPhoneNumberValid(phone)){
-            editPhone.setError(getString(R.string.error_invalid_phone));
-            focusView = editPhone;
-            cancel = true;
-        }
-
         // Check for empty e-mail address
-        if (TextUtils.isEmpty(email)){
-            editMail.setError(getString(R.string.error_field_required));
-            focusView = editMail;
-            cancel = true;
-        } else if (!FieldChecker.isEmailValid(email)) {
-            editMail.setError(getString(R.string.error_invalid_email));
-            focusView = editMail;
+        if (TextUtils.isEmpty(location)){
+            editLocation.setError(getString(R.string.error_field_required));
+            focusView = editLocation;
             cancel = true;
         }
 
         // Check for empty name and surname
         if (TextUtils.isEmpty(name)){
             editName.setError(getString(R.string.error_field_required));
-            focusView = editName;
-            cancel = true;
-        } else if(!FieldChecker.isNameValid(name)){
-            editName.setError(getString(R.string.error_invalid_name));
             focusView = editName;
             cancel = true;
         }
@@ -121,24 +89,24 @@ public class OrderActivity extends AppCompatActivity {
         }
         else {
 
-            //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-            //HashMap<String, String> user = db.getUserDetails();
+            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+            HashMap<String, String> user = db.getUserDetails();
 
             JSONObject jsonBody = new JSONObject();
             try {
-                jsonBody.put("name", name);
-                jsonBody.put("email", email);
-                jsonBody.put("phone", phone);
-                jsonBody.put("device_count", devCount);
+                jsonBody.put("id", user.get("id")); //TODO chce to Miso ako string alebo integer?
+                jsonBody.put("hive_name", name);
+                jsonBody.put("hive_address", location);
+                jsonBody.put("SMS", sms);
+                jsonBody.put("E-mail", email);
                 jsonBody.put("notes", notes);
-                //jsonBody.put("user_id", user.get("id"));
-                //jsonBody.put("token", user.get("token"));
+                jsonBody.put("token", user.get("token"));
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
             final String requestBody = jsonBody.toString();
-            Log.i("order", requestBody);
+            Log.i(TAG, requestBody);
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                     AppConfig.URL_ORDER, null, new Response.Listener<JSONObject>() {
@@ -151,11 +119,9 @@ public class OrderActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-//                Log.e("error", "Error response: " + error.getMessage());
-//                Toast.makeText(getApplicationContext(),
-//                        "Error response: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "Objednávka bola úspešne vytvorená", Toast.LENGTH_LONG).show();
-                    finish();
+                Log.i(TAG, "Error response: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        "Error response: " + error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }) {
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.example.jozef.vcelicky.HiveBaseInfo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role_id";
     private static final String KEY_TOKEN = "token";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_EXPIRES = "expires";
 
     // Measurement table column names
     private static final String KEY_TIME = "time";
@@ -60,7 +63,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_NAME + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
                 + KEY_ROLE + " TEXT,"
-                +  KEY_TOKEN + " TEXT" +")";
+                + KEY_TOKEN + " TEXT,"
+                + KEY_PHONE + " TEXT,"
+                + KEY_EXPIRES + " BIGINT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         String CREATE_MEASUREMENT_TABLE = "CREATE TABLE " + TABLE_MEASUREMENTS + " ("
@@ -93,7 +98,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(int user_id, String name, String email, int role, String token) {
+    public void addUser(int user_id, String name, String email, int role, String token, String phone, long expires) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -102,7 +107,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_ROLE, role); // User Role
         values.put(KEY_TOKEN, token); // Token
-
+        values.put(KEY_PHONE, phone);
+        values.put(KEY_EXPIRES, expires);
         // Inserting Row
         long id = db.insert(TABLE_USER, null, values);
         db.close(); // Closing database connection
@@ -317,5 +323,25 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return hives;
+    }
+
+    public boolean isExpired() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_EXPIRES
+                + " FROM " + TABLE_USER;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            Log.i(TAG, String.valueOf(new Date().getTime() / 1000));
+            if(cursor.getLong(0) >= new Date().getTime() / 1000){
+                cursor.close();
+                db.close();
+                return false;
+            }
+        }
+        cursor.close();
+        db.close();
+        return true;
     }
 }

@@ -7,8 +7,8 @@
         android:title="@string/action_show_all"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_settings2"
+        android:id="@+id/action_limit_values"
         android:orderInCategory="100"
-        android:title="Nast"
+        android:title="Hraničné hodnoty"
         app:showAsAction="never" />
 </menu>

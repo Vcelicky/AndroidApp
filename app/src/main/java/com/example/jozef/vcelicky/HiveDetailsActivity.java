@@ -504,13 +504,14 @@ public class HiveDetailsActivity extends BaseActivity {
         if (id == R.id.action_limit_values) {
             Intent i = new Intent(getApplicationContext(), LimitValuesSettingsActivity.class);
             Intent intent = getIntent();
-            String hiveId =  intent.getExtras().getString("hiveId");
+            String hiveId = intent.getExtras().getString("hiveId");
             String hiveName = intent.getExtras().getString("hiveName");
-            i.putExtra("hiveId",hiveId);
+            i.putExtra("hiveId", hiveId);
             i.putExtra("hiveName", hiveName);
             startActivity(i);
             return true;
-          
+
+        }
         if (id == R.id.action_show_all) {
             Intent i = new Intent(getApplicationContext(), HiveAllDetailsActivity.class);
             i.putExtra("hiveId", hiveList.get(0).getHiveId());
@@ -518,7 +519,6 @@ public class HiveDetailsActivity extends BaseActivity {
             startActivity(i);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

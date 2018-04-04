@@ -44,7 +44,19 @@ public class HiveBaseInfo {
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(String hiveId, String hiveName,String hiveLocation, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
+    public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
+        this.hiveId = hiveId;
+        this.hiveName = hiveName;
+        this.outsideTemperature = outsideTemperature;
+        this.insideTemperature = insideTemperature;
+        this.outsideHumidity = outsideHumidity;
+        this.insideHumidity = insideHumidity;
+        this.weight = weight;
+        this.accelerometer = accelerometer;
+        this.battery = battery;
+    }
+
+    public HiveBaseInfo(String hiveId, String hiveName, String hiveLocation, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;

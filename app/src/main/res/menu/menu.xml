@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="@string/action_show_all"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings2"
+        android:orderInCategory="100"
+        android:title="Nast"
+        app:showAsAction="never" />
 </menu>

@@ -1,10 +1,21 @@
 package com.example.jozef.vcelicky;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,6 +50,7 @@ public class MainActivity extends BaseActivity {
     ListView menuListView;
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
+    int flag = 0;
     SwipeRefreshLayout swipeRefreshLayout;
     SQLiteHandler db;
 
@@ -53,6 +65,7 @@ public class MainActivity extends BaseActivity {
         db = new SQLiteHandler(getApplicationContext());
         final String token =  db.getUserDetails().get("token");
         final int userId = Integer.parseInt(db.getUserDetails().get("id"));
+
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
 
@@ -89,6 +102,7 @@ public class MainActivity extends BaseActivity {
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
+        FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails().get("id"));
         Log.d("firebase", "Firebase Token: " + firebaseToken);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
@@ -120,13 +134,19 @@ public class MainActivity extends BaseActivity {
 
     public void loadHiveBaseInfo(int userId, String token){
         Log.d(TAG, "Loading hives");
-        for (HiveBaseInfo hive : hiveIDs) {
-            Log.i(TAG, "Loading data for : " + hive.getHiveId());
-            loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token);
+        try {
+            for (HiveBaseInfo hive : hiveIDs) {
+                Log.i(TAG, "Loading data for : " + hive.getHiveId());
+                loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token, hive.getHiveLocation());
+            }
+        }  catch (Exception e) {
+            Log.e(TAG, " Error: loadHiveBaseInfoServerReq: " + e.getMessage());
+            Toast.makeText(getApplicationContext(), "Error loading data from server" + e.getMessage(), Toast.LENGTH_LONG).show();
+         return;
         }
     }
 
-    public void loadHiveBaseInfoServerReq(final String hiveId, final String hiveName, int userId, String token){
+    public void loadHiveBaseInfoServerReq(final String hiveId, final String hiveName, final int userId,final String token, final String hiveLocation) {
 
         Log.i(TAG, "Load Hive BASE Info method");
         String tag_json_obj = "json_obj_req";
@@ -200,10 +220,14 @@ public class MainActivity extends BaseActivity {
                             Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
                     }
-                    hiveList.add(new HiveBaseInfo(hiveId, hiveName, ot , it, oh, ih, w, p, b));
+                    HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName,hiveLocation, ot , it, oh, ih, w, p, b);
+     //               loadLimitValues (hiveId, userId, token,hive);
+
+                    Log.i(TAG, "Hivelist lenght : " + hiveList.size());
+
+                    hiveList.add(hive);
                     menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
-                    Log.i(TAG, "Hivelist lenght : " + hiveList.size());
 
                     if(!db.isMeasurement(time)) {
                         db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
@@ -215,6 +239,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
+                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -223,9 +248,9 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " Error: " + error.getMessage());
+                Log.e(TAG, " ErrorBBB: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -276,10 +301,13 @@ public class MainActivity extends BaseActivity {
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
-                        String hiveName = json.getString("location");
+        //                String hiveName = json.getString("location");
+                        String hiveName = json.getString("uf_name");
+                     //   String hiveLocation = json.getString("location");
+                        String hiveLocation =json.getString("location");
                         String hiveId = json.getString("device_id");
                         Log.i(TAG, "Loaded Hive: " + json.toString());
-                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName));
+                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName,hiveLocation));
                     }
                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {
@@ -296,7 +324,7 @@ public class MainActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        "ErrorAAA: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -338,6 +366,90 @@ public class MainActivity extends BaseActivity {
                 }
         );
 
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =  getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_limit_values);
+        item.setVisible(false);
+        return true;
+    }
+
+    public void loadLimitValues (final String hiveId, int userId, String token, final HiveBaseInfo hive){
+
+        Log.i(TAG, "Load limit values method");
+        String tag_json_obj = "json_obj_req";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("user_id", userId);
+            jsonBody.put("device_id", hiveId);
+            jsonBody.put("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+        final String requestBody = jsonBody.toString();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                AppConfig.URL_GET_HIVE_LIMIT_VALUES, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i(TAG, "Load Hive Limit values " + response.toString());
+
+                try {
+                    JSONObject json = response.getJSONObject("data");
+
+                    try {
+                       hive.setHumidity_in_up_limit(json.getInt("temperature_in_up_limit"));
+                       hive.setTemperature_in_down_limit(json.getInt("temperature_in_down_limit"));
+                       hive.setWeight_limit(json.getInt("weight_limit"));
+                       hive.setTemperature_out_up_limit(json.getInt("temperature_out_up_limit"));
+                       hive.setTemperature_out_down_limit(json.getInt("temperature_out_down_limit"));
+                       hive.setHumidity_in_up_limit( json.getInt("humidity_in_up_limit"));
+                       hive.setHumidity_in_down_limit(json.getInt("humidity_in_down_limit"));
+                       hive.setHumidity_out_up_limit(json.getInt("humidity_out_up_limit"));
+                       hive.setHumidity_out_down_limit(json.getInt("humidity_out_down_limit"));
+                       hive.setBatery_limit(json.getInt("batery_limit"));
+
+                    }catch(Exception e){
+                        Log.i(TAG, "NULL value loaded, saving variable with 0");
+                    }
+                } catch (Exception e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
+                    //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " ErrorBBB: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee){
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 }

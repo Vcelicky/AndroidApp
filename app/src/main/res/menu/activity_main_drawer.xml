@@ -13,12 +13,16 @@
         <item
             android:id="@+id/nav_notifications"
             android:title="Notifikácie" />
+        <!--<item-->
+            <!--android:id="@+id/nav_limit_values"-->
+            <!--android:title="Nastavenie hraničných hodnôt" />-->
         <item
             android:id="@+id/nav_logout"
             android:title="Odhlásenie" />
         <item
             android:id="@+id/nav_about_project"
             android:title="O projekte" />
+
     </group>
 
 </menu>

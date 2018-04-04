@@ -1,6 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 
 /**
@@ -19,6 +18,17 @@ public class HiveBaseInfo {
     private boolean accelerometer;
     private float battery;
     private GregorianCalendar timeStamp;
+    private String hiveLocation;
+    int temperature_in_up_limit;
+    int temperature_in_down_limit;
+    int weight_limit;
+    int temperature_out_up_limit;
+    int temperature_out_down_limit;
+    int humidity_in_up_limit;
+    int humidity_in_down_limit;
+    int humidity_out_up_limit;
+    int humidity_out_down_limit;
+    int batery_limit;
     private long time;
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery, GregorianCalendar timeStamp) {
@@ -34,7 +44,7 @@ public class HiveBaseInfo {
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
+    public HiveBaseInfo(String hiveId, String hiveName,String hiveLocation, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery) {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.outsideTemperature = outsideTemperature;
@@ -44,6 +54,7 @@ public class HiveBaseInfo {
         this.weight = weight;
         this.accelerometer = accelerometer;
         this.battery = battery;
+        this.hiveLocation = hiveLocation;
     }
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight) {
@@ -67,9 +78,98 @@ public class HiveBaseInfo {
         this.timeStamp = timeStamp;
     }
 
-    public HiveBaseInfo(String hiveId, String hiveName){
+    public HiveBaseInfo(String hiveId, String hiveName, String hiveLocation){
         this.hiveId = hiveId;
         this.hiveName = hiveName;
+        this.hiveLocation =  hiveLocation;
+    }
+
+    public int getTemperature_in_up_limit() {
+        return temperature_in_up_limit;
+    }
+
+    public void setTemperature_in_up_limit(int temperature_in_up_limit) {
+        this.temperature_in_up_limit = temperature_in_up_limit;
+    }
+
+    public int getTemperature_in_down_limit() {
+        return temperature_in_down_limit;
+    }
+
+    public void setTemperature_in_down_limit(int temperature_in_down_limit) {
+        this.temperature_in_down_limit = temperature_in_down_limit;
+    }
+
+    public int getWeight_limit() {
+        return weight_limit;
+    }
+
+    public void setWeight_limit(int weight_limit) {
+        this.weight_limit = weight_limit;
+    }
+
+    public int getTemperature_out_up_limit() {
+        return temperature_out_up_limit;
+    }
+
+    public void setTemperature_out_up_limit(int temperature_out_up_limit) {
+        this.temperature_out_up_limit = temperature_out_up_limit;
+    }
+
+    public int getTemperature_out_down_limit() {
+        return temperature_out_down_limit;
+    }
+
+    public void setTemperature_out_down_limit(int temperature_out_down_limit) {
+        this.temperature_out_down_limit = temperature_out_down_limit;
+    }
+
+    public int getHumidity_in_up_limit() {
+        return humidity_in_up_limit;
+    }
+
+    public void setHumidity_in_up_limit(int humidity_in_up_limit) {
+        this.humidity_in_up_limit = humidity_in_up_limit;
+    }
+
+    public int getHumidity_in_down_limit() {
+        return humidity_in_down_limit;
+    }
+
+    public void setHumidity_in_down_limit(int humidity_in_down_limit) {
+        this.humidity_in_down_limit = humidity_in_down_limit;
+    }
+
+    public int getHumidity_out_up_limit() {
+        return humidity_out_up_limit;
+    }
+
+    public void setHumidity_out_up_limit(int humidity_out_up_limit) {
+        this.humidity_out_up_limit = humidity_out_up_limit;
+    }
+
+    public int getHumidity_out_down_limit() {
+        return humidity_out_down_limit;
+    }
+
+    public void setHumidity_out_down_limit(int humidity_out_down_limit) {
+        this.humidity_out_down_limit = humidity_out_down_limit;
+    }
+
+    public int getBatery_limit() {
+        return batery_limit;
+    }
+
+    public void setBatery_limit(int batery_limit) {
+        this.batery_limit = batery_limit;
+    }
+
+    public String getHiveLocation() {
+        return hiveLocation;
+    }
+
+    public void setHiveLocation(String hiveLocation) {
+        this.hiveLocation = hiveLocation;
     }
 
     public HiveBaseInfo() {

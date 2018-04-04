@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.jozef.vcelicky.MainActivity"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorWhite"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    <TextView
+        android:id="@+id/editName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Vnútorná teplota"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/editName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Vonkajšia teplota"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginRight="8dp" />
+
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="129dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorAccent"
+        android:onClick="reset"
+        android:text="Predvolené"
+        app:layout_constraintStart_toStartOf="@+id/editName5"
+        app:layout_constraintTop_toBottomOf="@+id/editTextBatMin" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="129dp"
+        android:layout_height="42dp"
+
+        android:layout_marginTop="40dp"
+        android:background="@color/colorAccent"
+        android:onClick="send"
+        android:text="Uložiť"
+        app:layout_constraintEnd_toEndOf="@+id/editName32"
+        app:layout_constraintTop_toBottomOf="@+id/editTextBatMin" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="MAX"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextTempInMax"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textView171"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:text="MAX"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="@+id/editName2"
+        app:layout_constraintTop_toBottomOf="@+id/editName2" />
+
+    <TextView
+        android:id="@+id/textView1712"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+
+        android:layout_marginTop="17dp"
+        android:text="MIN"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="@+id/textView171"
+        app:layout_constraintTop_toBottomOf="@+id/textView171" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="17dp"
+        android:text="MIN"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextTempInMax"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toBottomOf="@+id/editName"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextTempInMin"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTempInMax"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextTempOutMax"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView171"
+        app:layout_constraintTop_toBottomOf="@+id/editName2"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextTempOutMin"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView1712"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTempOutMax"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/editName3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Vnútorná vlhkosť"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTempInMin"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/editName4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Vonkajšia vlhkosť"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView1712"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTempInMin"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="MAX"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editName3"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="17dp"
+        android:text="MIN"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextHumInMax"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/editName3"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextHumInMin"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHumInMax"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:text="MAX"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="@+id/editName4"
+        app:layout_constraintTop_toBottomOf="@+id/editName4" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="17dp"
+        android:text="MIN"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <EditText
+        android:id="@+id/editTextHumOutMax"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/editName4"
+        android:layout_marginLeft="8dp" />
+
+    <EditText
+        android:id="@+id/editTextHumOutMin"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHumOutMax"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/editName32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Batéria"
+        android:textColor="@color/colorBlack"
+
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHumInMin"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="MIN"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editName32"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/editName5"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:text="Hmotnosť"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHumOutMin" />
+
+    <EditText
+        android:id="@+id/editTextBatMin"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView19"
+        app:layout_constraintTop_toBottomOf="@+id/editName32"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textView26"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:text="MAX"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintStart_toStartOf="@+id/editName5"
+        app:layout_constraintTop_toBottomOf="@+id/editName5" />
+
+    <EditText
+        android:id="@+id/editTextWeiMax"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:singleLine="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textView26"
+        app:layout_constraintTop_toBottomOf="@+id/editName5"
+        android:layout_marginLeft="8dp" />
+
+</android.support.constraint.ConstraintLayout>

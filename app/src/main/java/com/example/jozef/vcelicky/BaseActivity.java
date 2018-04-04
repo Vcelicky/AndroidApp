@@ -18,10 +18,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.jozef.vcelicky.app.AppConfig;
+import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -82,7 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_limit_values) {
+            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -113,6 +125,11 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             Intent intent = new Intent(BaseActivity.this, OrderActivity.class);
             startActivity(intent);
         }
+//        else if (id == R.id.nav_limit_values){
+//            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
+//            startActivity(intent);
+//        }
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -7,38 +7,82 @@
 
     <TextView
         android:id="@+id/hive_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="25dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Vceli ul 1"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorBlack"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/imageHive"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp" />
 
+    <TextView
+        android:id="@+id/hive_location"
+        android:layout_width="140dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="8dp"
+        android:gravity="end"
+        android:text="Lokalita"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageLocation"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="6dp" />
+
+    <ImageView
+        android:id="@+id/imageHive"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginStart="6dp"
+        android:layout_weight="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/hive_name"
+        app:srcCompat="@drawable/hive"
+        android:layout_marginLeft="6dp" />
+
+    <ImageView
+        android:id="@+id/imageLocation"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="3dp"
+        android:layout_weight="0.1"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/hive_location"
+        app:srcCompat="@drawable/map"
+        android:layout_marginLeft="4dp" />
+
+
     <ImageView
         android:id="@+id/imageOutTemperature"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorGreen"
+        android:tint="@color/colorRed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/temperature" />
 
     <TextView
         android:id="@+id/textOutTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         android:layout_weight="0.4"
         android:text="Out temperature"
         app:layout_constraintStart_toEndOf="@+id/imageOutTemperature"
@@ -46,24 +90,25 @@
 
     <ImageView
         android:id="@+id/imageInTemperature"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
+        android:tint="@color/colorRed"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/temperature"  />
 
     <TextView
         android:id="@+id/textInTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         android:layout_weight="0.4"
         android:text="In temperature"
         app:layout_constraintStart_toEndOf="@+id/imageInTemperature"
@@ -71,131 +116,126 @@
 
     <ImageView
         android:id="@+id/imageOutHumidity"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@android:color/holo_blue_dark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textOutTemperature"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/humidity"
+        android:layout_marginLeft="7dp" />
 
     <TextView
         android:id="@+id/textOutHumidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+
+        android:layout_marginTop="4dp"
         android:layout_weight="0.4"
         android:text="Out Humidity"
-        app:layout_constraintStart_toEndOf="@+id/imageOutHumidity"
+        app:layout_constraintStart_toStartOf="@+id/textOutTemperature"
         app:layout_constraintTop_toBottomOf="@+id/textOutTemperature" />
 
     <ImageView
         android:id="@+id/imageInHumidity"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="7dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@android:color/holo_blue_dark"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInTemperature"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/humidity" />
 
     <TextView
         android:id="@+id/textInHumidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+
+        android:layout_marginTop="6dp"
         android:layout_weight="0.4"
         android:text="In humidity"
-        app:layout_constraintStart_toEndOf="@+id/imageInHumidity"
+        app:layout_constraintStart_toStartOf="@+id/textInTemperature"
         app:layout_constraintTop_toBottomOf="@+id/textInTemperature" />
 
     <ImageView
         android:id="@+id/imageAccelerometer"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorRed"
+        android:tint="@color/colorBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textOutHumidity"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/acc"
+        android:layout_marginLeft="6dp" />
 
     <TextView
         android:id="@+id/textAccelerometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+
+        android:layout_marginTop="5dp"
         android:text="Accelerometer"
-        app:layout_constraintStart_toEndOf="@+id/imageAccelerometer"
-        app:layout_constraintTop_toBottomOf="@+id/textOutHumidity"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintStart_toStartOf="@+id/textOutHumidity"
+        app:layout_constraintTop_toBottomOf="@+id/textOutHumidity" />
 
     <ImageView
         android:id="@+id/imageBattery"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="14dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorGreen"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInHumidity"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/battery"  />
 
     <TextView
         android:id="@+id/textBattery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="0.4"
         android:text="Battery"
-        app:layout_constraintStart_toEndOf="@+id/imageBattery"
+        app:layout_constraintStart_toStartOf="@+id/textInHumidity"
         app:layout_constraintTop_toBottomOf="@+id/textInHumidity" />
 
     <ImageView
         android:id="@+id/imageWeight"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="13dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="0.1"
+        android:tint="#515151"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textAccelerometer"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="@drawable/weight"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textWeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="0.4"
         android:text="Weight"
-        app:layout_constraintStart_toEndOf="@+id/imageWeight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textAccelerometer"
         app:layout_constraintTop_toBottomOf="@+id/textAccelerometer" />
 
     <android.support.constraint.Guideline
@@ -204,5 +244,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="192dp" />
+
 
 </android.support.constraint.ConstraintLayout>

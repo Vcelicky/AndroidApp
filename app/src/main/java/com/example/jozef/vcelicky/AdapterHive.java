@@ -92,11 +92,9 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         Log.i(TAG, "L: " + hiveList.get(position).getBatery_limit());
         if (hiveList.get(position).getBattery() <= hiveList.get(position).getBatery_limit()){
             textBattery.setTextColor(Color.parseColor("#FF0000"));
-
-
         }
 
-        ImageView imgBattery = (ImageView) customView.findViewById(R.id.imageBattery);
+        ImageView imgBattery = customView.findViewById(R.id.imageBattery);
         if (hiveList.get(position).getBattery()>75){
             return customView;
         }

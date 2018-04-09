@@ -124,7 +124,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(BaseActivity.this, OrderActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_mainActivity){
+            Intent intent = new Intent(BaseActivity.this, MainActivity.class);
+            startActivity(intent);
         }
+
+
+
+
 //        else if (id == R.id.nav_limit_values){
 //            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
 //            startActivity(intent);

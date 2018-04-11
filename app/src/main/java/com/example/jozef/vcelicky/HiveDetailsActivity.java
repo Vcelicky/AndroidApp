@@ -348,142 +348,144 @@ public class HiveDetailsActivity extends BaseActivity {
         //Get entries from database
         hiveList.clear();
         hiveList = db.getAllMeasurements(hiveId);
-        for(HiveBaseInfo hive : hiveList){
-            String time = dateFormat.format(new Date(hive.getTime()));
-            hive.setTimeStamp(parseDateFromVcelickaApi(false, time));
-        }
+        if(hiveList.size() > 0) {
+            for (HiveBaseInfo hive : hiveList) {
+                String time = dateFormat.format(new Date(hive.getTime()));
+                hive.setTimeStamp(parseDateFromVcelickaApi(false, time));
+            }
 
-        //Temperature tab
-        ArrayAdapter<HiveBaseInfo> temperatureAdapter;
-        temperatureAdapter = new AdapterHiveTemperatureDetails(this, hiveList);
-        menuListView = findViewById(R.id.temperatureListView);
-        menuListView.setAdapter(temperatureAdapter);
-        chart = findViewById(R.id.temperatureChart);
-        ArrayList<ILineDataSet> datasets = new ArrayList<>();
-        //Outside temperature
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
-        }
-        LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
-        dataSet.setColor(Color.RED);
-        dataSet.setCircleColor(Color.RED);
-        datasets.add(dataSet);
-        //Inside temperature
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
-        }
-        dataSet = new LineDataSet(entries, "Vnútorná teplota");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
-        datasets.add(dataSet);
-        //Mapping data on chart
-        LineData lineData = new LineData(datasets);
-        chart.setData(lineData);
-        chart.invalidate();
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setEnabled(true);
-        chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
-        chart.getAxisRight().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-        chart.setVisibleXRangeMaximum(CHARTSCALE);
-        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            //Temperature tab
+            ArrayAdapter<HiveBaseInfo> temperatureAdapter;
+            temperatureAdapter = new AdapterHiveTemperatureDetails(this, hiveList);
+            menuListView = findViewById(R.id.temperatureListView);
+            menuListView.setAdapter(temperatureAdapter);
+            chart = findViewById(R.id.temperatureChart);
+            ArrayList<ILineDataSet> datasets = new ArrayList<>();
+            //Outside temperature
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
+            }
+            LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
+            dataSet.setColor(Color.RED);
+            dataSet.setCircleColor(Color.RED);
+            datasets.add(dataSet);
+            //Inside temperature
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
+            }
+            dataSet = new LineDataSet(entries, "Vnútorná teplota");
+            dataSet.setColor(Color.BLUE);
+            dataSet.setCircleColor(Color.BLUE);
+            datasets.add(dataSet);
+            //Mapping data on chart
+            LineData lineData = new LineData(datasets);
+            chart.setData(lineData);
+            chart.invalidate();
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getXAxis().setEnabled(true);
+            chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
+            chart.getAxisRight().setEnabled(false);
+            chart.getDescription().setEnabled(false);
+            chart.setVisibleXRangeMaximum(CHARTSCALE);
+            chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
-        //Humidity tab
-        ArrayAdapter<HiveBaseInfo> humidityAdapter;
-        humidityAdapter = new AdapterHiveHumidityDetails(this, hiveList);
-        menuListView = findViewById(R.id.humidityListView);
-        menuListView.setAdapter(humidityAdapter);
-        chart = findViewById(R.id.humidityChart);
-        datasets = new ArrayList<>();
-        //Outside humidity
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
-        }
-        dataSet = new LineDataSet(entries, "Vonkajšia vlhkosť");
-        dataSet.setColor(Color.RED);
-        dataSet.setCircleColor(Color.RED);
-        datasets.add(dataSet);
-        //Inside humidity
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
-        }
-        dataSet = new LineDataSet(entries, "Vnútorná vlhkosť");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
-        datasets.add(dataSet);
-        //Mapping data on chart
-        lineData = new LineData(datasets);
-        chart.setData(lineData);
-        chart.invalidate();
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setEnabled(true);
-        chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
-        chart.getAxisRight().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-        chart.setVisibleXRangeMaximum(CHARTSCALE);
-        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            //Humidity tab
+            ArrayAdapter<HiveBaseInfo> humidityAdapter;
+            humidityAdapter = new AdapterHiveHumidityDetails(this, hiveList);
+            menuListView = findViewById(R.id.humidityListView);
+            menuListView.setAdapter(humidityAdapter);
+            chart = findViewById(R.id.humidityChart);
+            datasets = new ArrayList<>();
+            //Outside humidity
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
+            }
+            dataSet = new LineDataSet(entries, "Vonkajšia vlhkosť");
+            dataSet.setColor(Color.RED);
+            dataSet.setCircleColor(Color.RED);
+            datasets.add(dataSet);
+            //Inside humidity
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
+            }
+            dataSet = new LineDataSet(entries, "Vnútorná vlhkosť");
+            dataSet.setColor(Color.BLUE);
+            dataSet.setCircleColor(Color.BLUE);
+            datasets.add(dataSet);
+            //Mapping data on chart
+            lineData = new LineData(datasets);
+            chart.setData(lineData);
+            chart.invalidate();
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getXAxis().setEnabled(true);
+            chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
+            chart.getAxisRight().setEnabled(false);
+            chart.getDescription().setEnabled(false);
+            chart.setVisibleXRangeMaximum(CHARTSCALE);
+            chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
-        //Weight tab
-        ArrayAdapter<HiveBaseInfo> weightAdapter;
-        weightAdapter = new AdapterHiveWeightDetails(this, hiveList);
-        menuListView = findViewById(R.id.weightListView);
-        menuListView.setAdapter(weightAdapter);
-        chart = findViewById(R.id.weightChart);
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
-        }
-        dataSet = new LineDataSet(entries, "Hmotnosť");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
-        //Mapping data on chart
-        lineData = new LineData();
-        lineData.addDataSet(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setEnabled(true);
-        chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
-        chart.getAxisRight().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-        chart.setVisibleXRangeMaximum(CHARTSCALE);
-        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            //Weight tab
+            ArrayAdapter<HiveBaseInfo> weightAdapter;
+            weightAdapter = new AdapterHiveWeightDetails(this, hiveList);
+            menuListView = findViewById(R.id.weightListView);
+            menuListView.setAdapter(weightAdapter);
+            chart = findViewById(R.id.weightChart);
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
+            }
+            dataSet = new LineDataSet(entries, "Hmotnosť");
+            dataSet.setColor(Color.BLUE);
+            dataSet.setCircleColor(Color.BLUE);
+            //Mapping data on chart
+            lineData = new LineData();
+            lineData.addDataSet(dataSet);
+            chart.setData(lineData);
+            chart.invalidate();
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getXAxis().setEnabled(true);
+            chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
+            chart.getAxisRight().setEnabled(false);
+            chart.getDescription().setEnabled(false);
+            chart.setVisibleXRangeMaximum(CHARTSCALE);
+            chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
-        //Battery tab
-        ArrayAdapter<HiveBaseInfo> batteryAdapter;
-        batteryAdapter = new AdapterHiveBatteryDetails(this, hiveList);
-        menuListView = findViewById(R.id.batteryListView);
-        menuListView.setAdapter(batteryAdapter);
-        chart = findViewById(R.id.batteryChart);
-        entries = new ArrayList<>();
-        for (int i = hiveList.size() - 1; i >= 0; i--) {
-            entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
-        }
-        dataSet = new LineDataSet(entries, "Batéria");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
-        //Mapping data on chart
-        lineData = new LineData();
-        lineData.addDataSet(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setEnabled(true);
-        chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
-        chart.getAxisRight().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-        chart.setVisibleXRangeMaximum(CHARTSCALE);
-        chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            //Battery tab
+            ArrayAdapter<HiveBaseInfo> batteryAdapter;
+            batteryAdapter = new AdapterHiveBatteryDetails(this, hiveList);
+            menuListView = findViewById(R.id.batteryListView);
+            menuListView.setAdapter(batteryAdapter);
+            chart = findViewById(R.id.batteryChart);
+            entries = new ArrayList<>();
+            for (int i = hiveList.size() - 1; i >= 0; i--) {
+                entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
+            }
+            dataSet = new LineDataSet(entries, "Batéria");
+            dataSet.setColor(Color.BLUE);
+            dataSet.setCircleColor(Color.BLUE);
+            //Mapping data on chart
+            lineData = new LineData();
+            lineData.addDataSet(dataSet);
+            chart.setData(lineData);
+            chart.invalidate();
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getXAxis().setEnabled(true);
+            chart.getXAxis().setValueFormatter(new HourAxisValueFormatter(null));
+            chart.getAxisRight().setEnabled(false);
+            chart.getDescription().setEnabled(false);
+            chart.setVisibleXRangeMaximum(CHARTSCALE);
+            chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
 
-        //Position tab
-        ArrayAdapter<HiveBaseInfo> positionAdapter;
-        positionAdapter = new AdapterHivePositionDetails(this, hiveList);
-        menuListView = findViewById(R.id.accelerometerListView);
-        menuListView.setAdapter(positionAdapter);
+            //Position tab
+            ArrayAdapter<HiveBaseInfo> positionAdapter;
+            positionAdapter = new AdapterHivePositionDetails(this, hiveList);
+            menuListView = findViewById(R.id.accelerometerListView);
+            menuListView.setAdapter(positionAdapter);
+        }
     }
 
     @Override

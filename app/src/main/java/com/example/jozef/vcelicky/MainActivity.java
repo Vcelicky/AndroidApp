@@ -229,12 +229,12 @@ public class MainActivity extends BaseActivity {
                     menuListView = findViewById(R.id.hiveListView);
                     menuListView.setAdapter(allAdapter);
 
-                    if(!db.isMeasurement(time)) {
-                        db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
-                    }
-                    else{
-                        Log.i(TAG, "Record already exists in database");
-                    }
+//                    if(!db.isMeasurement(time)) {
+//                        db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
+//                    }
+//                    else{
+//                        Log.i(TAG, "Record already exists in database");
+//                    }
                     swipeRefreshLayout.setRefreshing(false);
                 } catch (Exception e) {
                     // JSON error

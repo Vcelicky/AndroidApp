@@ -114,6 +114,8 @@ public class HiveDetailsActivity extends BaseActivity {
                     .show();
         }
         else {
+            progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
+            showDialog();
             update(hiveId, hiveName, userId, token);
         }
 
@@ -303,6 +305,7 @@ public class HiveDetailsActivity extends BaseActivity {
                     weightSwipeRefreshLayout.setRefreshing(false);
                     batterySwipeRefreshLayout.setRefreshing(false);
                     accelerometerSwipeRefreshLayout.setRefreshing(false);
+                    hideDialog();
                     setupGUI(hiveId);
                 } catch (Exception e) {
                     // JSON error

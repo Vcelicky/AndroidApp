@@ -1,15 +1,8 @@
 package com.example.jozef.vcelicky;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -96,6 +89,8 @@ public class MainActivity extends BaseActivity {
         else {
             hiveIDs.clear();
             hiveList.clear();
+            progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
+            showDialog();
             loadHiveNames(userId, token);
         }
 
@@ -235,6 +230,7 @@ public class MainActivity extends BaseActivity {
 //                        Log.i(TAG, "Record already exists in database");
 //                    }
                     swipeRefreshLayout.setRefreshing(false);
+                    hideDialog();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
@@ -275,8 +271,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void loadHiveNames(final int userId, final String token){
-            // Tag used to cancel the request
-
         Log.i(TAG, "Load Hive method");
         String tag_json_obj = "json_obj_req";
         JSONObject jsonBody = new JSONObject();

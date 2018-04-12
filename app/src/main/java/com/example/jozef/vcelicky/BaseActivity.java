@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
 
     protected static final long CHARTSCALE = 21600000;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
 
         Log.d("BasicActivity", "OnCreate");
 
+        // Progress dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
     }
 
  //   protected abstract int getLayoutResourceId();
@@ -210,6 +215,16 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             netInfo = cm.getActiveNetworkInfo();
         }
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public void showDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    public void hideDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }
 

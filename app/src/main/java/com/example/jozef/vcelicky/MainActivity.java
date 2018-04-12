@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
     ListView menuListView;
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
-    int flag = 0;
     SwipeRefreshLayout swipeRefreshLayout;
     SQLiteHandler db;
 

@@ -18,7 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="ExtraText">
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
+    tools:ignore="ExtraText">
         <activity android:name=".Loading_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
     ListView menuListView;
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<HiveBaseInfo> allAdapter;
-    int flag = 0;
     SwipeRefreshLayout swipeRefreshLayout;
     SQLiteHandler db;
 
@@ -367,7 +366,7 @@ public class MainActivity extends BaseActivity {
         );
 
     }
-
+/**/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater =  getMenuInflater();

@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -29,7 +30,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<NotificationInfo> allAdapter;
     private Observable mUserDataRepositoryObservable;
-
+    SQLiteHandler db;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,6 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 //        int userId = Integer.parseInt(db.getUserDetails().get("id"));
 //        Log.i(TAG, "Token: " + token);
 //        Log.i(TAG, "UserID: " + userId);
-
         try {
             loadNotificationInfoListFromSharedPreferencies();
         }catch (Exception ex){
@@ -63,7 +63,8 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     public void loadNotificationInfoListFromSharedPreferencies(){
         Log.d("fcmMessagingService", "Notification activity list first size " + notificationInfoList.size());
         notificationInfoList.clear();
-        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive",getApplicationContext().MODE_PRIVATE);
+        db = new SQLiteHandler(getApplicationContext());
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails().get("id"),getApplicationContext().MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString("myJson", "");
         Log.d("fcmMessagingService", "Notification activity loading prefs " + mPrefs.getString("myJson", ""));

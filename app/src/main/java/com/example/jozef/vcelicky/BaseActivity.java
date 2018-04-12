@@ -28,6 +28,8 @@ import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -157,6 +159,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                             for(String hive : hives){
                                 session.setFirstTime(hive, true);
                             }
+           //                 FirebaseMessaging.getInstance().unsubscribeFromTopic(db.getUserDetails().get("id"));
                             db.deleteUsers();
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);

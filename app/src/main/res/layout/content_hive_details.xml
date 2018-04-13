@@ -20,8 +20,9 @@
             android:orientation="vertical">
 
             <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
 
                 <TabWidget
                     android:id="@android:id/tabs"
@@ -38,19 +39,22 @@
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:weightSum="100">
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/temperatureChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="0dp"
+                        android:layout_weight="40">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
                     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/temperatureSwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="60"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -69,19 +73,22 @@
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:weightSum="100">
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/humidityChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="0dp"
+                        android:layout_weight="40">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
                     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/humiditySwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="60"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -100,19 +107,22 @@
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:weightSum="100">
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/weightChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="0dp"
+                        android:layout_weight="40">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
                     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/weightSwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="60"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -131,19 +141,22 @@
                     android:id="@+id/tab4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:weightSum="100">
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/batteryChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp">
+                        android:layout_height="0dp"
+                        android:layout_weight="40">
 
                     </com.github.mikephil.charting.charts.LineChart>
 
                     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/batterySwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="60"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

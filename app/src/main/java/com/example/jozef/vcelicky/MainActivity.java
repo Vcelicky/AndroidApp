@@ -363,11 +363,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =  getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_limit_values);
-        item.setVisible(false);
-        return true;
+        return false;
     }
 
     public void loadLimitValues (final String hiveId, int userId, String token, final HiveBaseInfo hive){

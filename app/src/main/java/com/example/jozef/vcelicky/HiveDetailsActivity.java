@@ -2,6 +2,7 @@ package com.example.jozef.vcelicky;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -251,67 +252,8 @@ public class HiveDetailsActivity extends BaseActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i(TAG, "Load Hive Base Info From Server Response: " + response.toString());
-                GregorianCalendar timeStampGregCal = null;
-                try {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    for(int i = 0; i < jsonArray.length(); i++){
-                        JSONArray jsonArray2 = jsonArray.getJSONArray(i); //proccess additional []
-                        int it = 0, ot = 0, ih = 0, oh = 0, w = 0, b = 0;
-                        boolean p = true;
-                        for(int j = 0; j < jsonArray2.length(); j++){
-                            JSONObject jo= jsonArray2.getJSONObject(j);
-                            try {
-                                String type = jo.getString("typ");
-                                if (type.equals("IT")) {
-                                    Log.d(TAG, "found IT : ");
-                                    it = jo.getInt("hodnota");
-                                }
-                                if (type.equals("OT")) {
-                                    Log.d(TAG, "found OT : ");
-                                    ot = jo.getInt("hodnota");
-                                }
-                                if (type.equals("IH")) {
-                                    Log.d(TAG, "found IH : ");
-                                    ih = jo.getInt("hodnota");
-                                }
-                                if (type.equals("OH")) {
-                                    Log.d(TAG, "found OH : ");
-                                    oh = jo.getInt("hodnota");
-                                }
-                                if (type.equals("P")) {
-                                    Log.d(TAG, "found P : ");
-                                    p = jo.getBoolean("hodnota");
-                                }
-                                if (type.equals("W")) {
-                                    Log.d(TAG, "found W : ");
-                                    w = jo.getInt("hodnota");
-                                }
-                                if (type.equals("B")) {
-                                    Log.d(TAG, "found B : ");
-                                    b = jo.getInt("hodnota");
-                                }
-                            }catch(Exception e){
-                                Log.i(TAG, "Unable to read value in JSON, setting 0");
-                            }
-                            String timeStamp = jo.getString("cas");
-                            timeStampGregCal = parseDateFromVcelickaApi(true, timeStamp);
-                        }
-                        Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
-                        Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
-                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
-                    }
-                    temperatureSwipeRefreshLayout.setRefreshing(false);
-                    humiditySwipeRefreshLayout.setRefreshing(false);
-                    weightSwipeRefreshLayout.setRefreshing(false);
-                    batterySwipeRefreshLayout.setRefreshing(false);
-                    accelerometerSwipeRefreshLayout.setRefreshing(false);
-                    hideDialog();
-                    setupGUI(hiveId);
-                } catch (Exception e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Log.e(TAG, "Reading data error: " + e.getMessage());
-                }
+                MyTaskParams params = new MyTaskParams(response, hiveName, hiveId);
+                new ProcessDownloadedData().execute(params);
             }
         }, new Response.ErrorListener() {
 
@@ -525,5 +467,101 @@ public class HiveDetailsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private static class MyTaskParams {
+        JSONObject response;
+        String hiveName;
+        String hiveId;
+
+        MyTaskParams(JSONObject response, String hiveName, String hiveId) {
+            this.response = response;
+            this.hiveName = hiveName;
+            this.hiveId = hiveId;
+        }
+    }
+
+    private class ProcessDownloadedData extends AsyncTask<MyTaskParams, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            showDialog();
+        }
+
+        @Override
+        protected String doInBackground(MyTaskParams... params) {
+            JSONObject response = params[0].response;
+            String hiveName = params[0].hiveName;
+            String hiveId = params[0].hiveId;
+
+            GregorianCalendar timeStampGregCal = null;
+            SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+            try {
+                JSONArray jsonArray = response.getJSONArray("data");
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONArray jsonArray2 = jsonArray.getJSONArray(i); //proccess additional []
+                    int it = 0, ot = 0, ih = 0, oh = 0, w = 0, b = 0;
+                    boolean p = true;
+                    for(int j = 0; j < jsonArray2.length(); j++){
+                        JSONObject jo= jsonArray2.getJSONObject(j);
+                        try {
+                            String type = jo.getString("typ");
+                            if (type.equals("IT")) {
+                                Log.d(TAG, "found IT : ");
+                                it = jo.getInt("hodnota");
+                            }
+                            if (type.equals("OT")) {
+                                Log.d(TAG, "found OT : ");
+                                ot = jo.getInt("hodnota");
+                            }
+                            if (type.equals("IH")) {
+                                Log.d(TAG, "found IH : ");
+                                ih = jo.getInt("hodnota");
+                            }
+                            if (type.equals("OH")) {
+                                Log.d(TAG, "found OH : ");
+                                oh = jo.getInt("hodnota");
+                            }
+                            if (type.equals("P")) {
+                                Log.d(TAG, "found P : ");
+                                p = jo.getBoolean("hodnota");
+                            }
+                            if (type.equals("W")) {
+                                Log.d(TAG, "found W : ");
+                                w = jo.getInt("hodnota");
+                            }
+                            if (type.equals("B")) {
+                                Log.d(TAG, "found B : ");
+                                b = jo.getInt("hodnota");
+                            }
+                        }catch(Exception e){
+                            Log.i(TAG, "Unable to read value in JSON, setting 0");
+                        }
+                        String timeStamp = jo.getString("cas");
+                        timeStampGregCal = parseDateFromVcelickaApi(true, timeStamp);
+                    }
+                    Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
+                    Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
+                    db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                }
+
+            } catch (Exception e) {
+                // JSON error
+                e.printStackTrace();
+                Log.e(TAG, "Reading data error: " + e.getMessage());
+            }
+            return hiveId;
+        }
+
+        @Override
+        protected void onPostExecute(String hiveId) {
+            temperatureSwipeRefreshLayout.setRefreshing(false);
+            humiditySwipeRefreshLayout.setRefreshing(false);
+            weightSwipeRefreshLayout.setRefreshing(false);
+            batterySwipeRefreshLayout.setRefreshing(false);
+            accelerometerSwipeRefreshLayout.setRefreshing(false);
+            setupGUI(hiveId);
+            hideDialog();
+        }
     }
 }

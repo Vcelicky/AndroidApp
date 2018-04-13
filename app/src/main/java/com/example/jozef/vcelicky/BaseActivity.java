@@ -1,6 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,22 +19,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.jozef.vcelicky.app.AppConfig;
-import com.example.jozef.vcelicky.app.AppController;
+
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.UnsupportedEncodingException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -227,4 +222,3 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             progressDialog.dismiss();
     }
 }
-

@@ -31,7 +31,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String TABLE_MEASUREMENTS = "measurements";
     private static final String TABLE_DEVICES = "devices";
 
-    // Login Table Columns names
+    // User Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
@@ -147,6 +147,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("email", cursor.getString(2));
             user.put("role_id", String.valueOf(cursor.getInt(3)));
             user.put("token", cursor.getString(4));
+            user.put("phone", cursor.getString(5));
         }
         cursor.close();
         db.close();
@@ -210,22 +211,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         Log.i(TAG, "New measurement inserted into sqlite: " + id);
         Log.i(TAG, values.toString());
-    }
-
-    //TODO change device name to device id after merge
-    //todo and also use devices table
-    public int getUserDevicesCount(){
-        int count = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT " + KEY_DEVICENAME
-                + " FROM " + TABLE_MEASUREMENTS
-                + " GROUP BY " + KEY_DEVICENAME;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        count = cursor.getCount();
-        cursor.close();
-        db.close();
-        return count;
     }
 
     public ArrayList<HiveBaseInfo> getActualMeasurement(int userId) {
@@ -377,5 +362,19 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return device;
+    }
+
+    public int getUserDevicesCount(int userId){
+        int count;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_DEVICEID
+                + " FROM " + TABLE_DEVICES
+                + " WHERE " + KEY_USERID + "='" + userId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count;
     }
 }

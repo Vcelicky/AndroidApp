@@ -188,8 +188,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
                         }
                         Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));
                         Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTime().getTime());
-                        //TODO in progress...
-                        //db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
+                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveId);
                     }
                     swipeRefreshLayout.setRefreshing(false);
                     setupGUI(hiveId);
@@ -244,5 +243,8 @@ public class HiveAllDetailsActivity extends BaseActivity {
             menuListView = findViewById(R.id.hiveAllDetailsListView);
             menuListView.setAdapter(allAdapter);
         }
+        Intent intent = getIntent();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(intent.getExtras().getString("hiveName") + ", " + intent.getExtras().getString("hiveLocation"));
     }
 }

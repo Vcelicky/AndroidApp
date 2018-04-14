@@ -27,7 +27,7 @@ public class AdapterHiveDetails extends ArrayAdapter<HiveBaseInfo> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater listInflater = LayoutInflater.from(getContext());
-        View customView = listInflater.inflate(R.layout.hive_row, parent, false);
+        View customView = listInflater.inflate(R.layout.hive_row_all_details, parent, false);
 
         //vyber i-ty prvok z listu
         // Device i = items.get(position);

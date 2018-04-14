@@ -73,7 +73,7 @@ public class HiveDetailsActivity extends BaseActivity {
         final String hiveLocation = intent.getExtras().getString("hiveLocation");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(hiveName);
+        toolbar.setTitle(hiveName + ", " + hiveLocation);
 
         db = new SQLiteHandler(getApplicationContext());
         final String token =  db.getUserDetails().get("token");
@@ -488,9 +488,10 @@ public class HiveDetailsActivity extends BaseActivity {
         }
         if (id == R.id.action_show_all) {
             Intent i = new Intent(getApplicationContext(), HiveAllDetailsActivity.class);
-            i.putExtra("hiveId", hiveList.get(0).getHiveId());
-            i.putExtra("hiveName", hiveList.get(0).getHiveName());
-            i.putExtra("hiveLocation", hiveList.get(0).getHiveLocation());
+            Intent intent = getIntent();
+            i.putExtra("hiveId", intent.getExtras().getString("hiveId"));
+            i.putExtra("hiveName", intent.getExtras().getString("hiveName"));
+            i.putExtra("hiveLocation", intent.getExtras().getString("hiveLocation"));
             startActivity(i);
             return true;
         }
@@ -573,8 +574,7 @@ public class HiveDetailsActivity extends BaseActivity {
                     }
                     Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
                     Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
-                    //TODO in progress...
-                    //db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
+                    db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveId);
                 }
 
             } catch (Exception e) {

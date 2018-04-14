@@ -311,9 +311,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 record.setWeight(cursor.getInt(5));
                 record.setAccelerometer(Boolean.parseBoolean(cursor.getString(6)));
                 record.setBattery(cursor.getInt(7));
-                record.setHiveName(cursor.getString(8));
-                record.setHiveId(cursor.getString(9));
-                record.setHiveLocation(cursor.getString(10));
+                record.setHiveId(cursor.getString(8));
                 hiveList.add(record);
                 cursor.moveToNext();
                 Log.i(TAG, "Fetching measurement from SQLite: " + record.getTime());
@@ -363,27 +361,21 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, values.toString());
     }
 
-    public ArrayList<HiveBaseInfo> getUserDevices(int userId){
-        ArrayList<HiveBaseInfo> devices = new ArrayList<>();
+    public HiveBaseInfo getDeviceInfo(String hiveId){
+        HiveBaseInfo device = new HiveBaseInfo();
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + TABLE_DEVICES
-                + " WHERE " + KEY_USERID + "='" + userId + "'";
+                + " WHERE " + KEY_DEVICEID + "='" + hiveId + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
-            HiveBaseInfo device;
-            for(int i = 0; i < cursor.getCount(); i++){
-                device = new HiveBaseInfo();
-                device.setHiveId(cursor.getString(0));
-                device.setHiveName(cursor.getString(1));
-                device.setHiveLocation(cursor.getString(2));
-                devices.add(device);
-                cursor.moveToNext();
-                Log.i(TAG, "Fetching device from SQLite: " + device.getHiveId());
-            }
+            device.setHiveId(cursor.getString(0));
+            device.setHiveName(cursor.getString(1));
+            device.setHiveLocation(cursor.getString(2));
+            Log.i(TAG, "Fetching device from SQLite: " + device.getHiveId());
         }
         cursor.close();
         db.close();
-        return devices;
+        return device;
     }
 }

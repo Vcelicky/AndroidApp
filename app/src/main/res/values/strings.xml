@@ -82,5 +82,6 @@
     <string name="celsius">°C</string>
     <string name="percent">%</string>
     <string name="kilogram">kg</string>
+    <string name="no_data_available">Žiadne dáta k dispozícii</string>
 
 </resources>

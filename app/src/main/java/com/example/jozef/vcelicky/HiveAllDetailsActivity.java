@@ -54,6 +54,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         final String hiveId = intent.getExtras().getString("hiveId");
         final String hiveName = intent.getExtras().getString("hiveName");
+        final String hiveLocation = intent.getExtras().getString("hiveLocation");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Včelí úľ " + hiveName);
@@ -73,7 +74,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
                     .show();
         }
         else {
-            update(hiveId, hiveName, userId, token);
+            update(hiveId, hiveName, hiveLocation, userId, token);
         }
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
@@ -88,7 +89,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
                             swipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
@@ -100,7 +101,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
         return R.layout.activity_hive_all_details;
     }
 
-    private void update(String hiveId, String hiveName, int userId, String token){
+    private void update(String hiveId, String hiveName, String hiveLocation, int userId, String token){
         String from = dateFormat.format(new Date(0));
         String to = dateFormat.format(new Date().getTime());
         if(session.isFirstTime(hiveId)) {
@@ -111,10 +112,10 @@ public class HiveAllDetailsActivity extends BaseActivity {
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
             from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
         }
-        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
+        loadHiveDetailInfoServerReq(hiveId, hiveName, hiveLocation, userId, token, from, to);
     }
 
-    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token, String from, String to){
+    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, final String hiveLocation, int userId, String token, String from, String to){
 
         Log.i(TAG, "Load Hive Details Info method");
         String tag_json_obj = "json_obj_req";
@@ -187,7 +188,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
                         }
                         Log.i(TAG, "I will add new record to list with timestamp: " + timeStampGregCal.get(Calendar.HOUR_OF_DAY) + ":" + timeStampGregCal.get(Calendar.MINUTE));
                         Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTime().getTime());
-                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                        db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
                     }
                     swipeRefreshLayout.setRefreshing(false);
                     setupGUI(hiveId);

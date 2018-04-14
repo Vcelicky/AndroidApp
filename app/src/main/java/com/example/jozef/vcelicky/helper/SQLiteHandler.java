@@ -50,6 +50,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_BATTERY = "battery";
     private static final String KEY_DEVICENAME = "deviceName";
     private static final String KEY_DEVICEID = "deviceId";
+    private static final String KEY_LOCATION = "location";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -78,7 +79,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_POSITION + " BOOLEAN,"
                 + KEY_BATTERY + " INTEGER,"
                 + KEY_DEVICENAME + " TEXT,"
-                + KEY_DEVICEID + " TEXT" + ")";
+                + KEY_DEVICEID + " TEXT,"
+                + KEY_LOCATION + " TEXT" + ")";
         db.execSQL(CREATE_MEASUREMENT_TABLE);
 
         Log.i(TAG, "Database tables created");
@@ -95,6 +97,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //    Users table handler methods
     /**
      * Storing user details in database
      * */
@@ -155,7 +158,29 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.i(TAG, "Deleted all users info from sqlite");
     }
 
-    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName, String deviceId){
+    public boolean isExpired() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT " + KEY_EXPIRES
+                + " FROM " + TABLE_USER;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            Log.i(TAG, String.valueOf(new Date().getTime() / 1000));
+            if(cursor.getLong(0) >= new Date().getTime() / 1000){
+                cursor.close();
+                db.close();
+                return false;
+            }
+        }
+        cursor.close();
+        db.close();
+        return true;
+    }
+
+//    Measurements table handler methods
+
+    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName, String deviceId, String location){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -169,6 +194,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_BATTERY, battery);
         values.put(KEY_DEVICENAME, deviceName);
         values.put(KEY_DEVICEID, deviceId);
+        values.put(KEY_LOCATION, location);
 
         // Inserting Row
         long id = db.insert(TABLE_MEASUREMENTS, null, values);
@@ -191,21 +217,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count;
-    }
-
-    public boolean isMeasurement(long time){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
-                + " WHERE " + KEY_TIME + " IS " + time;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.getCount() > 0){
-            cursor.close();
-            db.close();
-            return true;
-        }
-        cursor.close();
-        db.close();
-        return false;
     }
 
     public List <HashMap<String, String>> getActualMeasurement() {
@@ -243,6 +254,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 actual.put("battery", String.valueOf(cursor.getInt(7)));
                 actual.put("deviceName", cursor.getString(8));
                 actual.put("deviceId", cursor.getString(9));
+                actual.put("location", cursor.getString(10));
                 devices.add(actual);
                 Log.i(TAG, "Fetching actual measurement from Sqlite: " + actual.toString());
             }
@@ -293,6 +305,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 record.setBattery(cursor.getInt(7));
                 record.setHiveName(cursor.getString(8));
                 record.setHiveId(cursor.getString(9));
+                record.setHiveLocation(cursor.getString(10));
                 hiveList.add(record);
                 cursor.moveToNext();
                 Log.i(TAG, "Fetching measurement from SQLite: " + record.getTime());
@@ -323,25 +336,5 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return hives;
-    }
-
-    public boolean isExpired() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT " + KEY_EXPIRES
-                + " FROM " + TABLE_USER;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // Move to first row
-        cursor.moveToFirst();
-        if(cursor.getCount() > 0){
-            Log.i(TAG, String.valueOf(new Date().getTime() / 1000));
-            if(cursor.getLong(0) >= new Date().getTime() / 1000){
-                cursor.close();
-                db.close();
-                return false;
-            }
-        }
-        cursor.close();
-        db.close();
-        return true;
     }
 }

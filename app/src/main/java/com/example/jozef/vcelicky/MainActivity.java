@@ -68,6 +68,7 @@ public class MainActivity extends BaseActivity {
             hiveList.add(new HiveBaseInfo(
                     actual.get("deviceId"),
                     actual.get("deviceName"),
+                    actual.get("location"),
                     Float.parseFloat(actual.get("tempOut")),
                     Float.parseFloat(actual.get("tempIn")),
                     Float.parseFloat(actual.get("humiOut")),
@@ -136,7 +137,6 @@ public class MainActivity extends BaseActivity {
         }  catch (Exception e) {
             Log.e(TAG, " Error: loadHiveBaseInfoServerReq: " + e.getMessage());
             Toast.makeText(getApplicationContext(), "Error loading data from server" + e.getMessage(), Toast.LENGTH_LONG).show();
-         return;
         }
     }
 
@@ -214,7 +214,7 @@ public class MainActivity extends BaseActivity {
                             Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
                     }
-                    HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName,hiveLocation, ot , it, oh, ih, w, p, b);
+                    HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot , it, oh, ih, w, p, b);
      //               loadLimitValues (hiveId, userId, token,hive);
 
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
@@ -300,7 +300,7 @@ public class MainActivity extends BaseActivity {
                         String hiveLocation =json.getString("location");
                         String hiveId = json.getString("device_id");
                         Log.i(TAG, "Loaded Hive: " + json.toString());
-                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName,hiveLocation));
+                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
                     }
                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {
@@ -354,6 +354,7 @@ public class MainActivity extends BaseActivity {
                         Log.i(TAG, "SPARTA: hiveName " + device.getHiveName());
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
+                        i.putExtra("hiveLocation", device.getHiveLocation());
                         startActivity(i);
                         finish();
                     }

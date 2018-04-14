@@ -70,6 +70,7 @@ public class HiveDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         final String hiveId =  intent.getExtras().getString("hiveId");
         final String hiveName = intent.getExtras().getString("hiveName");
+        final String hiveLocation = intent.getExtras().getString("hiveLocation");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(hiveName);
@@ -120,7 +121,7 @@ public class HiveDetailsActivity extends BaseActivity {
         else {
             progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
             showDialog();
-            update(hiveId, hiveName, userId, token);
+            update(hiveId, hiveName, hiveLocation, userId, token);
         }
 
         //TODO too much hardcoded, make it simpler!!
@@ -136,7 +137,7 @@ public class HiveDetailsActivity extends BaseActivity {
                             temperatureSwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
@@ -153,7 +154,7 @@ public class HiveDetailsActivity extends BaseActivity {
                             humiditySwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
@@ -170,7 +171,7 @@ public class HiveDetailsActivity extends BaseActivity {
                             weightSwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
@@ -187,7 +188,7 @@ public class HiveDetailsActivity extends BaseActivity {
                             batterySwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
@@ -204,14 +205,14 @@ public class HiveDetailsActivity extends BaseActivity {
                             accelerometerSwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
-                            update(hiveId, hiveName, userId, token);
+                            update(hiveId, hiveName, hiveLocation, userId, token);
                         }
                     }
                 }
         );
     }
 
-    private void update(String hiveId, String hiveName, int userId, String token){
+    private void update(String hiveId, String hiveName, String hiveLocation, int userId, String token){
         String from = dateFormat.format(new Date(0));
         String to = dateFormat.format(new Date().getTime());
         if(session.isFirstTime(hiveId)) {
@@ -222,7 +223,7 @@ public class HiveDetailsActivity extends BaseActivity {
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
             from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
         }
-        loadHiveDetailInfoServerReq(hiveId, hiveName, userId, token, from, to);
+        loadHiveDetailInfoServerReq(hiveId, hiveName, hiveLocation, userId, token, from, to);
     }
 
     @Override
@@ -239,7 +240,7 @@ public class HiveDetailsActivity extends BaseActivity {
         finish();
     }
 
-    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token, String from, String to){
+    public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, final String hiveLocation, int userId, String token, String from, String to){
 
         Log.i(TAG, "Load Hive Details Info method");
         String tag_json_obj = "json_obj_req";
@@ -264,7 +265,7 @@ public class HiveDetailsActivity extends BaseActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i(TAG, "Load Hive Base Info From Server Response: " + response.toString());
-                MyTaskParams params = new MyTaskParams(response, hiveName, hiveId);
+                MyTaskParams params = new MyTaskParams(response, hiveName, hiveId, hiveLocation);
                 new ProcessDownloadedData().execute(params);
             }
         }, new Response.ErrorListener() {
@@ -489,6 +490,7 @@ public class HiveDetailsActivity extends BaseActivity {
             Intent i = new Intent(getApplicationContext(), HiveAllDetailsActivity.class);
             i.putExtra("hiveId", hiveList.get(0).getHiveId());
             i.putExtra("hiveName", hiveList.get(0).getHiveName());
+            i.putExtra("hiveLocation", hiveList.get(0).getHiveLocation());
             startActivity(i);
             return true;
         }
@@ -499,11 +501,13 @@ public class HiveDetailsActivity extends BaseActivity {
         JSONObject response;
         String hiveName;
         String hiveId;
+        String hiveLocation;
 
-        MyTaskParams(JSONObject response, String hiveName, String hiveId) {
+        MyTaskParams(JSONObject response, String hiveName, String hiveId, String hiveLocation) {
             this.response = response;
             this.hiveName = hiveName;
             this.hiveId = hiveId;
+            this.hiveLocation = hiveLocation;
         }
     }
 
@@ -519,6 +523,7 @@ public class HiveDetailsActivity extends BaseActivity {
             JSONObject response = params[0].response;
             String hiveName = params[0].hiveName;
             String hiveId = params[0].hiveId;
+            String hiveLocation = params[0].hiveLocation;
 
             GregorianCalendar timeStampGregCal = null;
             SQLiteHandler db = new SQLiteHandler(getApplicationContext());
@@ -568,7 +573,7 @@ public class HiveDetailsActivity extends BaseActivity {
                     }
                     Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
                     Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
-                    db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId);
+                    db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
                 }
 
             } catch (Exception e) {

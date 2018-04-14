@@ -61,22 +61,7 @@ public class MainActivity extends BaseActivity {
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
 
-        //TODO change SQL method to return directly HiveBaseInfo array list
-        List<HashMap<String, String>> devices = db.getActualMeasurement();
-        for(int i = 0; i < devices.size(); i++) {
-            HashMap<String, String> actual = devices.get(i);
-            hiveList.add(new HiveBaseInfo(
-                    actual.get("deviceId"),
-                    actual.get("deviceName"),
-                    actual.get("location"),
-                    Float.parseFloat(actual.get("tempOut")),
-                    Float.parseFloat(actual.get("tempIn")),
-                    Float.parseFloat(actual.get("humiOut")),
-                    Float.parseFloat(actual.get("humiIn")),
-                    Float.parseFloat(actual.get("weight")),
-                    Boolean.parseBoolean(actual.get("position")),
-                    Float.parseFloat(actual.get("battery"))));
-        }
+        hiveList = db.getActualMeasurement(userId);
         allAdapter = new AdapterHive(this, hiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
@@ -136,7 +121,7 @@ public class MainActivity extends BaseActivity {
             }
         }  catch (Exception e) {
             Log.e(TAG, " Error: loadHiveBaseInfoServerReq: " + e.getMessage());
-            Toast.makeText(getApplicationContext(), "Error loading data from server" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -160,14 +145,12 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i(TAG, "Load Hive Base Info From Server Response: " + response.toString());
-
+                int it = 0;
+                int ot = 0;
+                int oh = 0, ih = 0, b = 0, w = 0;
+                boolean p = false;
+                long time = 0;
                 try {
-                    int it = 0;
-                    int ot = 0;
-                    int oh = 0, ih = 0, b = 0, w = 0;
-                    boolean p = false;
-                    long time = 0;
-
                     //Temporary variable because of wrong returning JSON from server array in array
                     JSONArray tempJsonArray = response.getJSONArray("data");
                     JSONArray jsonArray =  tempJsonArray.getJSONArray(0);
@@ -214,30 +197,20 @@ public class MainActivity extends BaseActivity {
                             Log.i(TAG, "NULL value loaded, saving variable with 0");
                         }
                     }
-                    HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot , it, oh, ih, w, p, b);
-     //               loadLimitValues (hiveId, userId, token,hive);
-
-                    Log.i(TAG, "Hivelist lenght : " + hiveList.size());
-
-                    hiveList.add(hive);
-                    menuListView = findViewById(R.id.hiveListView);
-                    menuListView.setAdapter(allAdapter);
-
-//                    if(!db.isMeasurement(time)) {
-//                        db.addMeasurement(time, it, ot, ih, oh, w, p, b, hiveName, hiveId);
-//                    }
-//                    else{
-//                        Log.i(TAG, "Record already exists in database");
-//                    }
-                    swipeRefreshLayout.setRefreshing(false);
-                    hideDialog();
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
                     Log.e(TAG, " ErrorCCC: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
+                HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot , it, oh, ih, w, p, b);
+                hiveList.add(hive);
+                Log.i(TAG, "Hivelist lenght : " + hiveList.size());
+                allAdapter = new AdapterHive(MainActivity.this, hiveList);
+                menuListView = findViewById(R.id.hiveListView);
+                menuListView.setAdapter(allAdapter);
+                swipeRefreshLayout.setRefreshing(false);
+                hideDialog();
             }
         }, new Response.ErrorListener() {
 
@@ -265,7 +238,6 @@ public class MainActivity extends BaseActivity {
             }
 
         };
-
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
@@ -294,13 +266,12 @@ public class MainActivity extends BaseActivity {
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
-        //                String hiveName = json.getString("location");
                         String hiveName = json.getString("uf_name");
-                     //   String hiveLocation = json.getString("location");
                         String hiveLocation =json.getString("location");
                         String hiveId = json.getString("device_id");
                         Log.i(TAG, "Loaded Hive: " + json.toString());
                         hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
+                        db.addDevice(hiveId, hiveName, hiveLocation, userId);
                     }
                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {

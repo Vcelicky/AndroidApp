@@ -29,6 +29,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Table names
     private static final String TABLE_USER = "user";
     private static final String TABLE_MEASUREMENTS = "measurements";
+    private static final String TABLE_DEVICES = "devices";
 
     // Login Table Columns names
     private static final String KEY_ID = "id";
@@ -48,9 +49,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_WEIGHT = "weight";
     private static final String KEY_POSITION = "position";
     private static final String KEY_BATTERY = "battery";
-    private static final String KEY_DEVICENAME = "deviceName";
     private static final String KEY_DEVICEID = "deviceId";
+
+    // Devices table column names
+    private static final String KEY_DEVICENAME = "deviceName";
     private static final String KEY_LOCATION = "location";
+    private static final String KEY_USERID = "userId";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -78,10 +82,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_WEIGHT + " INTEGER,"
                 + KEY_POSITION + " BOOLEAN,"
                 + KEY_BATTERY + " INTEGER,"
-                + KEY_DEVICENAME + " TEXT,"
-                + KEY_DEVICEID + " TEXT,"
-                + KEY_LOCATION + " TEXT" + ")";
+                + KEY_DEVICEID + " TEXT" + ")";
         db.execSQL(CREATE_MEASUREMENT_TABLE);
+
+        String CREATE_DEVICE_TABLE = "CREATE TABLE " + TABLE_DEVICES + " ("
+                + KEY_DEVICEID + " TEXT PRIMARY KEY,"
+                + KEY_DEVICENAME + " TEXT,"
+                + KEY_LOCATION + " TEXT,"
+                + KEY_USERID + " INTEGER" + ")";
+        db.execSQL(CREATE_DEVICE_TABLE);
 
         Log.i(TAG, "Database tables created");
     }
@@ -92,6 +101,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEASUREMENTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICES);
 
         // Create tables again
         onCreate(db);
@@ -180,7 +190,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
 //    Measurements table handler methods
 
-    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceName, String deviceId, String location){
+    public void addMeasurement(long time, int tempIn, int tempOut, int humiIn, int humiOut, int weight, boolean position, int battery, String deviceId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -192,9 +202,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_WEIGHT, weight);
         values.put(KEY_POSITION, position);
         values.put(KEY_BATTERY, battery);
-        values.put(KEY_DEVICENAME, deviceName);
         values.put(KEY_DEVICEID, deviceId);
-        values.put(KEY_LOCATION, location);
 
         // Inserting Row
         long id = db.insert(TABLE_MEASUREMENTS, null, values);
@@ -205,6 +213,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     //TODO change device name to device id after merge
+    //todo and also use devices table
     public int getUserDevicesCount(){
         int count = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -219,49 +228,48 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return count;
     }
 
-    public List <HashMap<String, String>> getActualMeasurement() {
+    public ArrayList<HiveBaseInfo> getActualMeasurement(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<HashMap<String, String>> devices = new ArrayList<>();
-        List<String> deviceIds = new ArrayList<>();
-        String selectQuery = "SELECT " + KEY_DEVICEID
-                + " FROM " + TABLE_MEASUREMENTS
-                + " GROUP BY " + KEY_DEVICEID
-                + " ORDER BY " + KEY_DEVICENAME;
+        ArrayList<HiveBaseInfo> devices = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_DEVICES
+                + " WHERE " + KEY_USERID + "='" + userId + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
-            do {
-                deviceIds.add(cursor.getString(0));
-            }while(cursor.moveToNext());
+            HiveBaseInfo device;
+            for(int i = 0; i < cursor.getCount(); i++){
+                device = new HiveBaseInfo();
+                device.setHiveId(cursor.getString(0));
+                device.setHiveName(cursor.getString(1));
+                device.setHiveLocation(cursor.getString(2));
+                devices.add(device);
+                cursor.moveToNext();
+                Log.i(TAG, "Fetching device from SQLite: " + device.getHiveId());
+            }
         }
-        Log.i(TAG, "Number of devices: " + cursor.getCount());
-        for(int i = 0; i < deviceIds.size(); i++){
-            HashMap<String, String> actual = new HashMap<>();
+        Log.i(TAG, "Number of devices: " + devices.size());
+        for(int i = 0; i < devices.size(); i++){
             selectQuery = "SELECT * FROM " + TABLE_MEASUREMENTS
-                    + " WHERE " + KEY_DEVICEID + "='" + deviceIds.get(i)
+                    + " WHERE " + KEY_DEVICEID + "='" + devices.get(i).getHiveId()
                     + "' ORDER BY " + KEY_TIME + " DESC LIMIT 1";
             cursor = db.rawQuery(selectQuery, null);
             // Move to first row
             cursor.moveToFirst();
             if (cursor.getCount() > 0) {
-                actual.put("time", String.valueOf(cursor.getLong(0)));
-                actual.put("tempIn", String.valueOf(cursor.getInt(1)));
-                actual.put("tempOut", String.valueOf(cursor.getInt(2)));
-                actual.put("humiIn", String.valueOf(cursor.getInt(3)));
-                actual.put("humiOut", String.valueOf(cursor.getInt(4)));
-                actual.put("weight", String.valueOf(cursor.getInt(5)));
-                actual.put("position", cursor.getString(6));
-                actual.put("battery", String.valueOf(cursor.getInt(7)));
-                actual.put("deviceName", cursor.getString(8));
-                actual.put("deviceId", cursor.getString(9));
-                actual.put("location", cursor.getString(10));
-                devices.add(actual);
-                Log.i(TAG, "Fetching actual measurement from Sqlite: " + actual.toString());
+                devices.get(i).setTime(cursor.getLong(0));
+                devices.get(i).setInsideTemperature(cursor.getFloat(1));
+                devices.get(i).setOutsideTemperature(cursor.getFloat(2));
+                devices.get(i).setInsideHumidity(cursor.getFloat(3));
+                devices.get(i).setOutsideHumidity(cursor.getFloat(4));
+                devices.get(i).setWeight(cursor.getFloat(5));
+                devices.get(i).setAccelerometer(Boolean.parseBoolean(cursor.getString(6)));
+                devices.get(i).setBattery(cursor.getFloat(7));
+                Log.i(TAG, "Fetching actual measurement from Sqlite: " + devices.get(i).toString());
             }
         }
         cursor.close();
         db.close();
-        // return actual measurement
+        // return actual measurement for all devices
         return devices;
     }
 
@@ -336,5 +344,46 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return hives;
+    }
+
+//    Devices table handler methods
+    public void addDevice(String hiveId, String hiveName, String hiveLocation, int userId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_DEVICEID, hiveId);
+        values.put(KEY_DEVICENAME, hiveName);
+        values.put(KEY_LOCATION, hiveLocation);
+        values.put(KEY_USERID, userId);
+
+        // Inserting Row
+        long id = db.insert(TABLE_DEVICES, null, values);
+        db.close(); // Closing database connection
+
+        Log.i(TAG, "New device inserted into sqlite: " + id);
+        Log.i(TAG, values.toString());
+    }
+
+    public ArrayList<HiveBaseInfo> getUserDevices(int userId){
+        ArrayList<HiveBaseInfo> devices = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_DEVICES
+                + " WHERE " + KEY_USERID + "='" + userId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            HiveBaseInfo device;
+            for(int i = 0; i < cursor.getCount(); i++){
+                device = new HiveBaseInfo();
+                device.setHiveId(cursor.getString(0));
+                device.setHiveName(cursor.getString(1));
+                device.setHiveLocation(cursor.getString(2));
+                devices.add(device);
+                cursor.moveToNext();
+                Log.i(TAG, "Fetching device from SQLite: " + device.getHiveId());
+            }
+        }
+        cursor.close();
+        db.close();
+        return devices;
     }
 }

@@ -573,7 +573,8 @@ public class HiveDetailsActivity extends BaseActivity {
                     }
                     Log.i(TAG, "I will add new record to database with timestamp: " + dateFormat.format(new Date(timeStampGregCal.getTimeInMillis())));
                     Log.i(TAG, "Long value of timestamp: " + timeStampGregCal.getTimeInMillis());
-                    db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
+                    //TODO in progress...
+                    //db.addMeasurement(timeStampGregCal.getTimeInMillis(), it, ot, ih, oh, w, p, b, hiveName, hiveId, hiveLocation);
                 }
 
             } catch (Exception e) {

@@ -230,6 +230,15 @@ public class HiveDetailsActivity extends BaseActivity {
         return R.layout.activity_hive_details;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Launch main activity
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, int userId, String token, String from, String to){
 
         Log.i(TAG, "Load Hive Details Info method");

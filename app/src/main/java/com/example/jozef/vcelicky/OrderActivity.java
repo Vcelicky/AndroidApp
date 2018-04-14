@@ -17,7 +17,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
-import com.example.jozef.vcelicky.helper.FieldChecker;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 
 import org.json.JSONException;
@@ -40,7 +39,7 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         editName = findViewById(R.id.editName);
-        editLocation = findViewById(R.id.editLocation);
+        editLocation = findViewById(R.id.editMail);
         checkSms = findViewById(R.id.sms);
         checkEmail = findViewById(R.id.email);
         editNotes = findViewById(R.id.editNotes);
@@ -152,4 +151,8 @@ public class OrderActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

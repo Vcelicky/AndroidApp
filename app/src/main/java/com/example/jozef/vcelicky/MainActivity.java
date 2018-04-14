@@ -355,6 +355,7 @@ public class MainActivity extends BaseActivity {
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
                         startActivity(i);
+                        finish();
                     }
                 }
         );

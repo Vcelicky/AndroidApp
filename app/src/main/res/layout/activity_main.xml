@@ -13,13 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <include
-        layout="@layout/log_out"
-        android:id="@+id/logout"
-        android:layout_width="243dp"
-        android:layout_height="128dp"
-        android:visibility="invisible" />
-
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

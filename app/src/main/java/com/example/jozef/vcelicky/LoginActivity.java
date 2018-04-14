@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Log.i(TAG, "Startin' activity");
-        mail = findViewById(R.id.editLocation);
+        mail = findViewById(R.id.editMail);
         pass = findViewById(R.id.editPass);
         main = findViewById(R.id.mainLayout);
         error = findViewById(R.id.errorLayout);
@@ -115,6 +115,15 @@ public class LoginActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, session.getTips());
         mail.setAdapter(adapter);
+        mail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (i == EditorInfo.IME_ACTION_DONE)) {
+                    mail.setNextFocusForwardId(R.id.editPass);
+                }
+                return false;
+            }
+        });
     }
 
     @Override

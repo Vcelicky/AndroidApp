@@ -12,7 +12,7 @@ public class AppConfig {
     public static String URL_REGISTER = "http://147.175.149.151/BeeWebpage/public/register/user";
 
     // Server order create url
-    public static String URL_ORDER = "http://147.175.149.151/BeeWebpage/public/order/new2";
+    public static String URL_ORDER = "http://147.175.149.151/BeeWebpage/public/order/new";
 
     // Server hive handling URLs
     public static String URL_GET_HIVES = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/devices";

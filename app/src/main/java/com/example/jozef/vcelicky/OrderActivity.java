@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -97,7 +98,7 @@ public class OrderActivity extends AppCompatActivity {
 
             JSONObject jsonBody = new JSONObject();
             try {
-                jsonBody.put("id", user.get("id")); //TODO chce to Miso ako string alebo integer?
+                jsonBody.put("id", Integer.parseInt(user.get("id")));
                 jsonBody.put("hive_name", name);
                 jsonBody.put("hive_address", location);
                 jsonBody.put("SMS", sms);
@@ -130,7 +131,7 @@ public class OrderActivity extends AppCompatActivity {
 
                 @Override
                 public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
+                    return "application/json";
                 }
 
                 @Override
@@ -141,6 +142,13 @@ public class OrderActivity extends AppCompatActivity {
                         VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
                         return null;
                     }
+                }
+
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    int mStatusCode = response.statusCode;
+                    Log.i(TAG, "Status code is " + mStatusCode);
+                    return super.parseNetworkResponse(response);
                 }
             };
 

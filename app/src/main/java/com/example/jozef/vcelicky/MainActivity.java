@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -55,8 +56,8 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitle("Prehľad úľov");
 
         db = new SQLiteHandler(getApplicationContext());
-        final String token =  db.getUserDetails().get("token");
-        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
+        final String token =  db.getUserDetails(session.getLoggedUser()).get("token");
+        final int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
 
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
@@ -82,7 +83,7 @@ public class MainActivity extends BaseActivity {
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("hives");
-        FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails().get("id"));
+        FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails(session.getLoggedUser()).get("id"));
         Log.d("firebase", "Firebase Token: " + firebaseToken);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
@@ -115,11 +116,17 @@ public class MainActivity extends BaseActivity {
     public void loadHiveBaseInfo(int userId, String token){
         Log.d(TAG, "Loading hives");
         try {
-            for (HiveBaseInfo hive : hiveIDs) {
-                Log.i(TAG, "Loading data for : " + hive.getHiveId());
-                loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token, hive.getHiveLocation());
+            if(hiveIDs.size() == 0){
+                hideDialog();
+                showMessageAlertDialog(getString(R.string.no_hives_available));
             }
-        }  catch (Exception e) {
+            else {
+                for (HiveBaseInfo hive : hiveIDs) {
+                    Log.i(TAG, "Loading data for : " + hive.getHiveId());
+                    loadHiveBaseInfoServerReq(hive.getHiveId(), hive.getHiveName(), userId, token, hive.getHiveLocation());
+                }
+            }
+        }  catch(Exception e) {
             Log.e(TAG, " Error: loadHiveBaseInfoServerReq: " + e.getMessage());
             Toast.makeText(getApplicationContext(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
         }

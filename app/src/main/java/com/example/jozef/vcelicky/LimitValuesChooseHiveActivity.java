@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -50,8 +51,8 @@ public class LimitValuesChooseHiveActivity extends BaseActivity {
         toolbar.setTitle("Hraničné hodnoty");
 
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        String token =  db.getUserDetails().get("token");
-        int userId = Integer.parseInt(db.getUserDetails().get("id"));
+        String token =  db.getUserDetails(session.getLoggedUser()).get("token");
+        int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
 

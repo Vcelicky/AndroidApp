@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
     protected static final long CHARTSCALE = 86400000;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
     ProgressDialog progressDialog;
+    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         // Progress dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
+
+        session = new SessionManager(getApplicationContext());
     }
 
  //   protected abstract int getLayoutResourceId();
@@ -147,10 +150,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                         if (session.isLoggedIn()) {
                             session.setLogin(false);
                             ArrayList<String> hives = db.getUserHiveIds();
-                            for(String hive : hives){
-                                session.setFirstTime(hive, true);
-                            }
-                            db.deleteUsers();
+//                            for(String hive : hives){
+//                                session.setFirstTime(hive, true);
+//                            }
+//                            db.deleteUsers();
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                             finish();
@@ -164,6 +167,18 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
                     }
                 });
         logoutAlert.show();
+    }
+
+    public void showMessageAlertDialog(String message){
+        final AlertDialog.Builder messageAlert = new AlertDialog.Builder(BaseActivity.this)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        messageAlert.show();
     }
 
     // parse date from tomo API time format (day.month.year.hour.minute)

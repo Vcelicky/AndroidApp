@@ -33,6 +33,7 @@ public class SessionManager {
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
     private static final String KEY_EMAIL = "userEmail";
+    private static final String KEY_LOGGED_USER = "loggedUser";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -62,6 +63,15 @@ public class SessionManager {
         ArrayList<String> emails = new ArrayList<>();
         emails.add(pref.getString(KEY_EMAIL, null));
         return emails;
+    }
+
+    public void setLoggedUser(String email){
+        editor.putString(KEY_LOGGED_USER, email);
+        editor.commit();
+    }
+
+    public String getLoggedUser(){
+        return pref.getString(KEY_LOGGED_USER, null);
     }
   
     public void setFirstTime(String hiveId, boolean isFirstTime){

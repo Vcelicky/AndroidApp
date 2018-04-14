@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +54,8 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
     EditText edit_text_humidity_out_down_limit;
     EditText edit_text_batery_limit;
 
+    SessionManager session;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +67,11 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(hiveName);
 
+        session = new SessionManager(getApplicationContext());
+
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        token =  db.getUserDetails().get("token");
-        userId = Integer.parseInt(db.getUserDetails().get("id"));
+        token =  db.getUserDetails(session.getLoggedUser()).get("token");
+        userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
 
         loadLimitValues(hiveId, userId, token);
 

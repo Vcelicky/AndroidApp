@@ -42,7 +42,6 @@ public class HiveAllDetailsActivity extends BaseActivity {
     final String TAG = "HiveAllDetailsActivity";
     ArrayList<HiveBaseInfo> hiveList = new ArrayList<>();
     SQLiteHandler db;
-    SessionManager session;
     SwipeRefreshLayout swipeRefreshLayout;
 
 
@@ -61,10 +60,8 @@ public class HiveAllDetailsActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         db = new SQLiteHandler(getApplicationContext());
-        final String token =  db.getUserDetails().get("token");
-        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
-
-        session = new SessionManager(getApplicationContext());
+        final String token =  db.getUserDetails(session.getLoggedUser()).get("token");
+        final int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
 
         setupGUI(hiveId);
 

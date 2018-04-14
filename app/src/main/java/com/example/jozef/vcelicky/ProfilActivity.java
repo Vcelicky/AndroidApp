@@ -7,12 +7,15 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
 public class ProfilActivity extends AppCompatActivity {
+
+    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,8 +28,10 @@ public class ProfilActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        session = new SessionManager(getApplicationContext());
+
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
+        HashMap<String, String> user = db.getUserDetails(session.getLoggedUser());
 
         TextView nameBeekeeper = findViewById(R.id.nameBeekeeper);
         nameBeekeeper.setText(user.get("name"));

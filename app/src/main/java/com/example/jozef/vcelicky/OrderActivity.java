@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +33,7 @@ public class OrderActivity extends AppCompatActivity {
     private EditText editLocation;
     private CheckBox checkSms, checkEmail;
     private EditText editNotes;
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class OrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        session = new SessionManager(getApplicationContext());
     }
 
     public void send(View view){
@@ -89,7 +93,7 @@ public class OrderActivity extends AppCompatActivity {
         else {
 
             SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-            HashMap<String, String> user = db.getUserDetails();
+            HashMap<String, String> user = db.getUserDetails(session.getLoggedUser());
 
             JSONObject jsonBody = new JSONObject();
             try {

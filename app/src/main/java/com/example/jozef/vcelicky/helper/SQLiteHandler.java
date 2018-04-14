@@ -133,9 +133,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Getting user data from database
      * */
-    public HashMap<String, String> getUserDetails() {
+    public HashMap<String, String> getUserDetails(String email) {
         HashMap<String, String> user = new HashMap<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_USER;
+        String selectQuery = "SELECT  * FROM " + TABLE_USER
+                + " WHERE " + KEY_EMAIL + "='" + email + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -153,7 +154,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
         // return user
         Log.i(TAG, "Fetching user from Sqlite: " + user.toString());
-
         return user;
     }
 

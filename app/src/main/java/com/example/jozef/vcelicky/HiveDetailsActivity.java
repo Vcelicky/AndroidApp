@@ -57,7 +57,6 @@ public class HiveDetailsActivity extends BaseActivity {
     SwipeRefreshLayout batterySwipeRefreshLayout;
     SwipeRefreshLayout accelerometerSwipeRefreshLayout;
     SQLiteHandler db;
-    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,10 +75,8 @@ public class HiveDetailsActivity extends BaseActivity {
         toolbar.setTitle(hiveName + ", " + hiveLocation);
 
         db = new SQLiteHandler(getApplicationContext());
-        final String token =  db.getUserDetails().get("token");
-        final int userId = Integer.parseInt(db.getUserDetails().get("id"));
-
-        session = new SessionManager(getApplicationContext());
+        final String token =  db.getUserDetails(session.getLoggedUser()).get("token");
+        final int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
 
         //Tab 1 setup (Temperature)
         TabHost.TabSpec spec = host.newTabSpec("temperature");

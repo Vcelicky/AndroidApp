@@ -90,11 +90,11 @@ public class LoginActivity extends AppCompatActivity {
             }
             else{
                 session.setLogin(false);
-                ArrayList<String> hives = db.getUserHiveIds();
-                for(String hive : hives){
-                    session.setFirstTime(hive, true);
-                }
-                db.deleteUsers();
+//                ArrayList<String> hives = db.getUserHiveIds();
+//                for(String hive : hives){
+//                    session.setFirstTime(hive, true);
+//                }
+//                db.deleteUsers();
             }
         }
         //Arrow back
@@ -227,6 +227,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Remember user in shared preferences
                         session.saveUserEmail(email);
+                        session.setLoggedUser(email);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,

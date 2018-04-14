@@ -54,6 +54,7 @@
     <string name="passwd">Zmena hesla</string>
     <string name="no_service">Žiadne pripojenie k intenetu, aktualizácia dát bola neúspešná</string>
     <string name="error_loading_data">Nepodarilo sa načítať dáta zo servera. Kontaktujte svojho administrátora</string>
+    <string name="no_hives_available">Aktuálne ešte nemáte žiaden úľ. Prosím objednajte si zariadenie ak chcete využívať naše služby (Ľavý bočný panel - Objednávka)</string>
 
     <!--Order Activity strings-->
     <string name="hive_name">Názov úľa</string>
@@ -65,6 +66,7 @@
     <string name="proceed_with_logout">Chcete pokračovať v odhlásení?</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
+    <string name="ok">OK</string>
 
     <!--Button texts-->
     <string name="temperature">Teplota</string>

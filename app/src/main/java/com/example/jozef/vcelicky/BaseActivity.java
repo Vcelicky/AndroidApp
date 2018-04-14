@@ -100,7 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -133,7 +133,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.notifications_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_limit_values, menu);
         return true;
     }
 
@@ -150,7 +150,6 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

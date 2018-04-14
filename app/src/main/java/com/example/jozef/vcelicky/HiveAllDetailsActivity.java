@@ -1,13 +1,7 @@
 package com.example.jozef.vcelicky;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,7 +19,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
-import com.example.jozef.vcelicky.helper.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -243,5 +236,28 @@ public class HiveAllDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(intent.getExtras().getString("hiveName") + ", " + intent.getExtras().getString("hiveLocation"));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_limit_values, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_limit_values) {
+            Intent intent = new Intent(HiveAllDetailsActivity.this, LimitValuesChooseHiveActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

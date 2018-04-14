@@ -1,5 +1,6 @@
 package com.example.jozef.vcelicky;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -22,9 +23,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.jozef.vcelicky.app.AppConfig;
 import com.example.jozef.vcelicky.app.AppController;
+import com.example.jozef.vcelicky.helper.CustomMarkerView;
 import com.example.jozef.vcelicky.helper.HourAxisValueFormatter;
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
+import com.example.jozef.vcelicky.helper.ValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -311,18 +314,20 @@ public class HiveDetailsActivity extends BaseActivity {
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
             }
-            LineDataSet dataSet = new LineDataSet(entries, "Vonkajšia teplota");
+            LineDataSet dataSet = new LineDataSet(entries, getString(R.string.out_temperature));
             dataSet.setColor(Color.RED);
             dataSet.setCircleColor(Color.RED);
+            dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Inside temperature
             entries = new ArrayList<>();
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
             }
-            dataSet = new LineDataSet(entries, "Vnútorná teplota");
+            dataSet = new LineDataSet(entries, getString(R.string.in_temperature));
             dataSet.setColor(Color.BLUE);
             dataSet.setCircleColor(Color.BLUE);
+            dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Mapping data on chart
             LineData lineData = new LineData(datasets);
@@ -335,6 +340,8 @@ public class HiveDetailsActivity extends BaseActivity {
             chart.getDescription().setEnabled(false);
             chart.setVisibleXRangeMaximum(CHARTSCALE);
             chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            chart.getAxisLeft().setValueFormatter(new ValueFormatter(getString(R.string.celsius)));
+            chart.setMarker(new CustomMarkerView(getApplicationContext(), R.layout.chart_detail, getString(R.string.temperature), getString(R.string.celsius)));
 
             //Humidity tab
             ArrayAdapter<HiveBaseInfo> humidityAdapter;
@@ -348,18 +355,20 @@ public class HiveDetailsActivity extends BaseActivity {
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
             }
-            dataSet = new LineDataSet(entries, "Vonkajšia vlhkosť");
+            dataSet = new LineDataSet(entries, getString(R.string.out_humidity));
             dataSet.setColor(Color.RED);
             dataSet.setCircleColor(Color.RED);
+            dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Inside humidity
             entries = new ArrayList<>();
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
             }
-            dataSet = new LineDataSet(entries, "Vnútorná vlhkosť");
+            dataSet = new LineDataSet(entries, getString(R.string.in_humidity));
             dataSet.setColor(Color.BLUE);
             dataSet.setCircleColor(Color.BLUE);
+            dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Mapping data on chart
             lineData = new LineData(datasets);
@@ -372,6 +381,8 @@ public class HiveDetailsActivity extends BaseActivity {
             chart.getDescription().setEnabled(false);
             chart.setVisibleXRangeMaximum(CHARTSCALE);
             chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            chart.getAxisLeft().setValueFormatter(new ValueFormatter(" %"));
+            chart.setMarker(new CustomMarkerView(getApplicationContext(), R.layout.chart_detail, getString(R.string.humidity), getString(R.string.percent)));
 
             //Weight tab
             ArrayAdapter<HiveBaseInfo> weightAdapter;
@@ -383,9 +394,10 @@ public class HiveDetailsActivity extends BaseActivity {
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
             }
-            dataSet = new LineDataSet(entries, "Hmotnosť");
+            dataSet = new LineDataSet(entries, getString(R.string.weight));
             dataSet.setColor(Color.BLUE);
             dataSet.setCircleColor(Color.BLUE);
+            dataSet.setDrawValues(false);
             //Mapping data on chart
             lineData = new LineData();
             lineData.addDataSet(dataSet);
@@ -398,6 +410,8 @@ public class HiveDetailsActivity extends BaseActivity {
             chart.getDescription().setEnabled(false);
             chart.setVisibleXRangeMaximum(CHARTSCALE);
             chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            chart.getAxisLeft().setValueFormatter(new ValueFormatter(" kg"));
+            chart.setMarker(new CustomMarkerView(getApplicationContext(), R.layout.chart_detail, getString(R.string.weight), getString(R.string.kilogram)));
 
             //Battery tab
             ArrayAdapter<HiveBaseInfo> batteryAdapter;
@@ -409,9 +423,10 @@ public class HiveDetailsActivity extends BaseActivity {
             for (int i = hiveList.size() - 1; i >= 0; i--) {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
             }
-            dataSet = new LineDataSet(entries, "Batéria");
+            dataSet = new LineDataSet(entries, getString(R.string.battery));
             dataSet.setColor(Color.BLUE);
             dataSet.setCircleColor(Color.BLUE);
+            dataSet.setDrawValues(false);
             //Mapping data on chart
             lineData = new LineData();
             lineData.addDataSet(dataSet);
@@ -424,6 +439,8 @@ public class HiveDetailsActivity extends BaseActivity {
             chart.getDescription().setEnabled(false);
             chart.setVisibleXRangeMaximum(CHARTSCALE);
             chart.moveViewToX(hiveList.get(0).getTime() - CHARTSCALE);
+            chart.getAxisLeft().setValueFormatter(new ValueFormatter(" %"));
+            chart.setMarker(new CustomMarkerView(getApplicationContext(), R.layout.chart_detail, getString(R.string.battery), getString(R.string.percent)));
 
             //Position tab
             ArrayAdapter<HiveBaseInfo> positionAdapter;

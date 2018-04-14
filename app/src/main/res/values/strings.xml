@@ -73,4 +73,14 @@
     <string name="battery">Batéria</string>
     <string name="accelerometer">Pozícia</string>
 
+    <!--Chart related strings-->
+    <string name="time">Čas:</string>
+    <string name="in_temperature">Vnútorná teplota</string>
+    <string name="out_temperature">Vonkajšia teplota</string>
+    <string name="in_humidity">Vnútorná vlhkosť</string>
+    <string name="out_humidity">Vonkajšia vlhkosť</string>
+    <string name="celsius">°C</string>
+    <string name="percent">%</string>
+    <string name="kilogram">kg</string>
+
 </resources>

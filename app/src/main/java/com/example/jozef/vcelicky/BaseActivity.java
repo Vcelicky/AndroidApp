@@ -35,7 +35,7 @@ import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener  {
 
-    protected static final long CHARTSCALE = 21600000;
+    protected static final long CHARTSCALE = 86400000;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
     ProgressDialog progressDialog;
 

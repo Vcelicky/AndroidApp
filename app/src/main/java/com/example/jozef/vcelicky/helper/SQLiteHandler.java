@@ -294,7 +294,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 record.setInsideHumidity(cursor.getInt(3));
                 record.setOutsideHumidity(cursor.getInt(4));
                 record.setWeight(cursor.getInt(5));
-                record.setAccelerometer(Boolean.parseBoolean(cursor.getString(6)));
+                record.setAccelerometer(cursor.getString(6).equals("1"));
                 record.setBattery(cursor.getInt(7));
                 record.setHiveId(cursor.getString(8));
                 hiveList.add(record);

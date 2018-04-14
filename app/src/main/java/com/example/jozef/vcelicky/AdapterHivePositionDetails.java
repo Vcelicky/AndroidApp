@@ -15,11 +15,13 @@ import java.util.Calendar;
 public class AdapterHivePositionDetails extends ArrayAdapter<HiveBaseInfo> {
 
     ArrayList<HiveBaseInfo> hiveList;
+    Context context;
 
     public AdapterHivePositionDetails(Context context, ArrayList<HiveBaseInfo> hiveList){
         //nezabudni mu povedat ze listView bude pouzivat toto xml pre jeden riadok "custom_row_devices"
         super(context, R.layout.hive_row , hiveList);
         this.hiveList = hiveList;
+        this.context = context;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class AdapterHivePositionDetails extends ArrayAdapter<HiveBaseInfo> {
             textAccelerometer.setText("A: OK");
         }else{
             textAccelerometer.setText("A: Úľ je prevrátený");
+            textAccelerometer.setTextColor(0xffff0000);
         }
 
         return customView;

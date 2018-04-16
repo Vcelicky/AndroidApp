@@ -172,6 +172,8 @@ public class MainActivity extends BaseActivity {
                     int oh = 0, ih = 0, b = 0, w = 0;
                     boolean p = false;
                     long time = 0;
+                    int Temperature_in_up_limit =0, Temperature_in_down_limit=0, Weight_limit=0, Temperature_out_up_limit=0, Temperature_out_down_limit=0,
+                            Humidity_in_up_limit=0, Humidity_in_down_limit=0,Humidity_out_up_limit=0, Humidity_out_down_limit=0,Batery_limit=0;
 
                     //Temporary variable because of wrong returning JSON from server array in array
                     JSONArray tempJsonArray = response.getJSONArray("data");
@@ -179,7 +181,26 @@ public class MainActivity extends BaseActivity {
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
 
+
                         try {
+
+                            if (i == jsonArray.length()-1){
+                                HiveBaseInfo hive = new HiveBaseInfo();
+                                Temperature_in_up_limit = json.getInt("temperature_in_up_limit");
+                                Temperature_in_down_limit = json.getInt("temperature_in_down_limit");
+                                Weight_limit = json.getInt("weight_limit");
+                                Temperature_out_up_limit = json.getInt("temperature_out_up_limit");
+                                Temperature_out_down_limit = json.getInt("temperature_out_down_limit");
+                                Humidity_in_up_limit =  json.getInt("humidity_in_up_limit");
+                                Humidity_in_down_limit = json.getInt("humidity_in_down_limit");
+                                Humidity_out_up_limit = json.getInt("humidity_out_up_limit");
+                                Humidity_out_down_limit = json.getInt("humidity_out_down_limit");
+                                Batery_limit = json.getInt("batery_limit");
+                                Log.i(TAG, "Loaded Battery limit: "+Batery_limit);
+                                break;
+                            }
+
+
                             String type = json.getString("typ");
                             if (type.equals("IT")) {
                                 Log.i(TAG, "found IT : ");
@@ -220,7 +241,16 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                     HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName,hiveLocation, ot , it, oh, ih, w, p, b);
-     //               loadLimitValues (hiveId, userId, token,hive);
+                    hive.setTemperature_in_up_limit(Temperature_in_up_limit);
+                    hive.setTemperature_in_down_limit(Temperature_in_down_limit);
+                    hive.setWeight_limit(Weight_limit);
+                    hive.setTemperature_out_up_limit(Temperature_out_up_limit);
+                    hive.setTemperature_out_down_limit(Temperature_out_down_limit);
+                    hive.setHumidity_in_up_limit( Humidity_in_up_limit);
+                    hive.setHumidity_in_down_limit(Humidity_in_down_limit);
+                    hive.setHumidity_out_up_limit(Humidity_out_up_limit);
+                    hive.setHumidity_out_down_limit(Humidity_out_down_limit);
+                    hive.setBatery_limit(Batery_limit);
 
                     Log.i(TAG, "Hivelist lenght : " + hiveList.size());
 

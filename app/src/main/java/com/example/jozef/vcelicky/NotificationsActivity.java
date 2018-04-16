@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.google.gson.Gson;
@@ -75,6 +76,11 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             }.getType();
             notificationInfoList = gson.fromJson(json, type);
         }
+        if (notificationInfoList.size() == 0 ){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_notification, Toast.LENGTH_LONG)
+                    .show();
+        }
   //      refreshListView();
 
     }
@@ -128,5 +134,4 @@ public class NotificationsActivity extends BaseActivity implements Observer {
                 }
         );
     }
-
 }

@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity {
             }
         }  catch (Exception e) {
             Log.e(TAG, " Error: loadHiveBaseInfoServerReq: " + e.getMessage());
-            Toast.makeText(getApplicationContext(), "Error loading data from server" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Nepodarilo sa načítať dáta zo serveru", Toast.LENGTH_LONG).show();
          return;
         }
     }
@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
+                    Log.e(TAG, " Error: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -247,9 +247,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, " Error: " + error.getMessage());
             }
         }) {
 
@@ -312,8 +310,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.i(TAG, "Hotfix2 Error: " + e.getMessage());
+                    Log.i(TAG, "Error: " + e.getMessage());
                 }
 
             }
@@ -322,8 +319,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorAAA: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -418,17 +413,14 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
-                    //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, " Error: " + e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, " Error: " + error.getMessage());
             }
         }) {
 

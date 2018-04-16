@@ -94,12 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_limit_values) {
-            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

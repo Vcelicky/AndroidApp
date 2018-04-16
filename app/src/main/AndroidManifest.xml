@@ -59,7 +59,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".LimitValuesChooseHiveActivity" />
         <activity android:name=".LimitValuesSettingsActivity"></activity>
         <activity android:name=".HiveAllDetailsActivity" />
         <activity android:name=".ProfilActivity"></activity>

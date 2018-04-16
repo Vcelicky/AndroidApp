@@ -86,6 +86,19 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        HiveBaseInfo device = db.getDeviceInfo(hiveId);
+        Intent intent = new Intent(getApplicationContext(), HiveDetailsActivity.class);
+        intent.putExtra("hiveId", device.getHiveId());
+        intent.putExtra("hiveName", device.getHiveName());
+        intent.putExtra("hiveLocation", device.getHiveLocation());
+        startActivity(intent);
+        finish();
+    }
+
     public void loadLimitValues (final String hiveId, int userId, String token){
 
             Log.i(TAG, "Load limit values method");

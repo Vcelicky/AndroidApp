@@ -42,9 +42,9 @@
         android:layout_marginTop="8dp"
         android:text="@string/name"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar6"
         app:layout_constraintVertical_bias="0.050000012" />
@@ -88,15 +88,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/email"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/nameText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/nameText"
         app:layout_constraintTop_toBottomOf="@+id/toolbar6"
-        app:layout_constraintVertical_bias="0.25"
-        android:layout_marginRight="8dp" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
         android:id="@+id/emailBeekeeper"
@@ -136,6 +137,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/phone"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/nameText"
         app:layout_constraintHorizontal_bias="0.0"
@@ -180,15 +182,16 @@
         android:layout_height="27dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/numOfDevs"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/nameText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/nameText"
         app:layout_constraintTop_toBottomOf="@+id/toolbar6"
-        app:layout_constraintVertical_bias="0.64"
-        android:layout_marginRight="8dp" />
+        app:layout_constraintVertical_bias="0.64" />
 
     <TextView
         android:id="@+id/deviceBeekeeper"

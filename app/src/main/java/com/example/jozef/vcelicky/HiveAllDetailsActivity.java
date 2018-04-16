@@ -49,7 +49,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
         final String hiveLocation = intent.getExtras().getString("hiveLocation");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Včelí úľ " + hiveName);
+        toolbar.setTitle(hiveName + ", " + hiveLocation);
         setSupportActionBar(toolbar);
 
         db = new SQLiteHandler(getApplicationContext());
@@ -259,5 +259,16 @@ public class HiveAllDetailsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), HiveDetailsActivity.class);
+        intent.putExtra("hiveId", getIntent().getExtras().getString("hiveId"));
+        intent.putExtra("hiveName", getIntent().getExtras().getString("hiveName"));
+        intent.putExtra("hiveLocation", getIntent().getExtras().getString("hiveLocation"));
+        startActivity(intent);
+        finish();
     }
 }

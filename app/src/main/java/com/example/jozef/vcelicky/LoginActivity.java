@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editMail;
     private EditText editPass;
     private EditText editPassAgain;
+    private EditText editPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         editMail = findViewById(R.id.editRegMail);
         editPass = findViewById(R.id.editRegPass);
         editPassAgain = findViewById(R.id.editPassAgain);
+        editPhone = findViewById(R.id.editRegPhone);
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -135,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             editMail.setText("");
             editPass.setText("");
             editPassAgain.setText("");
+            editPhone.setText("");
             editName.setError(null);
             editMail.setError(null);
             editPass.setError(null);
@@ -316,13 +319,15 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view){
         editName.setError(null);
         editMail.setError(null);
+        editPhone.setError(null);
         editPass.setError(null);
         editPassAgain.setError(null);
 
         final String name = editName.getText().toString().trim();
         final String email = editMail.getText().toString().trim();
         final String pass = editPass.getText().toString().trim();
-        String passAgain = editPassAgain.getText().toString().trim();
+        final String passAgain = editPassAgain.getText().toString().trim();
+        final String phone = editPhone.getText().toString().trim();
 
         Log.i(TAG, "heslo: " + pass);
         Log.i(TAG, "znova: " + passAgain);
@@ -349,6 +354,16 @@ public class LoginActivity extends AppCompatActivity {
         } else if(!FieldChecker.isPasswordValid(pass)) {
             editPass.setError(getString(R.string.error_invalid_password));
             focusView = editPass;
+            cancel = true;
+        }
+
+        if(TextUtils.isEmpty(phone)){
+            editPhone.setError(getString(R.string.error_field_required));
+            focusView = editPhone;
+            cancel = true;
+        } else if(!FieldChecker.isPhoneNumberValid(phone)){
+            editPhone.setError(getString(R.string.error_invalid_phone));
+            focusView = editPhone;
             cancel = true;
         }
 
@@ -404,6 +419,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editMail.setText("");
                                 editPass.setText("");
                                 editPassAgain.setText("");
+                                editPhone.setText("");
                             } else {
                                 String errMsg = response.getString("error_msg");
                                 Toast.makeText(getApplicationContext(), "Nepodarilo sa registrovať, používateľ s daným e-mailom už existuje. Skúste znova", Toast.LENGTH_LONG).show();
@@ -437,6 +453,7 @@ public class LoginActivity extends AppCompatActivity {
                         params.put("name", name);
                         params.put("email", email);
                         params.put("password", pass);
+                        params.put("phone", phone);
                         final String requestBody = createPostBody(params);
                         return requestBody.getBytes();
                     }

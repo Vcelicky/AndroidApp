@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
+import com.example.jozef.vcelicky.helper.SessionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -24,11 +25,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "fcmMessagingService";
     public ArrayList<NotificationInfo> notificationInfoList=new ArrayList<>();
     SQLiteHandler db;
+    SessionManager session;
     String receivedUserId = "";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         NotificationObservable notificationObservable;
         db = new SQLiteHandler(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
         Log.d(TAG, "FROM:" + remoteMessage.getFrom());
         String[] splited = remoteMessage.getFrom().split("/");
         try {
@@ -46,7 +49,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
 
-            if (receivedUserId.equals(db.getUserDetails().get("id"))) {
+            if (receivedUserId.equals(db.getUserDetails(session.getLoggedUser()).get("id"))) {
                 sendNotification(title_text, text);
                 Log.d(TAG, "This notification is for me");
             }else {
@@ -63,7 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             saveNotificationInfoListFromSharedPreferencies();
 
-            if (receivedUserId.equals(db.getUserDetails().get("id"))) {
+            if (receivedUserId.equals(db.getUserDetails(session.getLoggedUser()).get("id"))) {
                 notificationObservable = NotificationObservable.getInstance();
                 notificationObservable.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
                 notificationObservable.myNotifyObservers();

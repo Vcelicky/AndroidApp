@@ -3,6 +3,7 @@ package com.example.jozef.vcelicky;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +34,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 
     static private ArrayList<NotificationInfo> notificationInfoList=new ArrayList<>();
     ListView menuListView;
-    ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
+//    ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<NotificationInfo> allAdapter;
     private Observable mUserDataRepositoryObservable;
     SQLiteHandler db;
@@ -55,6 +56,9 @@ public class NotificationsActivity extends BaseActivity implements Observer {
         }catch (Exception ex){
             Log.d(TAG, "Cant load from shared preferencies");
         }
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setEnabled(false);
 
         allAdapter = new AdapterNotifications(this,notificationInfoList );
         menuListView = findViewById(R.id.hiveListView);
@@ -116,9 +120,9 @@ public class NotificationsActivity extends BaseActivity implements Observer {
         NotificationObservable.getInstance().deleteObserver(this);
     }
 
-    public void refreshListView(){
-        allAdapter.notifyDataSetChanged();
-    }
+//    public void refreshListView(){
+//        allAdapter.notifyDataSetChanged();
+//    }
 
     @Override
     protected int getLayoutResourceId() {
@@ -156,7 +160,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_limit_values) {
-            Intent intent = new Intent(NotificationsActivity.this, LimitValuesChooseHiveActivity.class);
+            Intent intent = new Intent(NotificationsActivity.this, LimitValuesSettingsActivity.class);
             startActivity(intent);
             return true;
         }

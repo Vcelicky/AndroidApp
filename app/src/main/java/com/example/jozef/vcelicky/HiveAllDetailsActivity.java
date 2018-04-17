@@ -254,7 +254,7 @@ public class HiveAllDetailsActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_limit_values) {
-            Intent intent = new Intent(HiveAllDetailsActivity.this, LimitValuesChooseHiveActivity.class);
+            Intent intent = new Intent(HiveAllDetailsActivity.this, LimitValuesSettingsActivity.class);
             startActivity(intent);
             return true;
         }

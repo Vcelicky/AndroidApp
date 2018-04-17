@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -22,12 +23,19 @@ import java.util.List;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "fcmMessagingService";
     public ArrayList<NotificationInfo> notificationInfoList=new ArrayList<>();
-
+    SQLiteHandler db;
+    String receivedUserId = "";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         NotificationObservable notificationObservable;
-
+        db = new SQLiteHandler(getApplicationContext());
         Log.d(TAG, "FROM:" + remoteMessage.getFrom());
+        String[] splited = remoteMessage.getFrom().split("/");
+        try {
+            receivedUserId = splited[2];
+        }catch (Exception e){
+            Log.e(TAG, "Cant parse received notification ID");
+        }
 
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {
@@ -37,21 +45,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String text = remoteMessage.getData().get("text");
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
-            sendNotification(title_text,text);  // delete later///////////////////////////////////////////////////////////////////////////////////
+
+            if (receivedUserId.equals(db.getUserDetails().get("id"))) {
+                sendNotification(title_text, text);
+                Log.d(TAG, "This notification is for me");
+            }else {
+                Log.d(TAG, "This notification is not for me");
+            }
 
             loadNotificationInfoListFromSharedPreferencies();
             notificationInfoList.add(0,new NotificationInfo(title_text,text, hive_name, hive_id));
 
-            if(notificationInfoList.size() > 10)
+            if(notificationInfoList.size() > 100)
                 notificationInfoList.remove(notificationInfoList.size()-1);
 
             Log.d(TAG, "list Print " + notificationInfoList);
+
             saveNotificationInfoListFromSharedPreferencies();
 
-
-            notificationObservable = NotificationObservable.getInstance();
-            notificationObservable.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
-            notificationObservable.myNotifyObservers();
+            if (receivedUserId.equals(db.getUserDetails().get("id"))) {
+                notificationObservable = NotificationObservable.getInstance();
+                notificationObservable.setNotificationInfo(new NotificationInfo(title_text,text, hive_name, hive_id));
+                notificationObservable.myNotifyObservers();
+            }
         }
     }
 
@@ -80,7 +96,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public void loadNotificationInfoListFromSharedPreferencies(){
         notificationInfoList.clear();
-        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive",getApplicationContext().MODE_PRIVATE);
+        db = new SQLiteHandler(getApplicationContext());
+        //TODO:
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(receivedUserId,getApplicationContext().MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString("myJson", "");
         Log.d(TAG, "loadedPreferencies " + mPrefs.getString("myJson", ""));
@@ -93,7 +111,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
     public void saveNotificationInfoListFromSharedPreferencies(){
-        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive", getApplicationContext().MODE_PRIVATE);
+        db = new SQLiteHandler(getApplicationContext());
+        //TODO:
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(receivedUserId, getApplicationContext().MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(notificationInfoList);

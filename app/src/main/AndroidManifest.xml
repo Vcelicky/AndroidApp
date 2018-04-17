@@ -28,13 +28,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginActivity" />
-        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".NotificationsActivity"
+            android:launchMode="singleTask"
+            />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
+            />
+
+
+
         <activity android:name=".HiveDetailsActivity" />
         android:name=".MenuActivity"
         android:label="@string/title_activity_menu"
@@ -55,7 +61,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".LimitValuesChooseHiveActivity" />
         <activity android:name=".LimitValuesSettingsActivity"></activity>
         <activity android:name=".HiveAllDetailsActivity" />
         <activity android:name=".ProfilActivity"></activity>

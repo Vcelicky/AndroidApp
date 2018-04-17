@@ -7,11 +7,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,7 +36,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     ArrayList<HiveBaseInfo> hiveIDs =  new ArrayList<>();
     ArrayAdapter<NotificationInfo> allAdapter;
     private Observable mUserDataRepositoryObservable;
-
+    SQLiteHandler db;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +50,6 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 //        int userId = Integer.parseInt(db.getUserDetails().get("id"));
 //        Log.i(TAG, "Token: " + token);
 //        Log.i(TAG, "UserID: " + userId);
-
         try {
             loadNotificationInfoListFromSharedPreferencies();
         }catch (Exception ex){
@@ -65,7 +69,8 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     public void loadNotificationInfoListFromSharedPreferencies(){
         Log.d("fcmMessagingService", "Notification activity list first size " + notificationInfoList.size());
         notificationInfoList.clear();
-        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationArchive",getApplicationContext().MODE_PRIVATE);
+        db = new SQLiteHandler(getApplicationContext());
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails(session.getLoggedUser()).get("id"),getApplicationContext().MODE_PRIVATE);
         Gson gson = new Gson();
         String json = mPrefs.getString("myJson", "");
         Log.d("fcmMessagingService", "Notification activity loading prefs " + mPrefs.getString("myJson", ""));
@@ -75,6 +80,11 @@ public class NotificationsActivity extends BaseActivity implements Observer {
             Type type = new TypeToken<List<NotificationInfo>>() {
             }.getType();
             notificationInfoList = gson.fromJson(json, type);
+        }
+        if (notificationInfoList.size() == 0 ){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_notification, Toast.LENGTH_LONG)
+                    .show();
         }
   //      refreshListView();
 

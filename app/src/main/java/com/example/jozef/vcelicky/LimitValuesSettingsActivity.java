@@ -1,6 +1,9 @@
 package com.example.jozef.vcelicky;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -101,6 +104,15 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
 
     public void loadLimitValues (final String hiveId, int userId, String token){
 
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+
+
             Log.i(TAG, "Load limit values method");
             String tag_json_obj = "json_obj_req";
             JSONObject jsonBody = new JSONObject();
@@ -142,7 +154,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
                     } catch (Exception e) {
                         // JSON error
                         e.printStackTrace();
-                        Log.e(TAG, " ErrorCCC: " + e.getMessage());
+                        Log.e(TAG, " Error: " + e.getMessage());
                         //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -150,9 +162,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                    Toast.makeText(getApplicationContext(),
-                            "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+              //      Log.e(TAG, " ErrorBBB: " + error.getMessage());
                 }
             }) {
 
@@ -177,6 +187,13 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
     }
 
     public void setLimitValues (final String hiveId, int userId, String token){
+
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
 
         Log.i(TAG, "PUT on servers limit values method");
         String tag_json_obj = "json_obj_req";
@@ -211,7 +228,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
                     if (result.equals("false")){
                         Log.i(TAG, "Save was successfull");
                         Toast.makeText(getApplicationContext(),
-                                "Save was successfull", Toast.LENGTH_LONG).show();
+                                "Uloženie bolo úspešné", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -223,9 +240,9 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
+                Log.e(TAG, " Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        "Zmeny sa nepodarilo uložiť: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
@@ -250,6 +267,14 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
 
     public void resetLimitValues (final String hiveId, final int userId, final String token){
 
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+
         Log.i(TAG, "PUT on servers limit values method");
         String tag_json_obj = "json_obj_req";
         JSONObject jsonBody = new JSONObject();
@@ -273,7 +298,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
                     if (result.equals("false")){
                         Log.i(TAG, "Reset was successfull");
                         Toast.makeText(getApplicationContext(),
-                                "Reset was successfull", Toast.LENGTH_LONG).show();
+                                "Predvolené hodnoty boli nastavené", Toast.LENGTH_LONG).show();
                         loadLimitValues(hiveId, userId, token);
                     }
                 } catch (JSONException e) {
@@ -284,9 +309,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, " Error: " + error.getMessage());
             }
         }) {
             @Override
@@ -313,7 +336,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         Log.i("TAG", "SEND function ");
         if (!isSomethingNew()){
             Toast.makeText(getApplicationContext(),
-                    "No new settings", Toast.LENGTH_LONG).show();
+                    "Nebola vykonaná žiadna zmena", Toast.LENGTH_LONG).show();
             return;
         }
         if (minIsBiggerThanMax()){
@@ -362,7 +385,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         edit_text_batery_limit = findViewById(R.id.editTextBatMin);
 
         if ( Integer.parseInt(edit_text_temperature_in_up_limit.getText().toString())<= Integer.parseInt(edit_text_temperature_in_down_limit.getText().toString())){
-            Toast.makeText(getApplicationContext(), "MAX must be bigger than MIN", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Maximálna hodnota musí byť väčšia ako minimálna", Toast.LENGTH_LONG).show();
             return true;
         }
         if ( Integer.parseInt(edit_text_temperature_out_up_limit.getText().toString())<= Integer.parseInt(edit_text_temperature_out_down_limit.getText().toString())){
@@ -411,6 +434,16 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         humidity_out_up_limit = Integer.parseInt(edit_text_humidity_out_up_limit.getText().toString());
         humidity_out_down_limit = Integer.parseInt(edit_text_humidity_out_down_limit.getText().toString());
         batery_limit = Integer.parseInt(edit_text_batery_limit.getText().toString());
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = null;
+        if (cm != null) {
+            netInfo = cm.getActiveNetworkInfo();
+        }
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void setLoadedLimitValuesToGuiEditBoxes(){

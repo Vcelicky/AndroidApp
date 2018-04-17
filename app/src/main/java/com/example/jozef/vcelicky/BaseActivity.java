@@ -1,5 +1,6 @@
 package com.example.jozef.vcelicky;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,11 +24,12 @@ import android.view.MenuItem;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
-import com.google.gson.JsonObject;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,11 +98,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_limit_values) {
-            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
-            startActivity(intent);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -126,7 +124,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         } else if (id == R.id.nav_order){
             Intent intent = new Intent(BaseActivity.this, OrderActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_mainActivity){
+            Intent intent = new Intent(BaseActivity.this, MainActivity.class);
+            startActivity(intent);
         }
+
+
+
+
 //        else if (id == R.id.nav_limit_values){
 //            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);
 //            startActivity(intent);
@@ -154,8 +159,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
 //                            }
 //                            db.deleteUsers();
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                            finish();
                         }
                     }
                 })

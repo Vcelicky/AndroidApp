@@ -2,7 +2,15 @@ package com.example.jozef.vcelicky;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -157,6 +165,8 @@ public class MainActivity extends BaseActivity {
                 int oh = 0, ih = 0, b = 0, w = 0;
                 boolean p = false;
                 long time = 0;
+                int Temperature_in_up_limit =0, Temperature_in_down_limit=0, Weight_limit=0, Temperature_out_up_limit=0, Temperature_out_down_limit=0,
+                        Humidity_in_up_limit=0, Humidity_in_down_limit=0,Humidity_out_up_limit=0, Humidity_out_down_limit=0,Batery_limit=0;
                 try {
                     //Temporary variable because of wrong returning JSON from server array in array
                     JSONArray tempJsonArray = response.getJSONArray("data");
@@ -164,7 +174,26 @@ public class MainActivity extends BaseActivity {
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject json = jsonArray.getJSONObject(i);
 
+
                         try {
+
+                            if (i == jsonArray.length()-1){
+                                HiveBaseInfo hive = new HiveBaseInfo();
+                                Temperature_in_up_limit = json.getInt("temperature_in_up_limit");
+                                Temperature_in_down_limit = json.getInt("temperature_in_down_limit");
+                                Weight_limit = json.getInt("weight_limit");
+                                Temperature_out_up_limit = json.getInt("temperature_out_up_limit");
+                                Temperature_out_down_limit = json.getInt("temperature_out_down_limit");
+                                Humidity_in_up_limit =  json.getInt("humidity_in_up_limit");
+                                Humidity_in_down_limit = json.getInt("humidity_in_down_limit");
+                                Humidity_out_up_limit = json.getInt("humidity_out_up_limit");
+                                Humidity_out_down_limit = json.getInt("humidity_out_down_limit");
+                                Batery_limit = json.getInt("batery_limit");
+                                Log.i(TAG, "Loaded Battery limit: "+Batery_limit);
+                                break;
+                            }
+
+
                             String type = json.getString("typ");
                             if (type.equals("IT")) {
                                 Log.i(TAG, "found IT : ");
@@ -207,10 +236,21 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
+                    Log.e(TAG, " Error: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot , it, oh, ih, w, p, b);
+                HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName,hiveLocation, ot , it, oh, ih, w, p, b);
+                hive.setTemperature_in_up_limit(Temperature_in_up_limit);
+                hive.setTemperature_in_down_limit(Temperature_in_down_limit);
+                hive.setWeight_limit(Weight_limit);
+                hive.setTemperature_out_up_limit(Temperature_out_up_limit);
+                hive.setTemperature_out_down_limit(Temperature_out_down_limit);
+                hive.setHumidity_in_up_limit( Humidity_in_up_limit);
+                hive.setHumidity_in_down_limit(Humidity_in_down_limit);
+                hive.setHumidity_out_up_limit(Humidity_out_up_limit);
+                hive.setHumidity_out_down_limit(Humidity_out_down_limit);
+                hive.setBatery_limit(Batery_limit);
+
                 hiveList.add(hive);
                 Log.i(TAG, "Hivelist lenght : " + hiveList.size());
                 allAdapter = new AdapterHive(MainActivity.this, hiveList);
@@ -223,9 +263,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, " Error: " + error.getMessage());
             }
         }) {
 
@@ -284,8 +322,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.i(TAG, "Hotfix2 Error: " + e.getMessage());
+                    Log.i(TAG, "Error: " + e.getMessage());
                 }
 
             }
@@ -294,8 +331,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorAAA: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -334,7 +369,6 @@ public class MainActivity extends BaseActivity {
                         i.putExtra("hiveName", device.getHiveName());
                         i.putExtra("hiveLocation", device.getHiveLocation());
                         startActivity(i);
-                        finish();
                     }
                 }
         );
@@ -344,81 +378,5 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
-    }
-
-    public void loadLimitValues (final String hiveId, int userId, String token, final HiveBaseInfo hive){
-
-        Log.i(TAG, "Load limit values method");
-        String tag_json_obj = "json_obj_req";
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("user_id", userId);
-            jsonBody.put("device_id", hiveId);
-            jsonBody.put("token", token);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        final String requestBody = jsonBody.toString();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_GET_HIVE_LIMIT_VALUES, null, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i(TAG, "Load Hive Limit values " + response.toString());
-
-                try {
-                    JSONObject json = response.getJSONObject("data");
-
-                    try {
-                       hive.setHumidity_in_up_limit(json.getInt("temperature_in_up_limit"));
-                       hive.setTemperature_in_down_limit(json.getInt("temperature_in_down_limit"));
-                       hive.setWeight_limit(json.getInt("weight_limit"));
-                       hive.setTemperature_out_up_limit(json.getInt("temperature_out_up_limit"));
-                       hive.setTemperature_out_down_limit(json.getInt("temperature_out_down_limit"));
-                       hive.setHumidity_in_up_limit( json.getInt("humidity_in_up_limit"));
-                       hive.setHumidity_in_down_limit(json.getInt("humidity_in_down_limit"));
-                       hive.setHumidity_out_up_limit(json.getInt("humidity_out_up_limit"));
-                       hive.setHumidity_out_down_limit(json.getInt("humidity_out_down_limit"));
-                       hive.setBatery_limit(json.getInt("batery_limit"));
-
-                    }catch(Exception e){
-                        Log.i(TAG, "NULL value loaded, saving variable with 0");
-                    }
-                } catch (Exception e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Log.e(TAG, " ErrorCCC: " + e.getMessage());
-                    //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " ErrorBBB: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        "ErrorBBB: " + error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee){
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 }

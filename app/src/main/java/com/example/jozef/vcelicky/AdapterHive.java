@@ -45,35 +45,35 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         textOutTemperature.setText(String.valueOf(hiveList.get(position).getOutsideTemperature())+"°C (vonkajšia)"); // ("Vonkajšia teplota"+"hiveList.get(position).getHiveName()"+"°C");
 
         if (hiveList.get(position).getOutsideTemperature() >= hiveList.get(position).getTemperature_out_up_limit() ||  hiveList.get(position).getOutsideTemperature() <= hiveList.get(position).getTemperature_out_down_limit()){
- //           textOutTemperature.setTextColor(Color.parseColor("#FF0000"));
+            textOutTemperature.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textInTemperature =   (TextView) customView.findViewById(R.id.textInTemperature);
         textInTemperature.setText( String.valueOf(hiveList.get(position).getInsideTemperature())+"°C (vnútorná)");
 
         if (hiveList.get(position).getInsideTemperature() >= hiveList.get(position).getTemperature_in_up_limit() ||  hiveList.get(position).getInsideTemperature() <= hiveList.get(position).getTemperature_in_down_limit()){
- //           textInTemperature.setTextColor(Color.parseColor("#FF0000"));
+            textInTemperature.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textOutHumidity = customView.findViewById(R.id.textOutHumidity);
         textOutHumidity.setText(String.valueOf(hiveList.get(position).getOutsideHumidity())+"% (vonkajšia)");
 
         if (hiveList.get(position).getOutsideHumidity() >= hiveList.get(position).getHumidity_out_up_limit() ||  hiveList.get(position).getOutsideHumidity() <= hiveList.get(position).getHumidity_out_down_limit()){
- //           textOutHumidity.setTextColor(Color.parseColor("#FF0000"));
+            textOutHumidity.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textInHumidity = customView.findViewById(R.id.textInHumidity);
         textInHumidity.setText(String.valueOf(hiveList.get(position).getInsideHumidity())+"% (vnútorná)");
 
         if (hiveList.get(position).getInsideHumidity() >= hiveList.get(position).getHumidity_in_up_limit() ||  hiveList.get(position).getInsideHumidity() <= hiveList.get(position).getHumidity_in_down_limit()){
- //           textInHumidity.setTextColor(Color.parseColor("#FF0000"));
+            textInHumidity.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textWeight = (TextView) customView.findViewById(R.id.textWeight);
         textWeight.setText(String.valueOf(hiveList.get(position).getWeight())+"kg");
 
         if (hiveList.get(position).getWeight() >= hiveList.get(position).getWeight_limit()){
- //          textWeight.setTextColor(Color.parseColor("#FF0000"));
+           textWeight.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
@@ -81,7 +81,7 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
             textAccelerometer.setText("OK");
         }else{
             textAccelerometer.setText("Úľ je prevrátený");
- //           textAccelerometer.setTextColor(Color.parseColor("#FF0000"));
+            textAccelerometer.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textBattery = (TextView) customView.findViewById(R.id.textBattery);

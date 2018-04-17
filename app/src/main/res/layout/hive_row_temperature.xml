@@ -26,10 +26,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="7dp"
         android:layout_weight="0.1"
-        android:tint="@color/colorGreen"
+        android:tint="@color/colorRed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="?android:attr/textSelectHandle"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textOutTemperature"
@@ -40,7 +41,8 @@
         android:layout_weight="0.4"
         android:text="OutTemperrature"
         app:layout_constraintStart_toEndOf="@+id/imageOutTemperature"
-        app:layout_constraintTop_toBottomOf="@+id/hive_name" />
+        app:layout_constraintTop_toBottomOf="@+id/hive_name"
+        android:layout_marginLeft="8dp" />
 
     <ImageView
         android:id="@+id/imageInTemperature"
@@ -50,9 +52,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="7dp"
         android:layout_weight="0.1"
+        android:tint="@color/colorBlue"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/hive_name"
-        app:srcCompat="?android:attr/textSelectHandle" />
+        app:srcCompat="?android:attr/textSelectHandle"
+        android:layout_marginLeft="8dp" />
 
 
     <TextView
@@ -64,7 +68,8 @@
         android:layout_weight="0.4"
         android:text="InTemprarute"
         app:layout_constraintStart_toEndOf="@+id/imageInTemperature"
-        app:layout_constraintTop_toBottomOf="@+id/hive_name" />
+        app:layout_constraintTop_toBottomOf="@+id/hive_name"
+        android:layout_marginLeft="8dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

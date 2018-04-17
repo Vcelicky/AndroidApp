@@ -99,7 +99,6 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         intent.putExtra("hiveName", device.getHiveName());
         intent.putExtra("hiveLocation", device.getHiveLocation());
         startActivity(intent);
-        finish();
     }
 
     public void loadLimitValues (final String hiveId, int userId, String token){

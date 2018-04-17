@@ -162,9 +162,4 @@ public class OrderActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 }

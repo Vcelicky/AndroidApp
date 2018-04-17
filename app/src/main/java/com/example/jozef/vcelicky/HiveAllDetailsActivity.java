@@ -255,6 +255,8 @@ public class HiveAllDetailsActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_limit_values) {
             Intent intent = new Intent(HiveAllDetailsActivity.this, LimitValuesSettingsActivity.class);
+            intent.putExtra("hiveId", getIntent().getExtras().getString("hiveId"));
+            intent.putExtra("hiveName", getIntent().getExtras().getString("hiveName"));
             startActivity(intent);
             return true;
         }
@@ -269,6 +271,5 @@ public class HiveAllDetailsActivity extends BaseActivity {
         intent.putExtra("hiveName", getIntent().getExtras().getString("hiveName"));
         intent.putExtra("hiveLocation", getIntent().getExtras().getString("hiveLocation"));
         startActivity(intent);
-        finish();
     }
 }

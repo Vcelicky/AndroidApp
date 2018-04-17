@@ -234,7 +234,6 @@ public class HiveDetailsActivity extends BaseActivity {
         // Launch main activity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public void loadHiveDetailInfoServerReq(final String hiveId, final String hiveName, final String hiveLocation, int userId, String token, String from, String to){
@@ -480,7 +479,6 @@ public class HiveDetailsActivity extends BaseActivity {
             i.putExtra("hiveId", hiveId);
             i.putExtra("hiveName", hiveName);
             startActivity(i);
-            finish();
             return true;
 
         }
@@ -491,7 +489,6 @@ public class HiveDetailsActivity extends BaseActivity {
             i.putExtra("hiveName", intent.getExtras().getString("hiveName"));
             i.putExtra("hiveLocation", intent.getExtras().getString("hiveLocation"));
             startActivity(i);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

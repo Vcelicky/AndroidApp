@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +58,7 @@ public class HiveDetailsActivity extends BaseActivity {
     SwipeRefreshLayout batterySwipeRefreshLayout;
     SwipeRefreshLayout accelerometerSwipeRefreshLayout;
     SQLiteHandler db;
+    private int insideColor, outsideColor, defaultColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class HiveDetailsActivity extends BaseActivity {
         db = new SQLiteHandler(getApplicationContext());
         final String token =  db.getUserDetails(session.getLoggedUser()).get("token");
         final int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
+
+        insideColor = ContextCompat.getColor(getApplicationContext(), R.color.colorBlue);
+        outsideColor = ContextCompat.getColor(getApplicationContext(), R.color.colorRed);
+        defaultColor = ContextCompat.getColor(getApplicationContext(), R.color.colorBlue);
 
         //Tab 1 setup (Temperature)
         TabHost.TabSpec spec = host.newTabSpec("temperature");
@@ -321,8 +327,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideTemperature()));
             }
             LineDataSet dataSet = new LineDataSet(entries, getString(R.string.out_temperature));
-            dataSet.setColor(Color.RED);
-            dataSet.setCircleColor(Color.RED);
+            dataSet.setColor(outsideColor);
+            dataSet.setCircleColor(outsideColor);
             dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Inside temperature
@@ -331,8 +337,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideTemperature()));
             }
             dataSet = new LineDataSet(entries, getString(R.string.in_temperature));
-            dataSet.setColor(Color.BLUE);
-            dataSet.setCircleColor(Color.BLUE);
+            dataSet.setColor(insideColor);
+            dataSet.setCircleColor(insideColor);
             dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Mapping data on chart
@@ -362,8 +368,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getOutsideHumidity()));
             }
             dataSet = new LineDataSet(entries, getString(R.string.out_humidity));
-            dataSet.setColor(Color.RED);
-            dataSet.setCircleColor(Color.RED);
+            dataSet.setColor(outsideColor);
+            dataSet.setCircleColor(outsideColor);
             dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Inside humidity
@@ -372,8 +378,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getInsideHumidity()));
             }
             dataSet = new LineDataSet(entries, getString(R.string.in_humidity));
-            dataSet.setColor(Color.BLUE);
-            dataSet.setCircleColor(Color.BLUE);
+            dataSet.setColor(insideColor);
+            dataSet.setCircleColor(insideColor);
             dataSet.setDrawValues(false);
             datasets.add(dataSet);
             //Mapping data on chart
@@ -401,8 +407,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getWeight()));
             }
             dataSet = new LineDataSet(entries, getString(R.string.weight));
-            dataSet.setColor(Color.BLUE);
-            dataSet.setCircleColor(Color.BLUE);
+            dataSet.setColor(defaultColor);
+            dataSet.setCircleColor(defaultColor);
             dataSet.setDrawValues(false);
             //Mapping data on chart
             lineData = new LineData();
@@ -430,8 +436,8 @@ public class HiveDetailsActivity extends BaseActivity {
                 entries.add(new Entry(hiveList.get(i).getTime(), hiveList.get(i).getBattery()));
             }
             dataSet = new LineDataSet(entries, getString(R.string.battery));
-            dataSet.setColor(Color.BLUE);
-            dataSet.setCircleColor(Color.BLUE);
+            dataSet.setColor(defaultColor);
+            dataSet.setCircleColor(defaultColor);
             dataSet.setDrawValues(false);
             //Mapping data on chart
             lineData = new LineData();

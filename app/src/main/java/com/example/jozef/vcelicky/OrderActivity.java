@@ -59,8 +59,6 @@ public class OrderActivity extends AppCompatActivity {
     public void send(View view){
         editName.setError(null);
         editLocation.setError(null);
-        checkSms.setChecked(false);
-        checkEmail.setChecked(false);
         editNotes.setError(null);
 
         boolean cancel = false;

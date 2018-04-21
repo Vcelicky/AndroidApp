@@ -29,6 +29,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String receivedUserId = "";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         NotificationObservable notificationObservable;
         db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
@@ -39,6 +40,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }catch (Exception e){
             Log.e(TAG, "Cant parse received notification ID");
         }
+
+
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(receivedUserId,getApplicationContext().MODE_PRIVATE);
+        boolean notificationsOn = mPrefs.getBoolean("notificationSwitch", true);
+        if (!notificationsOn){
+            Log.d(TAG, "Notifications are off for this user. Notification will be dropped");
+            return;
+        }
+
 
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {

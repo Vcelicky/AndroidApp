@@ -15,5 +15,16 @@
     <style name="HiveDetailTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">10sp</item>
     </style>
-
+    <style name="BrandedSwitch.text" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">#ffa000</item>
+        <item name="android:textSize">9dp</item>
+    </style>
+    <style name="BrandedSwitch" parent="AppTheme">
+        <item name="colorAccent">#39ac39</item>
+    </style>
+    <style name="BrandedSwitch.control" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#ffffff</item>
+        <item name="colorSwitchThumbNormal">#ff0b0b</item>
+    </style>
 </resources>

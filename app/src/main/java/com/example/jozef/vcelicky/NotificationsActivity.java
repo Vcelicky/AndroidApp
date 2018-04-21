@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
@@ -51,6 +55,13 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 //        int userId = Integer.parseInt(db.getUserDetails().get("id"));
 //        Log.i(TAG, "Token: " + token);
 //        Log.i(TAG, "UserID: " + userId);
+
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setCustomView(R.layout.switch_layout);
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_CUSTOM);
+//
+//
+
         try {
             loadNotificationInfoListFromSharedPreferencies();
         }catch (Exception ex){
@@ -147,7 +158,43 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_limit_values, menu);
+        getMenuInflater().inflate(R.menu.switch_menu, menu);
+
+        SwitchCompat button = (SwitchCompat) menu.findItem(R.id.myswitch).getActionView().findViewById(R.id.switchForActionBar);
+
+        try {
+            db = new SQLiteHandler(getApplicationContext());
+            SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails(session.getLoggedUser()).get("id"),getApplicationContext().MODE_PRIVATE);
+            boolean sw = mPrefs.getBoolean("notificationSwitch", true);
+            button.setChecked(sw);
+        }catch (Exception e){
+            button.setChecked(true);
+        }
+
+        button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                db = new SQLiteHandler(getApplicationContext());
+                SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails(session.getLoggedUser()).get("id"), getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor prefsEditor = mPrefs.edit();
+                if (isChecked) {
+
+//                   Toast.makeText(getApplicationContext(),
+//                           "Notifications are On", Toast.LENGTH_LONG)
+//                           .show();
+
+                   prefsEditor.putBoolean("notificationSwitch",true );
+                   prefsEditor.commit();
+
+               }else{
+//                   Toast.makeText(getApplicationContext(),
+//                           "Notifications Off", Toast.LENGTH_LONG)
+//                           .show();
+                    prefsEditor.putBoolean("notificationSwitch",false );
+                    prefsEditor.commit();
+               }
+            }
+        });
+
         return true;
     }
 
@@ -166,4 +213,10 @@ public class NotificationsActivity extends BaseActivity implements Observer {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void myMethod(){
+
+    }
+
+
 }

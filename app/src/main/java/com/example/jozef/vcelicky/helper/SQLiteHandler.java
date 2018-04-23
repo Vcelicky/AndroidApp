@@ -111,22 +111,29 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(int user_id, String name, String email, int role, String token, String phone, long expires) {
+    public void addUser(boolean add, int userId, String name, String email, int role, String token, String phone, long expires) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, user_id); // User ID
+        values.put(KEY_ID, userId); // User ID
         values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_ROLE, role); // User Role
         values.put(KEY_TOKEN, token); // Token
         values.put(KEY_PHONE, phone);
         values.put(KEY_EXPIRES, expires);
-        // Inserting Row
-        long id = db.insert(TABLE_USER, null, values);
-        db.close(); // Closing database connection
 
-        Log.i(TAG, "New user inserted into sqlite: " + id);
+        long id;
+        if(add) {
+            // Inserting Row
+            id = db.insert(TABLE_USER, null, values);
+            Log.i(TAG, "New user inserted into sqlite: " + id);
+        }
+        else{
+            db.update(TABLE_USER, values, KEY_ID + "=" + userId, null);
+            Log.i(TAG, "User updated in sqlite: " + userId);
+        }
+        db.close(); // Closing database connection
         Log.i(TAG, values.toString());
     }
 
@@ -155,6 +162,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // return user
         Log.i(TAG, "Fetching user from Sqlite: " + user.toString());
         return user;
+    }
+
+    public boolean isUser(int userId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_USER
+                + " WHERE " + KEY_ID + "='" + userId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return result;
     }
 
     /**

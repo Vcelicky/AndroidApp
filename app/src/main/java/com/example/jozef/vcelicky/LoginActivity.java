@@ -82,22 +82,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            // User is already logged in. Let's check token validity
-            if(!db.isExpired()){
-                // His session han't expired yet. Take him to main activity
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                Log.i(TAG, "Prihlasujem bez overenia...");
-            }
-            else{
-                session.setLogin(false);
-//                ArrayList<String> hives = db.getUserHiveIds();
-//                for(String hive : hives){
-//                    session.setFirstTime(hive, true);
-//                }
-//                db.deleteUsers();
-            }
+            //Take him to main activity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            Log.i(TAG, "Prihlasujem bez overenia...");
         }
         //Arrow back
         Toolbar toolbar = findViewById(R.id.toolbar3);
@@ -225,8 +214,8 @@ public class LoginActivity extends AppCompatActivity {
                         String email = user.getString("email");
                         String phone = user.getString("phone");
 
-                        // Inserting row in users table
-                        db.addUser(user_id, name, email, role, token, phone, expires);
+                        // First check if the user is already in the DB and then add or update user
+                        db.addUser(!db.isUser(user_id), user_id, name, email, role, token, phone, expires);
 
                         // Remember user in shared preferences
                         session.saveUserEmail(email);

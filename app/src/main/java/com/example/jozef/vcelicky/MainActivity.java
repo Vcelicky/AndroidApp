@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity {
             progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
             showDialog();
             loadHiveNames(userId, token);
+            hideDialog();
         }
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
@@ -257,7 +258,6 @@ public class MainActivity extends BaseActivity {
                 menuListView = findViewById(R.id.hiveListView);
                 menuListView.setAdapter(allAdapter);
                 swipeRefreshLayout.setRefreshing(false);
-                hideDialog();
             }
         }, new Response.ErrorListener() {
 

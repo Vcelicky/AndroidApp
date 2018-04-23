@@ -130,7 +130,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             Log.i(TAG, "New user inserted into sqlite: " + id);
         }
         else{
-            db.update(TABLE_USER, values, KEY_ID + "=" + userId, null);
+            db.update(TABLE_USER, values, KEY_ID + "='" + userId + "'", null);
             Log.i(TAG, "User updated in sqlite: " + userId);
         }
         db.close(); // Closing database connection
@@ -325,30 +325,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return hiveList;
     }
 
-    public ArrayList<String> getUserHiveIds(){
-        ArrayList<String> hives = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT " + KEY_DEVICEID
-                + " FROM " + TABLE_MEASUREMENTS
-                + " GROUP BY " + KEY_DEVICEID;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        if(cursor.getCount() > 0){
-            String hive;
-            for(int i = 0; i < cursor.getCount(); i++){
-                hive = cursor.getString(0);
-                hives.add(hive);
-                cursor.moveToNext();
-                Log.i(TAG, "Fetching device ID from SQLite: " + hive);
-            }
-        }
-        cursor.close();
-        db.close();
-        return hives;
-    }
-
 //    Devices table handler methods
-    public void addDevice(String hiveId, String hiveName, String hiveLocation, int userId){
+    public void addDevice(boolean add, String hiveId, String hiveName, String hiveLocation, int userId){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DEVICEID, hiveId);
@@ -356,12 +334,30 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_LOCATION, hiveLocation);
         values.put(KEY_USERID, userId);
 
-        // Inserting Row
-        long id = db.insert(TABLE_DEVICES, null, values);
+        long id;
+        if(add) {
+            // Inserting Row
+            id = db.insert(TABLE_DEVICES, null, values);
+            Log.i(TAG, "New device inserted into sqlite: " + id);
+        }
+        else{
+            // Updating row
+            db.update(TABLE_DEVICES, values, KEY_DEVICEID + "='" + hiveId + "'", null);
+            Log.i(TAG, "Updated device in sqlite: " + hiveId);
+        }
         db.close(); // Closing database connection
-
-        Log.i(TAG, "New device inserted into sqlite: " + id);
         Log.i(TAG, values.toString());
+    }
+
+    public boolean isDevice(String hiveId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_DEVICES
+                + " WHERE " + KEY_DEVICEID + "='" + hiveId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        boolean result = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return result;
     }
 
     public HiveBaseInfo getDeviceInfo(String hiveId){
@@ -394,5 +390,27 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count;
+    }
+
+    public ArrayList<HiveBaseInfo> getUserDevices(int userId){
+        ArrayList<HiveBaseInfo> devices = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_DEVICES
+                + " WHERE " + KEY_USERID + "='" + userId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            HiveBaseInfo device;
+            for(int i = 0; i < cursor.getCount(); i++){
+                device = new HiveBaseInfo();
+                device.setHiveId(cursor.getString(0));
+                device.setHiveName(cursor.getString(1));
+                device.setHiveLocation(cursor.getString(2));
+                devices.add(device);
+            }
+        }
+        cursor.close();
+        db.close();
+        return devices;
     }
 }

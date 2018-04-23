@@ -25,6 +25,16 @@
     <style name="BrandedSwitch.control" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">#ffffff</item>
-        <item name="colorSwitchThumbNormal">#ff0b0b</item>
+        <item name="colorSwitchThumbNormal">#5e5e5e</item>
+        <!--ff0b0b alternative color-->
+    </style>
+    <style name="BrandedSwitchVer2.control" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorSwitchThumbNormal">#5e5e5e</item>
+    </style>
+    <style name="BrandedSwitchVer2.text" parent="Theme.AppCompat.Light">
+    <item name="android:textColor">#ffffff</item>
+    <item name="android:textSize">9dp</item>
     </style>
 </resources>

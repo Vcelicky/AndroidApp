@@ -27,9 +27,8 @@
                 android:id="@+id/editName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:gravity="start"
                 android:hint="@string/name"
                 android:inputType="textPersonName"
@@ -38,15 +37,30 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notifications" />
+
+            <TextView
+                android:id="@+id/notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:text="Notifikácie pre úľ"
+                android:textColor="@color/colorBlack"
+
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/toolbar"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <TextView
                 android:id="@+id/editName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:gravity="start"
                 android:hint="@string/name"
                 android:inputType="textPersonName"
@@ -55,8 +69,26 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toTopOf="@+id/editName" />
 
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchForActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:checked="true"
+                android:longClickable="false"
+                android:text=""
+                android:textOff="OFF"
+                android:textOn="ON"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintTop_toTopOf="@+id/notifications"
+                app:showText="true"
+                app:switchTextAppearance="@style/BrandedSwitchVer2.text"
+                app:theme="@style/BrandedSwitchVer2.control"
+                android:layout_marginLeft="8dp" />
 
             <Button
                 android:id="@+id/button6"

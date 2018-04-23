@@ -2,13 +2,16 @@ package com.example.jozef.vcelicky;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,7 +59,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
     EditText edit_text_humidity_out_up_limit;
     EditText edit_text_humidity_out_down_limit;
     EditText edit_text_batery_limit;
-
+    SQLiteHandler db;
     SessionManager session;
 
     @Override
@@ -75,6 +78,8 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         SQLiteHandler db = new SQLiteHandler(getApplicationContext());
         token =  db.getUserDetails(session.getLoggedUser()).get("token");
         userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
+
+        initNotificationSwitch ();
 
         loadLimitValues(hiveId, userId, token);
 
@@ -265,6 +270,41 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
+    public void initNotificationSwitch (){
+        SwitchCompat button = (SwitchCompat) findViewById(R.id.switchForActionBar);
+
+        try {
+            db = new SQLiteHandler(getApplicationContext());
+            SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails(session.getLoggedUser()).get("id"),getApplicationContext().MODE_PRIVATE);
+            boolean sw = mPrefs.getBoolean("notificationSwitch"+hiveId, true);
+            button.setChecked(sw);
+        }catch (Exception e){
+            button.setChecked(true);
+        }
+
+        button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                db = new SQLiteHandler(getApplicationContext());
+                SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(db.getUserDetails(session.getLoggedUser()).get("id"), getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor prefsEditor = mPrefs.edit();
+                if (isChecked) {
+                   Toast.makeText(getApplicationContext(),
+                           "Hive notifications are On", Toast.LENGTH_LONG)
+                           .show();
+                    prefsEditor.putBoolean("notificationSwitch"+hiveId,true );
+                    prefsEditor.commit();
+
+                }else{
+                   Toast.makeText(getApplicationContext(),
+                           "Hive notifications Off", Toast.LENGTH_LONG)
+                           .show();
+                    prefsEditor.putBoolean("notificationSwitch"+hiveId,false );
+                    prefsEditor.commit();
+                }
+            }
+        });
+    }
+
     public void resetLimitValues (final String hiveId, final int userId, final String token){
 
         if(!isOnline()){
@@ -296,7 +336,7 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
                 try {
                     String result = response.getString("error");
                     if (result.equals("false")){
-                        Log.i(TAG, "Reset was successfull");
+                       Log.i(TAG, "Reset was successfull");
                         Toast.makeText(getApplicationContext(),
                                 "Predvolené hodnoty boli nastavené", Toast.LENGTH_LONG).show();
                         loadLimitValues(hiveId, userId, token);

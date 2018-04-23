@@ -49,7 +49,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return;
         }
 
-
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data: " + remoteMessage.getData());
@@ -58,6 +57,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String text = remoteMessage.getData().get("text");
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
+
+            boolean notificationsForHiveOn = mPrefs.getBoolean("notificationSwitch"+hive_id, true);
+            if (!notificationsForHiveOn){
+                Log.d(TAG, "Notifications are off for this hive. Notification will be dropped");
+                return;
+            }
 
             if (receivedUserId.equals(db.getUserDetails(session.getLoggedUser()).get("id"))) {
                 sendNotification(title_text, text);

@@ -149,6 +149,7 @@ public class NotificationsActivity extends BaseActivity implements Observer {
                         Intent i = new Intent(getApplicationContext(), HiveDetailsActivity.class);
                         i.putExtra("hiveId", device.getHiveId());
                         i.putExtra("hiveName", device.getHiveName());
+                        i.putExtra("hiveLocation", "");
                         startActivity(i);
                     }
                 }

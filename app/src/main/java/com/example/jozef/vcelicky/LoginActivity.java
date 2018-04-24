@@ -82,11 +82,17 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
-            //Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            Log.i(TAG, "Prihlasujem bez overenia...");
+            // User is already logged in. Let's check token validity
+            if(!db.isExpired()) {
+                // His session han't expired yet. Take him to main activity
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                Log.i(TAG, "Prihlasujem bez overenia...");
+            }
+            else{
+                session.setLogin(false);
+            }
         }
         //Arrow back
         Toolbar toolbar = findViewById(R.id.toolbar3);

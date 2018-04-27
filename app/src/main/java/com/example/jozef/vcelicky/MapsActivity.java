@@ -69,7 +69,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }else{
             toolbar.setTitle("Mapa úľov");
         }
-        
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

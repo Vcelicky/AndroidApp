@@ -373,6 +373,13 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
     }
 
     public void send(View view) {
+        if(!isOnline()){
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_service, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
         Log.i("TAG", "SEND function ");
         if (!isSomethingNew()){
             Toast.makeText(getApplicationContext(),

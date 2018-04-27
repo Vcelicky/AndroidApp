@@ -473,6 +473,7 @@ public class HiveDetailsActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_limit_values) {
+            if (isOnline()){
             Intent i = new Intent(getApplicationContext(), LimitValuesSettingsActivity.class);
             Intent intent = getIntent();
             String hiveId = intent.getExtras().getString("hiveId");
@@ -482,6 +483,11 @@ public class HiveDetailsActivity extends BaseActivity {
             startActivity(i);
             finish();
             return true;
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        R.string.need_internet, Toast.LENGTH_LONG)
+                        .show();
+        }
 
         }
         if (id == R.id.action_show_all) {
@@ -496,6 +502,7 @@ public class HiveDetailsActivity extends BaseActivity {
         }
 
         if (id == R.id.map) {
+            if (isOnline()){
             Intent i = getIntent();
             Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
             intent.putExtra("mode", "oneHive");
@@ -505,8 +512,12 @@ public class HiveDetailsActivity extends BaseActivity {
             Log.i(TAG, "hiveId:"+i.getExtras().getString("hiveId"));
             startActivity(intent);
             return true;
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        R.string.need_internet, Toast.LENGTH_LONG)
+                        .show();
+            }
         }
-
         return super.onOptionsItemSelected(item);
     }
 

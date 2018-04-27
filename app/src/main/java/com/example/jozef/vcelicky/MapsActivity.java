@@ -99,7 +99,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 List<LatLng> locations = new ArrayList<>();
 
                 for(HiveBaseInfo hive : hiveList) {
-                   Log.i(TAG, "longitude:" +hive.getLatitude());
+                   Log.i(TAG, "longitude:" +hive.getLongitude());
                    Log.i(TAG, "latitude:" +hive.getLatitude());
                    Log.i(TAG, hiveId+" VS " +hive.getHiveId());
 
@@ -115,7 +115,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                           m.showInfoWindow();
 
                     }else {
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(hive.getHiveName() + "," + hive.getHiveLocation())).setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                //        mMap.addMarker(new MarkerOptions().position(latLng).title(hive.getHiveName() + "," + hive.getHiveLocation())).setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(hive.getHiveName() + "," + hive.getHiveLocation()+", "+hive.getLatitude()+"° N,"+hive.getLongitude()+"° W")).setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                     }
                 }
                 //LatLngBound will cover all your marker on Google Maps

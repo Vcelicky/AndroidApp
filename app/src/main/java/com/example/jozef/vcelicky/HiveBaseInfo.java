@@ -29,6 +29,9 @@ public class HiveBaseInfo {
     int humidity_out_up_limit;
     int humidity_out_down_limit;
     int batery_limit;
+    double longitude;
+    double latitude;
+
     private long time;
 
     public HiveBaseInfo(String hiveId, String hiveName, float outsideTemperature, float insideTemperature, float outsideHumidity, float insideHumidity, float weight, boolean accelerometer, float battery, GregorianCalendar timeStamp) {
@@ -94,6 +97,22 @@ public class HiveBaseInfo {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.hiveLocation =  hiveLocation;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public int getTemperature_in_up_limit() {

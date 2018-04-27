@@ -11,10 +11,6 @@
         android:orderInCategory="100"
         android:title="Hraničné hodnoty"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/map"
-        android:orderInCategory="100"
-        android:title="Mapa úľov"
-        app:showAsAction="never" />
+
 
 </menu>

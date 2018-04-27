@@ -494,6 +494,19 @@ public class HiveDetailsActivity extends BaseActivity {
             finish();
             return true;
         }
+
+        if (id == R.id.map) {
+            Intent i = getIntent();
+            Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+            intent.putExtra("mode", "oneHive");
+            intent.putExtra("hiveId", i.getExtras().getString("hiveId"));
+            intent.putExtra("hiveName", i.getExtras().getString("hiveName"));
+            intent.putExtra("hiveLocation", i.getExtras().getString("hiveLocation"));
+            Log.i(TAG, "hiveId:"+i.getExtras().getString("hiveId"));
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

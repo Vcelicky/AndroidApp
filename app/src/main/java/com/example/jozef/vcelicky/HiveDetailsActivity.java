@@ -518,6 +518,12 @@ public class HiveDetailsActivity extends BaseActivity {
                         .show();
             }
         }
+
+        if (id == R.id.Back) {
+            onBackPressed();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

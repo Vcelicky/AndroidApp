@@ -20,8 +20,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:background="@color/colorWhite" />
 
             <TextView
                 android:id="@+id/editName"
@@ -37,7 +36,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notifications" />
+                app:layout_constraintTop_toBottomOf="@+id/notifications"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/notifications"
@@ -54,7 +54,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/toolbar"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/editName2"
@@ -69,7 +70,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@+id/editName" />
+                app:layout_constraintTop_toTopOf="@+id/editName"
+                android:layout_marginLeft="8dp" />
 
 
             <android.support.v7.widget.SwitchCompat
@@ -432,6 +434,98 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="°C"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextTempInMax"
+                app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="°C"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextTempInMin"
+                app:layout_constraintTop_toTopOf="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="°C"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextTempOutMin"
+                app:layout_constraintTop_toTopOf="@+id/textView1712" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="°C"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextTempOutMax"
+                app:layout_constraintTop_toTopOf="@+id/textView171" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="%"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextHumOutMax"
+                app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="%"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextHumOutMin"
+                app:layout_constraintTop_toTopOf="@+id/textView16" />
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="%"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextHumInMax"
+                app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="%"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextHumInMin"
+                app:layout_constraintTop_toTopOf="@+id/textView13" />
+
+            <TextView
+                android:id="@+id/textView29"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+
+                android:text="%"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextBatMin"
+                app:layout_constraintTop_toTopOf="@+id/textView19" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:text="kg"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintStart_toEndOf="@+id/editTextWeiMax"
+                app:layout_constraintTop_toTopOf="@+id/textView26" />
+
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

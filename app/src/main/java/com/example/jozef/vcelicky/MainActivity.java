@@ -70,8 +70,8 @@ public class MainActivity extends BaseActivity {
         Log.i(TAG, "Token: " + token);
         Log.i(TAG, "UserID: " + userId);
 
-        hiveList = db.getActualMeasurement(userId);
-        allAdapter = new AdapterHive(this, hiveList);
+        ArrayList<HiveBaseInfo> tmpHiveList = db.getActualMeasurement(userId);
+        allAdapter = new AdapterHive(this, tmpHiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
 
@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity {
             progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
             showDialog();
             loadHiveNames(userId, token);
+            hideDialog();
         }
 
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
@@ -257,7 +258,6 @@ public class MainActivity extends BaseActivity {
                 menuListView = findViewById(R.id.hiveListView);
                 menuListView.setAdapter(allAdapter);
                 swipeRefreshLayout.setRefreshing(false);
-                hideDialog();
             }
         }, new Response.ErrorListener() {
 
@@ -316,7 +316,7 @@ public class MainActivity extends BaseActivity {
                         String hiveId = json.getString("device_id");
                         Log.i(TAG, "Loaded Hive: " + json.toString());
                         hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
-                        db.addDevice(hiveId, hiveName, hiveLocation, userId);
+                        db.addDevice(!db.isDevice(hiveId), hiveId, hiveName, hiveLocation, userId);
                     }
                     loadHiveBaseInfo(userId, token);
                 } catch (Exception e) {

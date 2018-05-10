@@ -226,6 +226,7 @@ public class HiveDetailsActivity extends BaseActivity {
             Log.i(TAG, "Most recent time stamp for hive " + hiveName + " is " + db.getMostRecentTimeStamp(hiveId));
             from = dateFormat.format(new Date(db.getMostRecentTimeStamp(hiveId) + 1000)); //1000 is one second on millis
         }
+        showDialog();
         loadHiveDetailInfoServerReq(hiveId, hiveName, hiveLocation, userId, token, from, to);
     }
 
@@ -267,7 +268,7 @@ public class HiveDetailsActivity extends BaseActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i(TAG, "Load Hive Base Info From Server Response: " + response.toString());
-                MyTaskParams params = new MyTaskParams(response, hiveName, hiveId, hiveLocation);
+                MyTaskParams params = new MyTaskParams(response, hiveId);
                 new ProcessDownloadedData().execute(params);
             }
         }, new Response.ErrorListener() {
@@ -502,15 +503,11 @@ public class HiveDetailsActivity extends BaseActivity {
 
     private static class MyTaskParams {
         JSONObject response;
-        String hiveName;
         String hiveId;
-        String hiveLocation;
 
-        MyTaskParams(JSONObject response, String hiveName, String hiveId, String hiveLocation) {
+        MyTaskParams(JSONObject response, String hiveId) {
             this.response = response;
-            this.hiveName = hiveName;
             this.hiveId = hiveId;
-            this.hiveLocation = hiveLocation;
         }
     }
 
@@ -518,15 +515,13 @@ public class HiveDetailsActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            showDialog();
+
         }
 
         @Override
         protected String doInBackground(MyTaskParams... params) {
             JSONObject response = params[0].response;
-            String hiveName = params[0].hiveName;
             String hiveId = params[0].hiveId;
-            String hiveLocation = params[0].hiveLocation;
 
             GregorianCalendar timeStampGregCal = null;
             SQLiteHandler db = new SQLiteHandler(getApplicationContext());

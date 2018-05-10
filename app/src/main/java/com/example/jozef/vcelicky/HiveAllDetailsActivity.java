@@ -260,6 +260,11 @@ public class HiveAllDetailsActivity extends BaseActivity {
             startActivity(intent);
             return true;
         }
+        if (id == R.id.Back) {
+            onBackPressed();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

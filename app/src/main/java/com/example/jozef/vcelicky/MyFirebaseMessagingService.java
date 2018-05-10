@@ -29,6 +29,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String receivedUserId = "";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         NotificationObservable notificationObservable;
         db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
@@ -40,6 +41,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "Cant parse received notification ID");
         }
 
+
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences(receivedUserId,getApplicationContext().MODE_PRIVATE);
+        boolean notificationsOn = mPrefs.getBoolean("notificationSwitch", true);
+        if (!notificationsOn){
+            Log.d(TAG, "Notifications are off for this user. Notification will be dropped");
+            return;
+        }
+
         //Check if the message contains data
         if(remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data: " + remoteMessage.getData());
@@ -48,6 +57,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String text = remoteMessage.getData().get("text");
             String hive_id = remoteMessage.getData().get("hive_id");
             String hive_name = remoteMessage.getData().get("hive_name");
+
+            boolean notificationsForHiveOn = mPrefs.getBoolean("notificationSwitch"+hive_id, true);
+            if (!notificationsForHiveOn){
+                Log.d(TAG, "Notifications are off for this hive. Notification will be dropped");
+                return;
+            }
 
             if (receivedUserId.equals(db.getUserDetails(session.getLoggedUser()).get("id"))) {
                 sendNotification(title_text, text);

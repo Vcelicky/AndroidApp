@@ -1,6 +1,5 @@
 package com.example.jozef.vcelicky;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.ProgressDialog;
@@ -24,10 +23,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.example.jozef.vcelicky.helper.SessionManager;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -130,10 +129,17 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
         } else if (id == R.id.nav_mainActivity){
             Intent intent = new Intent(BaseActivity.this, MainActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_map) {
+            if (isOnline()){
+                Intent intent = new Intent(BaseActivity.this,MapsActivity.class);
+                intent.putExtra("mode", "allHives");
+                startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        R.string.need_internet, Toast.LENGTH_LONG)
+                        .show();
+            }
         }
-
-
-
 
 //        else if (id == R.id.nav_limit_values){
 //            Intent intent = new Intent(BaseActivity.this, LimitValuesChooseHiveActivity.class);

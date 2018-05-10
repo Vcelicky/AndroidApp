@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switchForActionBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:checked="true"
+        android:longClickable="false"
+        android:layout_marginRight="8dp"
+        android:textOff="OFF"
+        android:textOn="ON"
+        app:showText="true"
+        app:switchTextAppearance="@style/BrandedSwitch.text"
+        app:theme="@style/BrandedSwitch.control"
+        />
+</RelativeLayout>

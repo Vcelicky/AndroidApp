@@ -479,6 +479,7 @@ public class HiveDetailsActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_limit_values) {
+            if (isOnline()){
             Intent i = new Intent(getApplicationContext(), LimitValuesSettingsActivity.class);
             Intent intent = getIntent();
             String hiveId = intent.getExtras().getString("hiveId");
@@ -487,6 +488,11 @@ public class HiveDetailsActivity extends BaseActivity {
             i.putExtra("hiveName", hiveName);
             startActivity(i);
             return true;
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        R.string.need_internet, Toast.LENGTH_LONG)
+                        .show();
+        }
 
         }
         if (id == R.id.action_show_all) {
@@ -498,6 +504,30 @@ public class HiveDetailsActivity extends BaseActivity {
             startActivity(i);
             return true;
         }
+
+        if (id == R.id.map) {
+            if (isOnline()){
+            Intent i = getIntent();
+            Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+            intent.putExtra("mode", "oneHive");
+            intent.putExtra("hiveId", i.getExtras().getString("hiveId"));
+            intent.putExtra("hiveName", i.getExtras().getString("hiveName"));
+            intent.putExtra("hiveLocation", i.getExtras().getString("hiveLocation"));
+            Log.i(TAG, "hiveId:"+i.getExtras().getString("hiveId"));
+            startActivity(intent);
+            return true;
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        R.string.need_internet, Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+
+        if (id == R.id.Back) {
+            onBackPressed();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

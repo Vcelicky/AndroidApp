@@ -19,7 +19,7 @@
     </string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="no_notification">Nemáte žiadne notifikácie</string>
-
+    <string name="need_internet">Nefunkčné internetové pripojenie</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -86,5 +86,6 @@
     <string name="percent">%</string>
     <string name="kilogram">kg</string>
     <string name="no_data_available">Žiadne dáta k dispozícii</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

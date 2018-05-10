@@ -4,27 +4,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.Toast;
-
 import com.example.jozef.vcelicky.helper.SQLiteHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,18 +39,6 @@ public class NotificationsActivity extends BaseActivity implements Observer {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Notifikácie");
-
-//        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
-//        String token =  db.getUserDetails().get("token");
-//        int userId = Integer.parseInt(db.getUserDetails().get("id"));
-//        Log.i(TAG, "Token: " + token);
-//        Log.i(TAG, "UserID: " + userId);
-
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setCustomView(R.layout.switch_layout);
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_CUSTOM);
-//
-//
 
         try {
             loadNotificationInfoListFromSharedPreferencies();
@@ -160,10 +138,4 @@ public class NotificationsActivity extends BaseActivity implements Observer {
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
-
-    public void myMethod(){
-
-    }
-
-
 }

@@ -40,7 +40,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String mode;
     String hiveId = "";
     String hiveName;
-    String hiveLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

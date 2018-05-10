@@ -88,4 +88,8 @@
     <string name="no_data_available">Žiadne dáta k dispozícii</string>
     <string name="title_activity_maps">Map</string>
 
+    <!--Limit values strings-->
+    <string name="notificationsOn">Notifikácie pre úľ boli zapnuté</string>
+    <string name="notificationsOff">Notifikácie pre úľ boli vypnuté</string>
+
 </resources>

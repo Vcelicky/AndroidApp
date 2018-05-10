@@ -288,14 +288,14 @@ public class LimitValuesSettingsActivity extends AppCompatActivity  {
                 SharedPreferences.Editor prefsEditor = mPrefs.edit();
                 if (isChecked) {
                    Toast.makeText(getApplicationContext(),
-                           "Hive notifications are On", Toast.LENGTH_LONG)
+                           R.string.notificationsOn, Toast.LENGTH_LONG)
                            .show();
                     prefsEditor.putBoolean("notificationSwitch"+hiveId,true );
                     prefsEditor.commit();
 
                 }else{
                    Toast.makeText(getApplicationContext(),
-                           "Hive notifications Off", Toast.LENGTH_LONG)
+                           R.string.notificationsOff, Toast.LENGTH_LONG)
                            .show();
                     prefsEditor.putBoolean("notificationSwitch"+hiveId,false );
                     prefsEditor.commit();

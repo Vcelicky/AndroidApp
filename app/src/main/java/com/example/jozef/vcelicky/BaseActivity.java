@@ -131,7 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements Navigat
             startActivity(intent);
         } else if (id == R.id.nav_map) {
             if (isOnline()){
-                Intent intent = new Intent(BaseActivity.this,MapsActivity.class);
+                Intent intent = new Intent(BaseActivity.this, MapsActivity.class);
                 intent.putExtra("mode", "allHives");
                 startActivity(intent);
             }else{

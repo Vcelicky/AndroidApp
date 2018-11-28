@@ -16,7 +16,7 @@ public class AppConfig {
 
     // Server hive handling URLs
     public static String URL_GET_HIVES = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/devices";
-    public static String URL_GET_HIVE_INFO = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/measurements/actual";
+    public static String URL_GET_HIVE_INFO = "http://api.altairsmartcore.com/streams/?max=1&sort=at&order=-1";
     public static String URL_GET_HIVE_INFO_DETAILS ="http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/measurements";
     public static String URL_GET_HIVE_LIMIT_VALUES ="http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/device";
     public static String URL_PUT_SET_LIMIT_VALUES = "http://team20-17.studenti.fiit.stuba.sk/BeeWebpage/public/user/device/limits";

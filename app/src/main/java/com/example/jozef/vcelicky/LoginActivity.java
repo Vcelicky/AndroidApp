@@ -144,6 +144,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login (View view){
+        // Launch main activity
+        Intent intent = new Intent(LoginActivity.this,
+                MainActivity.class);
+        startActivity(intent);
+        if (true)return;
+
+
         String email = mail.getText().toString().trim();
         String password = pass.getText().toString().trim();
 

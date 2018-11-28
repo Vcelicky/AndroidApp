@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -45,6 +46,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -65,19 +67,12 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Prehľad úľov");
 
-        db = new SQLiteHandler(getApplicationContext());
-        final String token = db.getUserDetails(session.getLoggedUser()).get("token");
-        final int userId = Integer.parseInt(db.getUserDetails(session.getLoggedUser()).get("id"));
 
-        Log.i(TAG, "Token: " + token);
-        Log.i(TAG, "UserID: " + userId);
-
-        ArrayList<HiveBaseInfo> tmpHiveList = db.getActualMeasurement(userId);
+        ArrayList<HiveBaseInfo> tmpHiveList = new ArrayList<>();
         allAdapter = new AdapterHive(this, tmpHiveList);
         menuListView = findViewById(R.id.hiveListView);
         menuListView.setAdapter(allAdapter);
 
-        hiveClicked();
         if (!isOnline()) {
             Toast.makeText(getApplicationContext(),
                     R.string.no_service, Toast.LENGTH_LONG)
@@ -87,14 +82,9 @@ public class MainActivity extends BaseActivity {
             hiveList.clear();
             progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
             showDialog();
-            loadHiveNames(userId, token);
+            loadHiveNames(1007, "bleh");
             hideDialog();
         }
-
-        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        FirebaseMessaging.getInstance().subscribeToTopic("hives");
-        FirebaseMessaging.getInstance().subscribeToTopic(db.getUserDetails(session.getLoggedUser()).get("id"));
-        Log.d("firebase", "Firebase Token: " + firebaseToken);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(
@@ -109,12 +99,15 @@ public class MainActivity extends BaseActivity {
                         } else {
                             hiveIDs.clear();
                             hiveList.clear();
-                            loadHiveNames(userId, token);
+                            loadHiveNames(1007, "bleh"); //TODO
+                            progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
+                            showDialog();
+                            ////////////////////////loadHiveNames(userId, token);
+                            hideDialog();
                         }
                     }
                 }
         );
-
     }
 
     @Override
@@ -122,11 +115,19 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
+    public void loadHiveNames(final int userId, final String token) {
+        Log.i(TAG, "Load Hive method");
+        String hiveName = "Pri mlyne";
+        String hiveLocation = "Humenné";
+        String hiveId = "12345";
+        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
+        loadHiveBaseInfo(userId, token);
+    }
+
     public void loadHiveBaseInfo(int userId, String token) {
         Log.d(TAG, "Loading hives");
         try {
             if (hiveIDs.size() == 0) {
-                hideDialog();
                 showMessageAlertDialog(getString(R.string.no_hives_available));
             } else {
                 for (HiveBaseInfo hive : hiveIDs) {
@@ -144,17 +145,7 @@ public class MainActivity extends BaseActivity {
 
         Log.i(TAG, "Load Hive BASE Info method");
         String tag_json_obj = "json_obj_req";
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("user_id", userId);
-            jsonBody.put("device_id", hiveId);
-            jsonBody.put("token", token);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        final String requestBody = jsonBody.toString();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 AppConfig.URL_GET_HIVE_INFO, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -165,87 +156,45 @@ public class MainActivity extends BaseActivity {
                 int oh = 0, ih = 0, b = 0, w = 0;
                 boolean p = false;
                 long time = 0;
-                int Temperature_in_up_limit = 0, Temperature_in_down_limit = 0, Weight_limit = 0, Temperature_out_up_limit = 0, Temperature_out_down_limit = 0,
-                        Humidity_in_up_limit = 0, Humidity_in_down_limit = 0, Humidity_out_up_limit = 0, Humidity_out_down_limit = 0, Batery_limit = 0;
+                int Temperature_in_up_limit = 100, Temperature_in_down_limit = -20, Weight_limit = 200, Temperature_out_up_limit = 100, Temperature_out_down_limit = -20,
+                        Humidity_in_up_limit = 120, Humidity_in_down_limit = -1, Humidity_out_up_limit = 120, Humidity_out_down_limit = -1, Batery_limit = -1;
                 double latitude = 0, longitude = 0;
+                String dataInHexstring="defaultdatavalue";
                 try {
                     //Temporary variable because of wrong returning JSON from server array in array
-                    JSONArray tempJsonArray = response.getJSONArray("data");
-                    JSONArray jsonArray = tempJsonArray.getJSONArray(0);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        HiveBaseInfo hive = new HiveBaseInfo();
-                        try {
+                    JSONArray tempJsonArray = response.getJSONArray("result");
+                    JSONObject json = tempJsonArray.getJSONObject(0);
+                    Log.i(TAG, "fist parse: " + json.toString());
+                    JSONObject a = json.getJSONObject("data");
+                    dataInHexstring = a.getString("value");
+                    Log.i(TAG, "second parse: " + dataInHexstring);
 
-                            if (i == jsonArray.length() - 2) {
-                                Temperature_in_up_limit = json.getInt("temperature_in_up_limit");
-                                Temperature_in_down_limit = json.getInt("temperature_in_down_limit");
-                                Weight_limit = json.getInt("weight_limit");
-                                Temperature_out_up_limit = json.getInt("temperature_out_up_limit");
-                                Temperature_out_down_limit = json.getInt("temperature_out_down_limit");
-                                Humidity_in_up_limit = json.getInt("humidity_in_up_limit");
-                                Humidity_in_down_limit = json.getInt("humidity_in_down_limit");
-                                Humidity_out_up_limit = json.getInt("humidity_out_up_limit");
-                                Humidity_out_down_limit = json.getInt("humidity_out_down_limit");
-                                Batery_limit = json.getInt("batery_limit");
-                                Log.i(TAG, "Loaded Battery limit: " + Batery_limit);
-                                continue;
-                            }
-
-                            if (i == jsonArray.length() - 1) {
-                                latitude = json.getDouble("lat");
-                                longitude = json.getDouble("long");
-                                Log.i(TAG, "longitude:" + latitude);
-                                Log.i(TAG, "latitude:" + longitude);
-                                break;
-                            }
-
-                            String type = json.getString("typ");
-                            if (type.equals("IT")) {
-                                Log.i(TAG, "found IT : ");
-                                it = json.getInt("hodnota");
-                            }
-                            if (type.equals("OT")) {
-                                Log.i(TAG, "found OT : ");
-                                ot = json.getInt("hodnota");
-                            }
-                            if (type.equals("OH")) {
-                                Log.i(TAG, "found OH : ");
-                                oh = json.getInt("hodnota");
-                            }
-                            if (type.equals("IH")) {
-                                Log.i(TAG, "found IH : ");
-                                ih = json.getInt("hodnota");
-                            }
-                            if (type.equals("P")) {
-                                Log.i(TAG, "found P : ");
-                                p = json.getBoolean("hodnota");
-                            }
-                            if (type.equals("W")) {
-                                Log.i(TAG, "found W : ");
-                                w = json.getInt("hodnota");
-                            }
-                            if (type.equals("B")) {
-                                Log.i(TAG, "found B : ");
-                                b = json.getInt("hodnota");
-                            }
-                            if (time == 0) {
-                                String timestamp = json.getString("cas");
-                                time = parseDateFromVcelickaApi(true, timestamp).getTimeInMillis();
-                                Log.i(TAG, "Timestamp from record is: " + timestamp);
-                                Log.i(TAG, "Timestamp from record is: " + time);
-                            }
-                        } catch (Exception e) {
-                            Log.i(TAG, "NULL value loaded, saving variable with 0");
-                        }
-                    }
                 } catch (Exception e) {
                     // JSON error
                     e.printStackTrace();
                     Log.e(TAG, " Error: " + e.getMessage());
                     //Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot, it, oh, ih, w, p, b);
+
+                Log.i(TAG, "second parse: " + dataInHexstring);
+                Map parsed_data = parseData(dataInHexstring);
+                int aaaa = (int) parsed_data.get("hmotnost");
+                Log.i(TAG, "jjjj parse: " + aaaa);
+
+
+//                "poloha", poloha);
+//                "hmotnost", hmotnost);
+//                "vnutorna_teplota", vnutorna_teplota);
+//                "vonkajsia_teplota", vonkajsia_teplota);
+//                "vonkajsia_vlhkost", vonkajsia_vlhkost);
+//                "vnutorna_vlhkost", vnutorna_vlhkost);
+//                "stav_baterie", stav_baterie);
+
+                HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, (int) parsed_data.get("vonkajsia_teplota"),
+                        (int) parsed_data.get("vnutorna_teplota"),
+                        (int) parsed_data.get("vonkajsia_vlhkost"),
+                        (int) parsed_data.get("vnutorna_vlhkost"),
+                        (int) parsed_data.get("hmotnost"), p, (int) parsed_data.get("stav_baterie"));
                 hive.setTemperature_in_up_limit(Temperature_in_up_limit);
                 hive.setTemperature_in_down_limit(Temperature_in_down_limit);
                 hive.setWeight_limit(Weight_limit);
@@ -256,15 +205,14 @@ public class MainActivity extends BaseActivity {
                 hive.setHumidity_out_up_limit(Humidity_out_up_limit);
                 hive.setHumidity_out_down_limit(Humidity_out_down_limit);
                 hive.setBatery_limit(Batery_limit);
-                hive.setLatitude(latitude);
-                hive.setLongitude(longitude);
+                hive.setLatitude(1);
+                hive.setLongitude(2);
                 hiveList.add(hive);
                 saveHiveListToSharedPreferencies();
                 Log.i(TAG, "Hivelist lenght : " + hiveList.size());
                 allAdapter = new AdapterHive(MainActivity.this, hiveList);
                 menuListView = findViewById(R.id.hiveListView);
                 menuListView.setAdapter(allAdapter);
-                swipeRefreshLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
 
@@ -272,94 +220,96 @@ public class MainActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, " Error: " + error.getMessage());
             }
-        }) {
-
+        })
+        {
+            /** Passing some request headers* */
             @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Carriots.apiKey", "582155c4a8a15467d4fbede176862673f4c5a5137b911e8a7cbf5034ff7c38ce");
+                headers.put("Device", "DeviceBratislava@fiittp20.fiittp20");
+                return headers;
             }
-
-            @Override
-            public byte[] getBody() {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
-
         };
+
+//        {
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/json; charset=utf-8";
+//            }
+//
+//        };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
     }
 
-    public void loadHiveNames(final int userId, final String token) {
-        Log.i(TAG, "Load Hive method");
-        String tag_json_obj = "json_obj_req";
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("user_id", userId);
-            jsonBody.put("token", token);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
+
+    public static Map parseData(String data){
+        System.out.println(data.length());
+        for (int i = 0; i < 12-data.length(); i++) {
+            data = "0"+ data;
         }
-        final String requestBody = jsonBody.toString();
+        int hmotnost = ((Integer.parseInt(data.substring(1, 3),16))>> 1);
+        int poloha = ((Integer.parseInt(data.substring(0, 1),16)))%2;
+        int vonkajsia_teplota,vnutorna_teplota;
+        if (Integer.parseInt(data.substring(10, 12),16)/128==1){
+            vonkajsia_teplota  = (Integer.parseInt(data.substring(10, 12),16)% 128)*-1;
+        }else{
+            vonkajsia_teplota  = (Integer.parseInt(data.substring(10, 12),16)% 128);
+        }
+        if (Integer.parseInt(data.substring(8, 10),16)/128==1){
+            vnutorna_teplota  = (Integer.parseInt(data.substring(8, 10),16)% 128)*-1;
+        }else{
+            vnutorna_teplota  = (Integer.parseInt(data.substring(8, 10),16)% 128);
+        }
+        int vonkajsia_vlhkost = (Integer.parseInt(data.substring(6, 8),16)% 128);
+        int vnutorna_vlhkost =((Integer.parseInt(data.substring(4, 7),16))>> 3)% 128;
+        int stav_baterie = ((Integer.parseInt(data.substring(2, 5),16))>> 2)% 128;
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_GET_HIVES, null, new Response.Listener<JSONObject>() {
+        Map parsed_values = new HashMap();
+        parsed_values.put("poloha", poloha);
+        parsed_values.put("hmotnost", hmotnost);
+        parsed_values.put("vnutorna_teplota", vnutorna_teplota);
+        parsed_values.put("vonkajsia_teplota", vonkajsia_teplota);
+        parsed_values.put("vonkajsia_vlhkost", vonkajsia_vlhkost);
+        parsed_values.put("vnutorna_vlhkost", vnutorna_vlhkost);
+        parsed_values.put("stav_baterie", stav_baterie);
+        System.out.println(parsed_values);
+        return parsed_values;
+    }
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i(TAG, "Load Hive Server Response: " + response.toString());
+    public void tempLoadHiveBaseInfoServerReq(final String hiveId, final String hiveName, final int userId, final String token, final String hiveLocation) {
 
-                try {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        String hiveName = json.getString("uf_name");
-                        String hiveLocation = json.getString("location");
-                        String hiveId = json.getString("device_id");
-                        Log.i(TAG, "Loaded Hive: " + json.toString());
-                        hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
-                        db.addDevice(!db.isDevice(hiveId), hiveId, hiveName, hiveLocation, userId);
-                    }
-                    loadHiveBaseInfo(userId, token);
-                } catch (Exception e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Log.i(TAG, "Error: " + e.getMessage());
-                }
 
-            }
-        }, new Response.ErrorListener() {
+        int it = 0;
+        int ot = 0;
+        int oh = 0, ih = 0, b = 0, w = 0;
+        boolean p = false;
+        long time = 0;
+        int Temperature_in_up_limit = 0, Temperature_in_down_limit = 0, Weight_limit = 0, Temperature_out_up_limit = 0, Temperature_out_down_limit = 0,
+                Humidity_in_up_limit = 0, Humidity_in_down_limit = 0, Humidity_out_up_limit = 0, Humidity_out_down_limit = 0, Batery_limit = 0;
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " + error.getMessage());
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, ot, it, oh, ih, w, p, b);
+        hive.setTemperature_in_up_limit(Temperature_in_up_limit);
+        hive.setTemperature_in_down_limit(Temperature_in_down_limit);
+        hive.setWeight_limit(Weight_limit);
+        hive.setTemperature_out_up_limit(Temperature_out_up_limit);
+        hive.setTemperature_out_down_limit(Temperature_out_down_limit);
+        hive.setHumidity_in_up_limit(Humidity_in_up_limit);
+        hive.setHumidity_in_down_limit(Humidity_in_down_limit);
+        hive.setHumidity_out_up_limit(Humidity_out_up_limit);
+        hive.setHumidity_out_down_limit(Humidity_out_down_limit);
+        hive.setBatery_limit(Batery_limit);
+        hive.setLatitude(1);
+        hive.setLongitude(2);
+        hiveList.add(hive);
+        saveHiveListToSharedPreferencies();
+        Log.i(TAG, "Hivelist lenght : " + hiveList.size());
+        allAdapter = new AdapterHive(MainActivity.this, hiveList);
+        menuListView = findViewById(R.id.hiveListView);
+        menuListView.setAdapter(allAdapter);
 
     }
 
@@ -379,7 +329,6 @@ public class MainActivity extends BaseActivity {
                     }
                 }
         );
-
     }
 
     @Override

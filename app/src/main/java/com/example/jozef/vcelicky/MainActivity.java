@@ -99,11 +99,10 @@ public class MainActivity extends BaseActivity {
                         } else {
                             hiveIDs.clear();
                             hiveList.clear();
-                            loadHiveNames(1007, "bleh"); //TODO
                             progressDialog.setMessage("Prebieha sťahovanie dát zo servera ...");
-                            showDialog();
-                            ////////////////////////loadHiveNames(userId, token);
-                            hideDialog();
+                            //showDialog();
+                            loadHiveNames(1007, "bleh"); //TODO
+                           // hideDialog();
                         }
                     }
                 }
@@ -213,6 +212,7 @@ public class MainActivity extends BaseActivity {
                 allAdapter = new AdapterHive(MainActivity.this, hiveList);
                 menuListView = findViewById(R.id.hiveListView);
                 menuListView.setAdapter(allAdapter);
+                swipeRefreshLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
 

@@ -153,6 +153,21 @@
         app:layout_constraintTop_toBottomOf="@+id/textInTemperature"
         app:srcCompat="@drawable/humidity" />
 
+    <ImageView
+        android:id="@+id/time"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginStart="5.5dp"
+        android:layout_marginLeft="3.5dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="0.1"
+        android:tint="@color/colorClock"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/charging"
+        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+
+
     <TextView
         android:id="@+id/textInHumidity"
         android:layout_width="wrap_content"
@@ -238,6 +253,15 @@
         android:text="Battery"
         app:layout_constraintStart_toStartOf="@+id/textInHumidity"
         app:layout_constraintTop_toBottomOf="@+id/textInHumidity" />
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.4"
+        android:text="Time"
+        app:layout_constraintStart_toStartOf="@+id/textBattery"
+        app:layout_constraintTop_toTopOf="@+id/textWeight" />
 
     <ImageView
         android:id="@+id/imageWeight"

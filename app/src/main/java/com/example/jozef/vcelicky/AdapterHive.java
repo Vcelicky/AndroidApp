@@ -10,7 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by MSI on 2. 11. 2017.
@@ -75,6 +77,14 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
         if (hiveList.get(position).getWeight() >= hiveList.get(position).getWeight_limit()){
            textWeight.setTextColor(Color.parseColor("#FF0000"));
         }
+
+        TextView textTime = (TextView) customView.findViewById(R.id.textTime);
+//        textHiveName.setText(hiveList.get(position).getTimeStamp().toString());
+        Calendar ts = hiveList.get(position).getTimeStamp();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        textTime.setText(ts.get(Calendar.DAY_OF_MONTH)+"."+ts.get(Calendar.MONTH)+"."+ts.get(Calendar.YEAR)+" "+timeFormat.format(ts.getTime()));
+
+
 
         TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
         if (!(hiveList.get(position).isAccelerometer())){

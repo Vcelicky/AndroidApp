@@ -44,6 +44,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +159,7 @@ public class MainActivity extends BaseActivity {
                 long time = 0;
                 int Temperature_in_up_limit = 100, Temperature_in_down_limit = -20, Weight_limit = 200, Temperature_out_up_limit = 100, Temperature_out_down_limit = -20,
                         Humidity_in_up_limit = 120, Humidity_in_down_limit = -1, Humidity_out_up_limit = 120, Humidity_out_down_limit = -1, Batery_limit = -1;
+                long created_at_date=0;
                 double latitude = 0, longitude = 0;
                 String dataInHexstring="defaultdatavalue";
                 try {
@@ -165,8 +168,10 @@ public class MainActivity extends BaseActivity {
                     JSONObject json = tempJsonArray.getJSONObject(0);
                     Log.i(TAG, "fist parse: " + json.toString());
                     JSONObject a = json.getJSONObject("data");
+                    created_at_date = json.getLong("created_at");
                     dataInHexstring = a.getString("value");
                     Log.i(TAG, "second parse: " + dataInHexstring);
+                    Log.i(TAG, "date: " +  created_at_date);
 
                 } catch (Exception e) {
                     // JSON error
@@ -214,6 +219,11 @@ public class MainActivity extends BaseActivity {
                 hive.setHumidity_out_up_limit(Humidity_out_up_limit);
                 hive.setHumidity_out_down_limit(Humidity_out_down_limit);
                 hive.setBatery_limit(Batery_limit);
+                GregorianCalendar cal = new GregorianCalendar();
+                cal.setTimeInMillis(created_at_date * 1000);
+                hive.setTimeStamp(cal);
+                Log.i(TAG, "I will add new record to list with timestamp: " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+
                 hive.setLatitude(1);
                 hive.setLongitude(2);
                 hiveList.add(hive);

@@ -78,15 +78,19 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
 
         TextView textAccelerometer = (TextView) customView.findViewById(R.id.textAccelerometer);
         if (!(hiveList.get(position).isAccelerometer())){
-            textAccelerometer.setText("OK");
+            textAccelerometer.setText("Úľ je neprevrátený");
+            //textAccelerometer.setText("OK");
         }else{
             textAccelerometer.setText("Úľ je prevrátený");
             textAccelerometer.setTextColor(Color.parseColor("#FF0000"));
         }
 
         TextView textBattery = (TextView) customView.findViewById(R.id.textBattery);
-        textBattery.setText(String.valueOf(hiveList.get(position).getBattery())+"%");
-
+        if (hiveList.get(position).isCharging()) {
+            textBattery.setText(String.valueOf(hiveList.get(position).getBattery()) + "%"+" (nabíja sa)");
+        }else{
+            textBattery.setText(String.valueOf(hiveList.get(position).getBattery()) + "%"+" (nenabíja sa)");
+        }
 
         Log.i(TAG, "M: " + hiveList.get(position).getBattery());
         Log.i(TAG, "L: " + hiveList.get(position).getBatery_limit());
@@ -94,8 +98,14 @@ public class AdapterHive  extends ArrayAdapter<HiveBaseInfo> {
             textBattery.setTextColor(Color.parseColor("#FF0000"));
         }
 
+        if (!hiveList.get(position).isCharging()) {
+            ImageView imgC = customView.findViewById(R.id.charging);
+            imgC.setImageDrawable(null);
+            ImageView imgC2 = customView.findViewById(R.id.charging2);
+            imgC2.setImageDrawable(null);
+        }
         ImageView imgBattery = customView.findViewById(R.id.imageBattery);
-        if (hiveList.get(position).getBattery()>75){
+        if (hiveList.get(position).getBattery()>79){
             return customView;
         }
         if (hiveList.get(position).getBattery()>50){

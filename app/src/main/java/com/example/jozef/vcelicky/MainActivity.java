@@ -116,8 +116,8 @@ public class MainActivity extends BaseActivity {
 
     public void loadHiveNames(final int userId, final String token) {
         Log.i(TAG, "Load Hive method");
-        String hiveName = "Pri mlyne";
-        String hiveLocation = "Humenné";
+        String hiveName = "FIIT STU";
+        String hiveLocation = "Bratislava";
         String hiveId = "12345";
         hiveIDs.add(new HiveBaseInfo(hiveId, hiveName, hiveLocation));
         loadHiveBaseInfo(userId, token);
@@ -188,12 +188,22 @@ public class MainActivity extends BaseActivity {
 //                "vonkajsia_vlhkost", vonkajsia_vlhkost);
 //                "vnutorna_vlhkost", vnutorna_vlhkost);
 //                "stav_baterie", stav_baterie);
+                Boolean prevrateny_ul = false;
+                if ((int) parsed_data.get("poloha")==1)
+                    prevrateny_ul = true;
+                Boolean nabija_sa = false;
+                if ((int) parsed_data.get("nabijanie")==1)
+                    nabija_sa = true;
+
+                        //(int) parsed_data.get("hmotnost");
 
                 HiveBaseInfo hive = new HiveBaseInfo(hiveId, hiveName, hiveLocation, (int) parsed_data.get("vonkajsia_teplota"),
                         (int) parsed_data.get("vnutorna_teplota"),
                         (int) parsed_data.get("vonkajsia_vlhkost"),
                         (int) parsed_data.get("vnutorna_vlhkost"),
-                        (int) parsed_data.get("hmotnost"), p, (int) parsed_data.get("stav_baterie"));
+                        (int) parsed_data.get("hmotnost"), prevrateny_ul, (int) parsed_data.get("stav_baterie"));
+                //hive.setBattery(51);
+                hive.setCharging(nabija_sa);
                 hive.setTemperature_in_up_limit(Temperature_in_up_limit);
                 hive.setTemperature_in_down_limit(Temperature_in_down_limit);
                 hive.setWeight_limit(Weight_limit);
@@ -267,6 +277,7 @@ public class MainActivity extends BaseActivity {
         int vonkajsia_vlhkost = (Integer.parseInt(data.substring(6, 8),16)% 128);
         int vnutorna_vlhkost =((Integer.parseInt(data.substring(4, 7),16))>> 3)% 128;
         int stav_baterie = ((Integer.parseInt(data.substring(2, 5),16))>> 2)% 128;
+        int nabijanie = (((Integer.parseInt(data.substring(0, 1),16)))>>1)%2;
 
         Map parsed_values = new HashMap();
         parsed_values.put("poloha", poloha);
@@ -276,6 +287,7 @@ public class MainActivity extends BaseActivity {
         parsed_values.put("vonkajsia_vlhkost", vonkajsia_vlhkost);
         parsed_values.put("vnutorna_vlhkost", vnutorna_vlhkost);
         parsed_values.put("stav_baterie", stav_baterie);
+        parsed_values.put("nabijanie", nabijanie);
         System.out.println(parsed_values);
         return parsed_values;
     }

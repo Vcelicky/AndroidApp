@@ -35,9 +35,10 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="E:\Android\iar_app\app\src\main\res\drawable-v24\iot_device.png" />
-                                      <entry key="foregroundLayerName" value="iot_devicer_foreground" />
-                                      <entry key="outputName" value="iot_device" />
+                                      <entry key="backgroundLayerName" value="charging_b" />
+                                      <entry key="foregroundImage" value="E:\Android\iar_app\app\src\main\res\drawable\charging.png" />
+                                      <entry key="foregroundLayerName" value="charging_f" />
+                                      <entry key="outputName" value="charging" />
                                       <entry key="previewDensity" value="MEDIUM" />
                                     </map>
                                   </option>

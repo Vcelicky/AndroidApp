@@ -17,6 +17,7 @@ public class HiveBaseInfo {
     private float weight;
     private boolean accelerometer;
     private float battery;
+    private boolean charging;
     private GregorianCalendar timeStamp;
     private String hiveLocation;
     int temperature_in_up_limit;
@@ -97,6 +98,14 @@ public class HiveBaseInfo {
         this.hiveId = hiveId;
         this.hiveName = hiveName;
         this.hiveLocation =  hiveLocation;
+    }
+
+    public boolean isCharging() {
+        return charging;
+    }
+
+    public void setCharging(boolean charging) {
+        this.charging = charging;
     }
 
     public double getLongitude() {

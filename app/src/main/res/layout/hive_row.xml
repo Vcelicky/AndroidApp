@@ -158,8 +158,8 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginStart="5.5dp"
-        android:layout_marginLeft="3.5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="3dp"
         android:layout_marginTop="2dp"
         android:layout_weight="0.1"
         android:tint="@color/colorClock"
@@ -243,16 +243,15 @@
         />
 
 
-
     <TextView
         android:id="@+id/textBattery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:layout_weight="0.4"
         android:text="Battery"
         app:layout_constraintStart_toStartOf="@+id/textInHumidity"
-        app:layout_constraintTop_toBottomOf="@+id/textInHumidity" />
+        app:layout_constraintTop_toTopOf="@+id/textAccelerometer" />
 
     <TextView
         android:id="@+id/textTime"

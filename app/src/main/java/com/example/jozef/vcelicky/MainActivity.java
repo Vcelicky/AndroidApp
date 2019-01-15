@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity {
     ArrayAdapter<HiveBaseInfo> allAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
     SQLiteHandler db;
+    long last_update_time = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -233,6 +234,14 @@ public class MainActivity extends BaseActivity {
                 menuListView = findViewById(R.id.hiveListView);
                 menuListView.setAdapter(allAdapter);
                 swipeRefreshLayout.setRefreshing(false);
+
+                if (last_update_time == created_at_date) {
+                    Toast.makeText(getApplicationContext(), "Žiadne nové dáta", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Dáta boli aktualizované", Toast.LENGTH_LONG).show();
+                }
+
+                last_update_time = created_at_date;
             }
         }, new Response.ErrorListener() {
 
